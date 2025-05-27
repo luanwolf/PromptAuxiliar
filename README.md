@@ -17,10 +17,10 @@ Script em batch (.bat) interativo para automação pós-formatação e manutenç
 
 ```plaintext
 📁 PromptAuxiliar\
-├── 📂 Log\               → Armazena os arquivos de log gerados automaticamente
-├── 📂 Registros\         → Local para arquivos .reg (ajustes de sistema)
-├── 📂 Software\          → Local para instaladores .exe, .msi e atalhos
-├── 📂 Utilitarios\       → Scripts auxiliares como limpeza de temporários
+├── 📂 Log\                → Armazena os arquivos de log gerados automaticamente
+├── 📂 Registros\          → Local para arquivos .reg (ajustes de sistema)
+├── 📂 Software\           → Local para instaladores .exe, .msi e atalhos
+├── 📂 Utilitarios\        → Scripts auxiliares como limpeza de temporários
 ├── 📄 Winget.txt          → Lista de apps para instalação via Winget
 ├── 📄 Bloatware.txt       → Lista de apps para desinstalação
 ```
@@ -42,7 +42,7 @@ Script em batch (.bat) interativo para automação pós-formatação e manutenç
 | 09     | 🧼 Limpeza de malwares via **MRT**                                      |
 | 10     | 🧹 Limpar arquivos temporários                                          |
 | 11     | 🧽 Limpeza profunda do sistema                                          |
-| 12     | 🪛 Acessar o **Windows Utility** (Chris Titus                           |
+| 12     | 🪛 Acessar o **Windows Utility** (Chris Titus)                           |
 | 13     | 🧰 Alternar menu de contexto do botão direito                           |
 | P      | 📂 Abrir pasta raiz do prompt                                           |
 | R      | 🔁 Recarregar o menu                                                    |
