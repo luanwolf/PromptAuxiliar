@@ -42,7 +42,7 @@ Script em batch (.bat) interativo para automação pós-formatação e manutenç
 | 09     | 🧼 Limpeza de malwares via **MRT**                                      |
 | 10     | 🧹 Limpar arquivos temporários                                          |
 | 11     | 🧽 Limpeza profunda do sistema                                          |
-| 12     | 🪛 Acessar o **Windows Utility** (Chris Titus)                           |
+| 12     | 🪛 Acessar o **Windows Utility** (`Chris Titus`)                           |
 | 13     | 🧰 Alternar menu de contexto do botão direito                           |
 | P      | 📂 Abrir pasta raiz do prompt                                           |
 | R      | 🔁 Recarregar o menu                                                    |
@@ -72,4 +72,4 @@ Script em batch (.bat) interativo para automação pós-formatação e manutenç
 
 ## 🧠 Créditos
 
-Desenvolvido por **Heyash** — com foco em produtividade e automação para técnicos e usuários avançados.
+Desenvolvido por **Heyash** com foco em produtividade e automação para técnicos e usuários avançados.
