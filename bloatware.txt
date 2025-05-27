@@ -1,0 +1,73 @@
+#ATENÇÃO PARA QUE O PROMPT IGNORE A LINHA VOCÊ DEVE COLOCAR UM # NA FRENTE DA LINHA QUE DESEJA QUE FOSSE IGNORADA
+
+#Assistência Rápida
+MicrosoftCorporationII.QuickAssist_8wekyb3d8bbwe
+
+#Camera
+WindowsCamera_8wekyb3d8bbwe
+
+#Clima
+Microsoft.BingWeather_8wekyb3d8bbwe
+
+#Climpchamp
+Clipchamp.Clipchamp_yxz26nhyzhsrt
+
+#Cortana
+Microsoft.549981C3F5F10_8wekyb3d8bbwe
+
+#Dev Home
+Microsoft.DevHome
+
+#Dicas da Microsoft
+Microsoft.Getstarted_8wekyb3d8bbwe
+
+#Email e Calendário
+microsoft.windowscommunicationsapps_8wekyb3d8bbwe
+
+#Filmes e TV
+Microsoft.ZuneVideo_8wekyb3d8bbwe
+
+#Gravador de Som
+Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe
+
+#Hub de Comentários
+Microsoft.WindowsFeedbackHub_8wekyb3d8bbwe
+
+#Mapas do Windows
+Microsoft.WindowsMaps_8wekyb3d8bbwe
+
+#Microsoft 365 (Office)
+Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe
+
+#Microsoft Clipchamp
+Clipchamp.Clipchamp_yxz26nhyzhsrt
+
+#Microsoft Teams
+Microsoft.Teams
+
+#Microsoft To Do
+Microsoft.Todos_8wekyb3d8bbwe
+
+#Notícias
+Microsoft.BingNews_8wekyb3d8bbwe
+
+#Notas autoadesivas
+Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe
+
+#Obter Ajuda
+Microsoft.GetHelp_8wekyb3d8bbwe
+
+#Outlook for Windows
+Microsoft.OutlookForWindows_8wekyb3d8bbwe
+
+#Pessoas Microsoft
+Microsoft.People_8wekyb3d8bbwe
+
+#Power Automate
+Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe
+
+#Solitaire & Casual Games
+Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe
+
+#Vincular ao Celular
+Microsoft.YourPhone_8wekyb3d8bbwe
