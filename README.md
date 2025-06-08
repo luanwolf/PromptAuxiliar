@@ -1,6 +1,6 @@
 # Prompt Auxiliar 🤖 v1.3.7
 
-![Prompt Auxiliar Banner](https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/imagens/banner.png)
+![Prompt Auxiliar Banner](https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/imagens/logo.png)
 
 Bem-vindo ao Prompt Auxiliar, a sua ferramenta completa para otimizar e gerenciar o Windows de forma simples e eficiente! ✨
 
