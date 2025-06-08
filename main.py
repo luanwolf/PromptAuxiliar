@@ -17,7 +17,7 @@ ARQUIVOS_TXT = {
     "registros/README.txt": "Coloque seus arquivos .reg aqui.\nEles serão executados pelo app.",
     "softwares/README.txt": "Coloque seus seus arquivos .exe, .msi e .lnk (atalhos) aqui.\nEles serão executados pelo app.",
     "winget.txt": "#Informe aqui quais são os códigos que o app deve instalar.\n#Para ignorar uma linha, coloque '#' no início dela.",
-    "bloatware.txt": "#Informe aqui quais são os códigos que o app deve remover.\n#Para ignorar uma linha, coloque '#' no início dela.",
+    "bloatware.txt": "#Informe aqui quais são os códigos que o app deve remover.\n#Para ignorar uma linha, coloque '#' no início dela.\n\nMicrosoftCorporationII.QuickAssist_8wekyb3d8bbwe\nWindowsCamera_8wekyb3d8bbwe\nMicrosoft.BingWeather_8wekyb3d8bbwe\nClipchamp.Clipchamp_yxz26nhyzhsrt\nMicrosoft.549981C3F5F10_8wekyb3d8bbwe\nMicrosoft.DevHome\nMicrosoft.Getstarted_8wekyb3d8bbwe\nmicrosoft.windowscommunicationsapps_8wekyb3d8bbwe\nMicrosoft.ZuneVideo_8wekyb3d8bbwe\nMicrosoft.WindowsSoundRecorder_8wekyb3d8bbwe\nMicrosoft.WindowsFeedbackHub_8wekyb3d8bbwe\nMicrosoft.WindowsMaps_8wekyb3d8bbwe\nMicrosoft.MicrosoftOfficeHub_8wekyb3d8bbwe\nClipchamp.Clipchamp_yxz26nhyzhsrt\nMicrosoft.Teams\nMicrosoft.Todos_8wekyb3d8bbwe\nMicrosoft.BingNews_8wekyb3d8bbwe\nMicrosoft.MicrosoftStickyNotes_8wekyb3d8bbwe\nMicrosoft.GetHelp_8wekyb3d8bbwe\nMicrosoft.OutlookForWindows_8wekyb3d8bbwe\nMicrosoft.People_8wekyb3d8bbwe\nMicrosoft.PowerAutomateDesktop_8wekyb3d8bbwe\nMicrosoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe\nMicrosoft.YourPhone_8wekyb3d8bbwe",
 }
 
 # --- Cores e Estilos ---
