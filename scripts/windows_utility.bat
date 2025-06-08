@@ -1,6 +1,6 @@
 @echo off
 title Executar Script PowerShell - ChristTitus
-mode con: cols=85 lines=10
+mode con: cols=100 lines=30
 chcp 65001 >nul
 setlocal enabledelayedexpansion
 

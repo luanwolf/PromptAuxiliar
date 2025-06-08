@@ -1,6 +1,6 @@
 @echo off
 title Instalador Local - EXE / MSI / LNK - Prompt Auxiliar
-mode con: cols=70 lines=20
+mode con: cols=100 lines=30
 chcp 65001 >nul
 setlocal enabledelayedexpansion
 

@@ -1,6 +1,6 @@
 @echo off
 title Instalador Winget - Prompt Auxiliar
-mode con: cols=70 lines=15
+mode con: cols=100 lines=30
 chcp 65001 >nul
 setlocal enabledelayedexpansion
 

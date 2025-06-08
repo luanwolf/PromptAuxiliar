@@ -1,6 +1,6 @@
 @echo off
 title Atualizar Programas via Winget
-mode con: cols=85 lines=20
+mode con: cols=100 lines=30
 chcp 65001 >nul
 setlocal enabledelayedexpansion
 

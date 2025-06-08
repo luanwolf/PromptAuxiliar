@@ -1,6 +1,6 @@
 @echo off
 title Ferramenta de Reparo de Rede
-mode con: cols=70 lines=20
+mode con: cols=100 lines=30
 chcp 65001 >nul
 setlocal enabledelayedexpansion
 
