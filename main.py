@@ -644,7 +644,7 @@ class PromptAuxiliarApp(ctk.CTk):
     def mostrar_atualizacao(self):
         try:
             webbrowser.open(
-                "https://github.com/luanwolf/PromptAuxiliar/releases/tag/Prompt"
+                "https://github.com/luanwolf/PromptAuxiliar/releases/tag/Prompt-Auxiliar-1.3.7"
             )
             self.atualizar_status("Página de atualizações aberta no navegador.")
         except Exception as e:
