@@ -15,6 +15,7 @@ echo  [2] Usar menu de contexto do Windows 11 (moderno)
 echo  [0] Sair
 echo.
 set /p opcao=Escolha uma opcao e pressione Enter: 
+cls
 
 if "%opcao%"=="1" goto CLASSICO
 if "%opcao%"=="2" goto MODERNO

@@ -16,6 +16,7 @@ echo =================================================================
 echo.
 echo Pressione qualquer tecla para iniciar a criacao dos atalhos...
 pause >nul
+cls
 
 echo.
 echo [1/2] Criando a Pasta GodMode...

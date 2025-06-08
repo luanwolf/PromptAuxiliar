@@ -19,6 +19,7 @@ echo  - Redefinir as configuracoes de IP
 echo.
 echo Pressione qualquer tecla para iniciar o reparo...
 pause >nul
+cls
 
 echo.
 echo [1/5] Liberando e renovando o endereco IP...

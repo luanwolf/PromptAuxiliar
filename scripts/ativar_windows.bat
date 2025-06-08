@@ -15,6 +15,7 @@ echo =================================================================
 echo.
 echo Pressione qualquer tecla para tentar ativar o Windows...
 pause >nul
+cls
 
 cls
 echo.

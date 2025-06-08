@@ -103,14 +103,12 @@ class ToolTip(object):
             cor_fundo_principal = COR_FUNDO_ESCURO
             cor_fundo_tooltip = COR_FUNDO_ESCURO
             cor_texto = COR_TEXTO_TEMA_ESCURO
-            cor_borda = COR_DESTAQUE
         else:
             cor_fundo_principal = self.instancia_app.cget("fg_color")
             if isinstance(cor_fundo_principal, tuple):
                 cor_fundo_principal = cor_fundo_principal[0]
             cor_fundo_tooltip = COR_FUNDO_CLARO
             cor_texto = COR_TEXTO_TEMA_CLARO
-            cor_borda = COR_PRIMARIA
 
         self.janela_tooltip = ctk.CTkToplevel(self.widget)
         self.janela_tooltip.wm_overrideredirect(True)
@@ -843,7 +841,7 @@ class PromptAuxiliarApp(ctk.CTk):
             hover_color=COR_PERIGO_HOVER,
             corner_radius=8,
             height=30,
-        )  # Adicione esta linha
+        )
         botao_confirmar.pack(side="left", padx=ESPACAMENTO_S)
 
         # Botão Cancelar
@@ -855,7 +853,7 @@ class PromptAuxiliarApp(ctk.CTk):
             hover_color=COR_DESTAQUE,
             corner_radius=8,
             height=30,
-        )  # Adicione esta linha
+        )
         botao_cancelar.pack(side="right", padx=ESPACAMENTO_S)
 
         # Permite fechar o pop-up pelo 'X'

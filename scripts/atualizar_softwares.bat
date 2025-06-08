@@ -19,6 +19,7 @@ echo =================================================================
 echo.
 echo Pressione qualquer tecla para iniciar a atualizacao...
 pause >nul
+cls
 
 echo.
 echo Iniciando a verificacao e atualizacao de programas com Winget...

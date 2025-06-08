@@ -16,6 +16,7 @@ echo =================================================================
 echo.
 echo Pressione qualquer tecla para iniciar a aplicacao dos arquivos .reg...
 pause >nul
+cls
 
 set "REG_FOLDER=C:\PromptAuxiliar\registros"
 

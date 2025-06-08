@@ -19,6 +19,7 @@ echo.
 echo Verificando a pasta:
 echo !PASTA!
 echo.
+cls
 
 if not exist "!PASTA!" (
     echo Pasta de instaladores nao encontrada!

@@ -25,6 +25,7 @@ echo =================================================================
 echo.
 echo Pressione qualquer tecla para iniciar a limpeza profunda...
 pause >nul
+cls
 
 echo.
 echo [1/6] Limpando arquivos temporarios de usuario e sistema...

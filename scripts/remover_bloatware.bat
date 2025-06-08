@@ -19,8 +19,9 @@ echo IMPORTANTE - O APP ignora todas as linhas que se iniciam com '#'.
 echo.
 echo =================================================================
 echo.
-echo Pressione qualquer tecla para iniciar a aplicacao dos arquivos .reg...
+echo Pressione qualquer tecla para iniciar o processo...
 pause >nul
+cls
 
 set "ARQUIVO=C:\PromptAuxiliar\bloatware.txt"
 
