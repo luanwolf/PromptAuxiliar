@@ -1,0 +1,37 @@
+{
+  "categorias": [
+    "Apps Microsoft",
+    "Entretenimento",
+    "Comunicação",
+    "Utilitários OEM"
+  ],
+  "itens": [
+    {"id": "MicrosoftCorporationII.QuickAssist_8wekyb3d8bbwe", "nome": "Quick Assist", "categoria": "Apps Microsoft", "descricao": "Assistência remota Microsoft.", "padrao": true},
+    {"id": "Microsoft.GetHelp_8wekyb3d8bbwe", "nome": "Get Help", "categoria": "Apps Microsoft", "descricao": "Suporte Microsoft.", "padrao": true},
+    {"id": "Microsoft.Getstarted_8wekyb3d8bbwe", "nome": "Tips (Dicas)", "categoria": "Apps Microsoft", "descricao": "Dicas do Windows.", "padrao": true},
+    {"id": "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe", "nome": "Office Hub", "categoria": "Apps Microsoft", "descricao": "Hub do Microsoft 365.", "padrao": true},
+    {"id": "Microsoft.OutlookForWindows_8wekyb3d8bbwe", "nome": "Outlook (novo)", "categoria": "Apps Microsoft", "descricao": "Cliente Outlook Mail.", "padrao": true},
+    {"id": "microsoft.windowscommunicationsapps_8wekyb3d8bbwe", "nome": "Mail e Calendário", "categoria": "Apps Microsoft", "descricao": "Apps de e-mail e agenda.", "padrao": true},
+    {"id": "Microsoft.People_8wekyb3d8bbwe", "nome": "People", "categoria": "Apps Microsoft", "descricao": "Contatos Microsoft.", "padrao": true},
+    {"id": "Microsoft.YourPhone_8wekyb3d8bbwe", "nome": "Phone Link", "categoria": "Apps Microsoft", "descricao": "Vincular smartphone.", "padrao": true},
+    {"id": "Microsoft.Todos_8wekyb3d8bbwe", "nome": "Microsoft To Do", "categoria": "Apps Microsoft", "descricao": "Lista de tarefas.", "padrao": false},
+    {"id": "Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe", "nome": "Power Automate", "categoria": "Apps Microsoft", "descricao": "Automação desktop.", "padrao": true},
+    {"id": "Microsoft.WindowsFeedbackHub_8wekyb3d8bbwe", "nome": "Feedback Hub", "categoria": "Apps Microsoft", "descricao": "Enviar feedback ao Windows.", "padrao": true},
+    {"id": "Microsoft.WindowsMaps_8wekyb3d8bbwe", "nome": "Mapas", "categoria": "Apps Microsoft", "descricao": "App de mapas.", "padrao": true},
+    {"id": "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe", "nome": "Gravador de som", "categoria": "Apps Microsoft", "descricao": "Gravação de áudio simples.", "padrao": true},
+    {"id": "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe", "nome": "Sticky Notes", "categoria": "Apps Microsoft", "descricao": "Notas adesivas.", "padrao": false},
+    {"id": "Microsoft.DevHome", "nome": "Dev Home", "categoria": "Apps Microsoft", "descricao": "Painel para desenvolvedores.", "padrao": true},
+    {"id": "Microsoft.BingNews_8wekyb3d8bbwe", "nome": "Microsoft News", "categoria": "Apps Microsoft", "descricao": "Notícias Bing.", "padrao": true},
+    {"id": "Microsoft.BingWeather_8wekyb3d8bbwe", "nome": "Clima (Bing)", "categoria": "Apps Microsoft", "descricao": "Previsão do tempo.", "padrao": true},
+    {"id": "Microsoft.549981C3F5F10_8wekyb3d8bbwe", "nome": "Cortana", "categoria": "Apps Microsoft", "descricao": "Assistente Cortana.", "padrao": true},
+    {"id": "WindowsCamera_8wekyb3d8bbwe", "nome": "Câmera", "categoria": "Apps Microsoft", "descricao": "App de câmera.", "padrao": false},
+    {"id": "Clipchamp.Clipchamp_yxz26nhyzhsrt", "nome": "Clipchamp", "categoria": "Entretenimento", "descricao": "Editor de vídeo.", "padrao": true},
+    {"id": "Microsoft.ZuneVideo_8wekyb3d8bbwe", "nome": "Filmes e TV", "categoria": "Entretenimento", "descricao": "Loja de vídeo Microsoft.", "padrao": true},
+    {"id": "Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe", "nome": "Solitaire Collection", "categoria": "Entretenimento", "descricao": "Jogos de paciência.", "padrao": true},
+    {"id": "Microsoft.Teams", "nome": "Microsoft Teams", "categoria": "Comunicação", "descricao": "Chat e reuniões (consumo).", "padrao": false},
+    {"id": "Microsoft.SkypeApp_kzf8qxf38zg5c", "nome": "Skype", "categoria": "Comunicação", "descricao": "Skype (se instalado).", "padrao": true},
+    {"id": "Microsoft.XboxGamingOverlay_8wekyb3d8bbwe", "nome": "Xbox Game Bar", "categoria": "Utilitários OEM", "descricao": "Overlay de jogos Xbox.", "padrao": false},
+    {"id": "Microsoft.Xbox.TCUI_8wekyb3d8bbwe", "nome": "Xbox TCUI", "categoria": "Utilitários OEM", "descricao": "Componente Xbox.", "padrao": false},
+    {"id": "Microsoft.XboxSpeechToTextOverlay_8wekyb3d8bbwe", "nome": "Xbox Speech Overlay", "categoria": "Utilitários OEM", "descricao": "Overlay de voz Xbox.", "padrao": true}
+  ]
+}

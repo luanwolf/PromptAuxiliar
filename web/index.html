@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prompt Auxiliar</title>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <div class="bg-layer" aria-hidden="true">
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="grid-noise"></div>
+  </div>
+
+  <section id="boot" class="boot" aria-live="polite">
+    <div class="boot-card">
+      <div class="boot-logo">
+        <img src="assets/logo-mark.png" alt="" width="56" height="56" class="logo-img" onerror="this.onerror=null;this.src='assets/logo.svg'" />
+      </div>
+      <h1 class="boot-title">Prompt Auxiliar</h1>
+      <p id="boot-status" class="boot-status">Preparando…</p>
+      <div class="boot-bar"><span id="boot-bar-fill"></span></div>
+    </div>
+  </section>
+
+  <div id="app" class="app hidden" hidden>
+    <aside class="sidebar">
+      <header class="brand">
+        <div class="brand-mark">
+          <img src="assets/logo-mark.png" alt="" width="40" height="40" class="logo-img" onerror="this.onerror=null;this.src='assets/logo.svg'" />
+        </div>
+        <div>
+          <strong class="brand-name">Prompt Auxiliar</strong>
+          <span id="brand-version" class="brand-version">v—</span>
+        </div>
+      </header>
+      <nav id="nav-categories" class="nav"></nav>
+      <footer class="sidebar-foot">
+        <button type="button" class="btn ghost sm" data-action="folder">Pasta de dados</button>
+        <button type="button" class="btn ghost sm" data-action="releases">Atualizações</button>
+        <a class="creditos" href="#" data-action="creditos">© Heyash</a>
+      </footer>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-copy">
+          <h2 id="page-title" class="page-title">Todas as ferramentas</h2>
+          <p id="page-subtitle" class="page-subtitle">Scripts e painéis Winget</p>
+        </div>
+        <label class="search">
+          <input id="search" type="search" placeholder="Buscar…" autocomplete="off" />
+        </label>
+      </header>
+
+      <section id="view-home">
+        <section class="stats" id="stats"></section>
+        <section id="actions-grid" class="grid"></section>
+      </section>
+
+      <section id="view-panel" class="panel-view hidden" hidden>
+        <div class="panel-toolbar">
+          <button type="button" class="btn ghost sm" id="panel-back">← Voltar</button>
+          <div class="panel-toolbar-actions">
+            <button type="button" class="btn ghost sm" id="panel-select-all">Marcar categoria</button>
+            <button type="button" class="btn ghost sm" id="panel-select-none">Desmarcar categoria</button>
+            <button type="button" class="btn ghost sm" id="panel-save">Salvar seleção</button>
+            <button type="button" class="btn primary" id="panel-run">Executar selecionados</button>
+          </div>
+        </div>
+        <div class="panel-meta"><span id="panel-selected-count">0 selecionados</span></div>
+        <div class="panel-cats" id="panel-cats"></div>
+        <div class="panel-list-wrap"><div id="panel-list" class="panel-list"></div></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast-root" class="toast-root"></div>
+
+  <dialog id="modal" class="modal">
+    <form method="dialog" class="modal-card">
+      <h3 id="modal-title">Confirmar</h3>
+      <p id="modal-body" class="modal-body"></p>
+      <footer class="modal-foot">
+        <button type="button" class="btn ghost" id="modal-cancel">Cancelar</button>
+        <button type="submit" class="btn primary" id="modal-confirm">Confirmar</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog id="welcome" class="modal welcome">
+    <form method="dialog" class="modal-card">
+      <h3>Bem-vindo</h3>
+      <p class="modal-body">Pasta <code id="welcome-path">C:\PromptAuxiliar</code> pronta. Use os scripts ou os painéis Winget/Debloat.</p>
+      <footer class="modal-foot"><button type="submit" class="btn primary">Começar</button></footer>
+    </form>
+  </dialog>
+
+  <script src="js/panels.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
