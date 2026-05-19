@@ -161,15 +161,18 @@ def fetch_remote_version(timeout: float = 20.0) -> str | None:
 
 
 def install_root() -> Path | None:
-    if os.environ.get("PROMPTAUX_HOME"):
-        root = Path(os.environ["PROMPTAUX_HOME"])
+    """Raiz da instalação real — nunca o repositório de desenvolvimento."""
+    home = os.environ.get("PROMPTAUX_HOME", "").strip()
+    if home:
+        root = Path(home)
+        # Ignorar se for um repositório git (clone de dev)
+        if (root / "main.py").is_file() and not (root / ".git").is_dir():
+            return root
+    localappdata = os.environ.get("LOCALAPPDATA", "").strip()
+    if localappdata:
+        root = Path(localappdata) / "PromptAuxiliar"
         if (root / "main.py").is_file():
             return root
-    if getattr(sys, "frozen", False):
-        return None
-    root = Path(__file__).resolve().parent.parent
-    if (root / "main.py").is_file():
-        return root
     return None
 
 
