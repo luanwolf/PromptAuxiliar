@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import re
 import sys
+import time
 import urllib.request
 from pathlib import Path
 from typing import Any
@@ -43,9 +44,33 @@ def compare_versions(local: str, remote: str) -> int:
     return 0
 
 
+def get_local_version() -> str:
+    """Versão em disco (instalação), não só o módulo já importado."""
+    root = install_root()
+    if root:
+        cfg = root / "app" / "config.py"
+        try:
+            if cfg.is_file():
+                v = _parse_version(cfg.read_text(encoding="utf-8"))
+                if v:
+                    return v
+        except OSError:
+            pass
+    return APP_VERSION
+
+
+def _default_install_root() -> Path | None:
+    localappdata = os.environ.get("LOCALAPPDATA", "").strip()
+    if not localappdata:
+        return None
+    root = Path(localappdata) / "PromptAuxiliar"
+    return root if (root / "main.py").is_file() else None
+
+
 def fetch_remote_version(timeout: float = 20.0) -> str | None:
     try:
-        req = urllib.request.Request(_CONFIG_URL, headers={"User-Agent": "PromptAuxiliar"})
+        url = f"{_CONFIG_URL}?_={int(time.time())}"
+        req = urllib.request.Request(url, headers={"User-Agent": "PromptAuxiliar"})
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             text = resp.read().decode("utf-8", errors="replace")
         return _parse_version(text)
@@ -70,14 +95,21 @@ def should_skip_auto_update() -> bool:
     if os.environ.get("PROMPTAUX_SKIP_AUTO_UPDATE") == "1":
         return True
     root = install_root()
-    if root and (root / ".git").is_dir():
-        return True
-    return False
+    if not root or not (root / ".git").is_dir():
+        return False
+    default = _default_install_root()
+    if default:
+        try:
+            if root.resolve() == default.resolve():
+                return False
+        except OSError:
+            pass
+    return True
 
 
 def check_for_update() -> dict[str, Any]:
     """Retorna status da versão remota (não substitui arquivos — use win.ps1)."""
-    local = APP_VERSION
+    local = get_local_version()
     remote = fetch_remote_version()
     if not remote:
         return {
@@ -89,15 +121,22 @@ def check_for_update() -> dict[str, Any]:
         }
     cmp = compare_versions(local, remote)
     available = cmp < 0
+    if available:
+        msg = (
+            f"Nova versão v{remote} disponível (você está na v{local}). "
+            "Feche o app e abra pelo atalho ou execute o instalador irm novamente."
+        )
+    elif cmp > 0:
+        msg = (
+            f"Sua instalação (v{local}) é mais recente que a publicada no GitHub (v{remote}). "
+            "Aguarde a publicação no repositório ou use o clone de desenvolvimento."
+        )
+    else:
+        msg = f"Você está na versão mais recente (v{local})."
     return {
         "ok": True,
         "local": local,
         "remote": remote,
         "update_available": available,
-        "message": (
-            f"Nova versão v{remote} disponível (você está na v{local}). "
-            "Feche o app e abra pelo atalho ou execute o instalador irm novamente."
-            if available
-            else f"Você está na versão mais recente (v{local})."
-        ),
+        "message": msg,
     }

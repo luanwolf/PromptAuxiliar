@@ -39,7 +39,8 @@ function Get-PromptAuxLocalVersion {
 function Get-PromptAuxRemoteVersion {
     param([string]$Owner, [string]$Name, [string]$Branch)
 
-    $url = "https://raw.githubusercontent.com/$Owner/$Name/$Branch/app/config.py"
+    $cacheBust = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+    $url = "https://raw.githubusercontent.com/$Owner/$Name/$Branch/app/config.py?_=$cacheBust"
     try {
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $text = (Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 25).Content
@@ -53,7 +54,7 @@ function Get-PromptAuxRemoteVersion {
 function Compare-PromptAuxVersion {
     param([string]$Local, [string]$Remote)
 
-    if (-not $Remote) { return 0 }
+    if (-not $Remote) { return $null }
     if (-not $Local) { return -1 }
 
     $pa = @($Local.Split('.') | ForEach-Object { [int]($_ -replace '\D.*$', '0') })
@@ -72,8 +73,23 @@ function Test-PromptAuxSkipAutoUpdate {
     param([string]$InstallRoot, [string]$ScriptDir)
 
     if ($env:PROMPTAUX_SKIP_AUTO_UPDATE -eq '1') { return $true }
-    if ($ScriptDir -and $InstallRoot -and ((Resolve-Path $InstallRoot).Path -eq (Resolve-Path $ScriptDir).Path)) {
-        if (Test-Path (Join-Path $InstallRoot '.git')) { return $true }
+
+    $defaultInstall = Join-Path $env:LOCALAPPDATA 'PromptAuxiliar'
+    if ($InstallRoot -and (Test-Path -LiteralPath $defaultInstall)) {
+        try {
+            $a = (Resolve-Path -LiteralPath $InstallRoot).Path.TrimEnd('\')
+            $b = (Resolve-Path -LiteralPath $defaultInstall).Path.TrimEnd('\')
+            if ($a -ieq $b) { return $false }
+        } catch { }
+    }
+
+    if (-not (Test-Path (Join-Path $InstallRoot '.git'))) { return $false }
+    if ($ScriptDir -and $InstallRoot) {
+        try {
+            if ((Resolve-Path $InstallRoot).Path -eq (Resolve-Path $ScriptDir).Path) { return $true }
+        } catch {
+            return $true
+        }
     }
     return $false
 }
@@ -243,9 +259,15 @@ function Update-PromptAuxiliarIfNewer {
     $missing = -not (Test-Path (Join-Path $InstallRoot 'main.py'))
     $cmp = Compare-PromptAuxVersion -Local $local -Remote $remote
 
-    if (-not $Force -and -not $missing -and $cmp -ge 0) {
+    if ($null -eq $cmp -and -not $missing -and -not $Force) {
+        Write-Host '  Nao foi possivel comparar com a versao remota.' -ForegroundColor DarkYellow
+        return $false
+    }
+
+    if (-not $Force -and -not $missing -and ($null -ne $cmp) -and $cmp -ge 0) {
         if ($local) {
-            $msg = "  Versao local v$local (remota v$remote) - ja atualizado."
+            $suffix = if ($cmp -gt 0) { ' (local mais recente que o GitHub)' } else { ' - ja atualizado.' }
+            $msg = "  Versao local v$local (remota v$remote)$suffix"
             Write-Host $msg -ForegroundColor DarkGray
         }
         return $false
