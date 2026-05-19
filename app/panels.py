@@ -93,17 +93,11 @@ def get_panel(kind: PanelKind) -> dict[str, Any]:
     refresh_installed(wait=True)
     catalog = _load_catalog(kind)
     selected = read_selected_ids(kind)
-    primeira_carga = not _selection_path().is_file()
 
     itens = []
     for item in catalog["itens"]:
         pid = item["id"]
-        if pid in selected:
-            sel = True
-        elif primeira_carga and kind == "debloat" and item.get("padrao"):
-            sel = True
-        else:
-            sel = False
+        sel = pid in selected
         itens.append(
             {
                 "id": pid,

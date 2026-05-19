@@ -12,6 +12,7 @@
     count: $("#panel-selected-count"),
     selectAll: $("#panel-select-all"),
     selectNone: $("#panel-select-none"),
+    selectInstalled: $("#panel-select-installed"),
     save: $("#panel-save"),
     run: $("#panel-run"),
     search: $("#search"),
@@ -225,6 +226,7 @@
         ? `${data.subtitulo} · ${data.total_instalados} instalado(s) no PC`
         : data.subtitulo;
     window.appSetTitle(data.titulo, sub);
+    atualizarToolbarPainel();
     render();
   }
 
@@ -233,6 +235,10 @@
     state.data = null;
     state.categoria = null;
     window._panelBusca = "";
+    if (el.selectInstalled) {
+      el.selectInstalled.classList.add("hidden");
+      el.selectInstalled.hidden = true;
+    }
     setViewVisible(false);
     updateSidebarActive();
     if (typeof window.appClearCategory === "function") {
@@ -292,12 +298,40 @@
     render();
   }
 
+  function selecionarInstalados() {
+    if (!state.data) return;
+    state.selecionados.clear();
+    let n = 0;
+    state.data.itens.forEach((i) => {
+      if (i.instalado) {
+        state.selecionados.add(i.id);
+        n += 1;
+      }
+    });
+    applySelecionadosToData();
+    render();
+    window.appToast(
+      n
+        ? `${n} app(s) instalado(s) selecionado(s) para remoção.`
+        : "Nenhum item do catálogo foi detectado como instalado (winget list).",
+      n ? "success" : "info"
+    );
+  }
+
+  function atualizarToolbarPainel() {
+    if (!el.selectInstalled) return;
+    const debloat = state.kind === "debloat";
+    el.selectInstalled.classList.toggle("hidden", !debloat);
+    el.selectInstalled.hidden = !debloat;
+  }
+
   function bind() {
     if (bound) return;
     bound = true;
 
     el.selectAll.addEventListener("click", () => marcarCategoria(true));
     el.selectNone.addEventListener("click", () => marcarCategoria(false));
+    el.selectInstalled.addEventListener("click", selecionarInstalados);
     el.save.addEventListener("click", salvar);
     el.run.addEventListener("click", executar);
 
