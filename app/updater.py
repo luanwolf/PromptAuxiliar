@@ -200,7 +200,9 @@ def launch_win_ps1_update() -> None:
     win_local = (root / "win.ps1") if root else None
 
     if win_local and win_local.is_file():
-        # Usa o script local — evita irm e garante $ScriptDir definido no PS
+        # CWD = TEMP para que $PWD no win.ps1 não aponte para AppData
+        # (caso contrário Test-PromptAuxShouldDeferFolderSwap sempre adia)
+        neutral_cwd = os.environ.get("TEMP", os.environ.get("SystemRoot", "C:\\Windows"))
         subprocess.Popen(
             [
                 "powershell.exe",
@@ -212,6 +214,7 @@ def launch_win_ps1_update() -> None:
                 "-Update",
             ],
             creationflags=flags,
+            cwd=neutral_cwd,
         )
         return
 

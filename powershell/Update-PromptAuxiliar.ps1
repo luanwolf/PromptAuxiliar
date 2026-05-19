@@ -102,12 +102,14 @@ function Write-PromptAuxUtf8NoBom {
 }
 
 function Test-PromptAuxPathInUse {
-    param([string]$Path)
+    param([string]$Path, [int]$ExcludePid = 0)
     if (-not (Test-Path -LiteralPath $Path)) { return $false }
     $root = $Path.TrimEnd('\')
-    $pattern = ($root + '*')
+    $pattern = $root + '*'
     $procs = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue
     foreach ($p in $procs) {
+        if ($p.ProcessId -eq $PID) { continue }
+        if ($ExcludePid -gt 0 -and $p.ProcessId -eq $ExcludePid) { continue }
         if ($p.ExecutablePath -and ($p.ExecutablePath -like $pattern)) { return $true }
         if ($p.CommandLine -and ($p.CommandLine -like "*$root*")) { return $true }
     }
@@ -357,12 +359,6 @@ function Update-PromptAuxiliarIfNewer {
         Write-Host $msg -ForegroundColor Cyan
     } elseif ($missing) {
         Write-Host '  Instalacao nao encontrada - baixando...' -ForegroundColor Cyan
-    }
-
-    # Aguardar o app fechar antes de tentar substituir arquivos
-    if ($Force -and -not $missing) {
-        Write-Host '  Aguardando o app encerrar...' -ForegroundColor DarkGray
-        Start-Sleep -Seconds 3
     }
 
     $zipResult = Install-PromptAuxiliarSourceZip -Destination $InstallRoot -Owner $repo.Owner -Name $repo.Name -Branch $repo.Branch -ScriptDir $ScriptDir

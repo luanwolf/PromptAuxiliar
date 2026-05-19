@@ -8,7 +8,7 @@
     <img alt="Winget" src="https://img.shields.io/badge/Winget-pacotes-2EA043?logo=windows&logoColor=white" />
     <img alt="PowerShell" src="https://img.shields.io/badge/PowerShell-5.1+-5391FE?logo=powershell&logoColor=white" />
     <img alt="Batch" src="https://img.shields.io/badge/Batch-scripts-4D4D4D?logo=windowsterminal&logoColor=white" />
-    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.6.25-0c0f14" />
+    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.6.26-0c0f14" />
   </p>
 
   <p>
