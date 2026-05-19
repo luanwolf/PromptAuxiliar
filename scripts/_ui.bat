@@ -1,5 +1,5 @@
 @echo off
-setlocal DisableExtensions DisableDelayedExpansion
+setlocal DisableDelayedExpansion
 rem Biblioteca de interface - nao executar diretamente.
 if /i "%~1"==":banner" goto :banner
 if /i "%~1"==":confirmar" goto :confirmar
@@ -21,10 +21,12 @@ echo.
 exit /b 0
 
 :confirmar
+if /i "%PROMPTAUX_FROM_APP%"=="1" exit /b 0
 call :_pergunta_sn
 exit /b %ERRORLEVEL%
 
 :confirmar_perigo
+if /i "%PROMPTAUX_FROM_APP%"=="1" exit /b 0
 echo   ATENCAO: operacao sensivel - use por sua conta e risco.
 echo.
 call :_pergunta_sn

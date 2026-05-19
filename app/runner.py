@@ -102,45 +102,24 @@ Start-Process -FilePath 'powershell.exe' -Verb RunAs -ArgumentList @(
     )
 
 
-def _sanitize_cmd_text(texto: str) -> str:
-    """Remove caracteres que quebram cmd.exe (&, |, etc.)."""
-    for ch in "&|^<>%":
-        texto = texto.replace(ch, " ")
-    return " ".join(texto.split())
-
-
 def _abrir_console_script(script: str, titulo: str) -> None:
     """Abre o .bat em nova janela CMD (independente do processo WebView)."""
     script_path = Path(script).resolve()
     if not script_path.is_file():
         raise ScriptNaoEncontradoError(f"Script não encontrado: {script_path}")
 
-    script_dir = _escape_ps(str(script_path.parent))
-    titulo_esc = _escape_ps(_sanitize_cmd_text(titulo))
-
-    ps_body = f"""
-$Host.UI.RawUI.WindowTitle = '{titulo_esc} - Prompt Auxiliar'
-Start-Process -FilePath 'cmd.exe' -WorkingDirectory '{script_dir}' -ArgumentList @(
-  '/c', 'chcp 65001>nul & call ""{script_path.name}""'
-) -WindowStyle Normal
-"""
-
-    _PS_RUN.mkdir(parents=True, exist_ok=True)
-    ps1 = _PS_RUN / f"run_{uuid.uuid4().hex}.ps1"
-    ps1.write_text(ps_body.strip() + "\n", encoding="utf-8-sig")
+    cwd = str(script_path.parent)
+    bat = str(script_path)
+    cmd_line = f'chcp 65001>nul & call "{bat}"'
+    env = os.environ.copy()
+    env["PROMPTAUX_FROM_APP"] = "1"
 
     flags = getattr(subprocess, "CREATE_NEW_CONSOLE", 0)
     subprocess.Popen(
-        [
-            "powershell.exe",
-            "-NoProfile",
-            "-ExecutionPolicy",
-            "Bypass",
-            "-File",
-            str(ps1),
-        ],
+        ["cmd.exe", "/c", cmd_line],
+        cwd=cwd,
+        env=env,
         creationflags=flags,
-        cwd=str(_PS_RUN),
     )
 
 
