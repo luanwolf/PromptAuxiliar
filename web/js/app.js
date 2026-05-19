@@ -250,8 +250,8 @@
       const tag =
         acao.risco !== "normal"
           ? `<span class="tag risco-${acao.risco}">${acao.risco === "perigo" ? "Alto risco" : "Atenção"}</span>`
-          : "<span></span>";
-      card.innerHTML = `<div class="card-head"><h3>${escapeHtml(acao.nome)}</h3><p>${escapeHtml(acao.descricao)}</p></div><div class="card-foot">${tag}<span class="script-row-cat">${escapeHtml(acao.categoria)}</span><span class="card-run">Executar →</span></div>`;
+          : "";
+      card.innerHTML = `<div class="card-head"><h3>${escapeHtml(acao.nome)}</h3><p>${escapeHtml(acao.descricao)}</p></div><div class="card-foot"><span class="card-foot-left"><span class="script-row-cat">${escapeHtml(acao.categoria)}</span></span><span class="card-foot-right">${tag}<span class="card-run">Executar →</span></span></div>`;
       card.addEventListener("click", () => runAction(acao));
       ui.scriptsGrid.appendChild(card);
     });

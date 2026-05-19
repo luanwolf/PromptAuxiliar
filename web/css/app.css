@@ -511,8 +511,31 @@ input {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.5rem;
   margin-top: auto;
   padding-top: 0.35rem;
+  width: 100%;
+}
+
+.card-foot-left {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.card-foot-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.card-foot-right .tag {
+  flex-shrink: 0;
 }
 
 .tag {
