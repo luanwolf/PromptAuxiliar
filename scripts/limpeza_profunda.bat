@@ -1,45 +1,26 @@
-﻿@echo off
-chcp 65001 >nul
-title Limpeza Profunda - Prompt Auxiliar
-cls
-echo ========================================
-echo   LIMPEZA PROFUNDA DO SISTEMA
-echo   Prompt Auxiliar
-echo ========================================
-echo.
-echo [1/8] Removendo arquivos temporarios do usuario...
-del /f /s /q "%TEMP%\*" 2>nul
-for /d %%i in ("%TEMP%\*") do rd /s /q "%%i" 2>nul
-echo Concluido.
-pause
-echo.
-echo [2/8] Limpando Prefetch...
-del /f /q "C:\Windows\Prefetch\*.*" 2>nul
-echo Concluido.
-pause
-echo.
-echo [3/8] Limpando cache DNS...
+@echo off
+setlocal EnableExtensions EnableDelayedExpansion
+call "%~dp0_ui.bat" :banner "Limpeza profunda do Windows" "Limpa TEMP e Prefetch, flush DNS, cleanmgr, SFC e DISM - operacao longa."
+
+call "%~dp0_ui.bat" :confirmar
+if errorlevel 1 call "%~dp0_ui.bat" :sair 0 & exit /b 0
+set "EXIT_CODE=0"
+title Limpeza profunda do Windows
+echo   [1/6] Pastas TEMP...
+del /q /f /s "%TEMP%\*" >nul 2>&1
+del /q /f /s "%SystemRoot%\Temp\*" >nul 2>&1
+echo   [2/6] Prefetch...
+del /q /f /s "%SystemRoot%\Prefetch\*" >nul 2>&1
+echo   [3/6] Cache DNS...
 ipconfig /flushdns
-echo Concluido.
-pause
-echo.
-echo [4/8] Configurando perfil de limpeza de disco (sageset:1)...
-cleanmgr /sageset:1
-echo.
-echo [5/8] Executando limpeza de disco (sagerun:1)...
+echo   [4/6] Limpeza de disco (cleanmgr)...
+cleanmgr /sageset:1 >nul 2>&1
 cleanmgr /sagerun:1
-echo Concluido.
-pause
-echo.
-echo [6/8] Verificando integridade dos arquivos do sistema (SFC)...
+echo   [5/6] Verificacao de arquivos do sistema (SFC)...
 sfc /scannow
-echo Concluido.
-pause
-echo.
-echo [7/8] Reparando imagem do Windows (DISM)...
-DISM /Online /Cleanup-Image /RestoreHealth
-echo Concluido.
-pause
-echo.
-echo [8/8] Limpeza profunda finalizada.
-pause
+echo   [6/6] Reparo de imagem (DISM)...
+Dism /online /cleanup-image /restorehealth
+
+call "%~dp0_ui.bat" :sair %EXIT_CODE%
+endlocal
+exit /b %EXIT_CODE%

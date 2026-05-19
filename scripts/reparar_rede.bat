@@ -1,29 +1,26 @@
-﻿@echo off
-chcp 65001 >nul
-title Reparar Rede - Prompt Auxiliar
-cls
-echo ========================================
-echo   REPARAR CONFIGURACOES DE REDE
-echo   Prompt Auxiliar
-echo ========================================
-echo.
-echo [1/6] Liberando endereco IP...
-ipconfig /release
-echo.
-echo [2/6] Renovando endereco IP...
+@echo off
+setlocal EnableExtensions EnableDelayedExpansion
+call "%~dp0_ui.bat" :banner "Reparar conexao de rede" "Libera e renova o IP, limpa o cache DNS, redefine Winsock e a pilha TCP/IP."
+
+call "%~dp0_ui.bat" :confirmar
+if errorlevel 1 call "%~dp0_ui.bat" :sair 0 & exit /b 0
+set "EXIT_CODE=0"
+title Reparar conexao de rede
+echo   [1/6] Liberando IP...
+ipconfig /release >nul 2>&1
+echo   [2/6] Renovando IP...
 ipconfig /renew
-echo.
-echo [3/6] Limpando cache DNS...
+echo   [3/6] Limpando cache DNS...
 ipconfig /flushdns
-echo.
-echo [4/6] Redefinindo Winsock...
+echo   [4/6] Redefinindo Winsock...
 netsh winsock reset
-echo.
-echo [5/6] Redefinindo pilha TCP/IP...
+echo   [5/6] Redefinindo TCP/IP...
 netsh int ip reset
-echo.
-echo [6/6] Registrando DNS...
+echo   [6/6] Registrando DNS...
 ipconfig /registerdns
 echo.
-echo Concluido. Reinicie o computador para aplicar todas as alteracoes.
-pause
+echo   Reinicie o PC se o problema continuar.
+
+call "%~dp0_ui.bat" :sair %EXIT_CODE%
+endlocal
+exit /b %EXIT_CODE%

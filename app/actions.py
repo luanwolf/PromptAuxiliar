@@ -22,6 +22,14 @@ class Acao:
 _ACOES: tuple[Acao, ...] = (
     Acao("atualizar-programas", "Atualizar programas", "atualizar_softwares.bat", "Instalação", "Atualiza programas via Winget.", "arrow-sync"),
     Acao("instalar-software", "Instalar da pasta Software", "instalar_software.bat", "Instalação", "Instala .exe, .msi e .lnk da pasta softwares.", "folder-open"),
+    Acao(
+        "instalar-vcredist-aio",
+        "Visual C++ Runtimes (All-in-One)",
+        "instalar_runtimes.bat",
+        "Instalação",
+        "Instala o pacote AIO de Visual C++ Redistributables (abbodi1406) via Winget.",
+        "package",
+    ),
     Acao("limpeza-temporarios", "Limpeza de temporários", "limpeza_temporarios.bat", "Limpeza", "Remove temporários, lixeira e cache.", "broom"),
     Acao("limpeza-disco", "Limpeza de armazenamento", "limpeza_disco.bat", "Limpeza", "Abre a Limpeza de Disco do Windows.", "storage"),
     Acao("limpeza-malware", "Limpeza MRT (malware)", "limpeza_malware.bat", "Limpeza", "Executa a Ferramenta MRT.", "shield"),

@@ -1,35 +1,26 @@
-﻿@echo off
-chcp 65001 >nul
-title Instalar Software - Prompt Auxiliar
-cls
-echo ========================================
-echo   INSTALAR SOFTWARES
-echo   Prompt Auxiliar
-echo ========================================
-echo.
+@echo off
+setlocal EnableExtensions EnableDelayedExpansion
+call "%~dp0_ui.bat" :banner "Instalar da pasta Software" "Executa instaladores .exe, .msi e atalhos .lnk de C:\PromptAuxiliar\softwares."
+
+call "%~dp0_ui.bat" :confirmar
+if errorlevel 1 call "%~dp0_ui.bat" :sair 0 & exit /b 0
+set "EXIT_CODE=0"
+title Instalar da pasta Software
 set "PASTA=C:\PromptAuxiliar\softwares"
-if not exist "%PASTA%" (
-    echo Pasta nao encontrada: %PASTA%
-    pause
-    exit /b 1
+if not exist "!PASTA!" mkdir "!PASTA!"
+set "COUNT=0"
+for %%f in ("!PASTA!\*.exe" "!PASTA!\*.msi" "!PASTA!\*.lnk") do set /a COUNT+=1
+if !COUNT! equ 0 (
+  echo   Nenhum instalador encontrado. Abrindo pasta...
+  start "" "!PASTA!"
+  goto :fim_inst
 )
-echo Instalando executaveis (.exe)...
-for %%F in ("%PASTA%\*.exe") do (
-    echo Executando: %%~nxF
-    start /wait "" "%%F"
+for %%f in ("!PASTA!\*.exe" "!PASTA!\*.msi" "!PASTA!\*.lnk") do (
+  echo   Executando: %%~nxf
+  start /wait "" "%%f"
 )
-echo.
-echo Instalando pacotes MSI (.msi)...
-for %%F in ("%PASTA%\*.msi") do (
-    echo Executando: %%~nxF
-    start /wait msiexec /i "%%F"
-)
-echo.
-echo Abrindo atalhos (.lnk)...
-for %%F in ("%PASTA%\*.lnk") do (
-    echo Abrindo: %%~nxF
-    start /wait "" "%%F"
-)
-echo.
-echo Processo concluido.
-pause
+:fim_inst
+
+call "%~dp0_ui.bat" :sair %EXIT_CODE%
+endlocal
+exit /b %EXIT_CODE%

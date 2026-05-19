@@ -1,37 +1,50 @@
-﻿@echo off
-chcp 65001 >nul
-title Alternar Menu de Contexto - Prompt Auxiliar
+@echo off
+setlocal EnableExtensions EnableDelayedExpansion
+call "%~dp0_ui.bat" :banner "Alternar menu de contexto" "Escolha menu classico (estilo Windows 10) ou moderno (Windows 11). O Explorer sera reiniciado."
+call "%~dp0_ui.bat" :confirmar
+if errorlevel 1 call "%~dp0_ui.bat" :sair 0 & exit /b 0
+set "EXIT_CODE=0"
+title Alternar menu de contexto
+
+:MENU
 cls
-echo ========================================
-echo   ALTERNAR MENU DE CONTEXTO DO EXPLORADOR
-echo   Prompt Auxiliar
-echo ========================================
 echo.
-echo  1 - Menu de contexto classico (Windows 10)
-echo  2 - Menu de contexto moderno (Windows 11)
-echo  0 - Sair
+echo   ==============================================================
+echo     Alternar menu de contexto
+echo     Prompt Auxiliar
+echo   ==============================================================
 echo.
-set /p OPCAO="Escolha uma opcao: "
-if "%OPCAO%"=="1" goto CLASSICO
-if "%OPCAO%"=="2" goto MODERNO
-if "%OPCAO%"=="0" exit /b 0
-echo Opcao invalida.
-pause
-exit /b 1
+echo     1  Menu classico (Windows 10)
+echo     2  Menu moderno (Windows 11)
+echo     0  Sair
+echo.
+set "OP="
+set /p "OP=  Opcao: "
+if "!OP!"=="1" goto CLASSICO
+if "!OP!"=="2" goto MODERNO
+if "!OP!"=="0" call "%~dp0_ui.bat" :sair 0 & exit /b 0
+echo   Opcao invalida.
+timeout /t 2 >nul
+goto MENU
 
 :CLASSICO
-echo Aplicando menu classico...
-reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve
-goto REINICIAR
+echo.
+echo   Aplicando menu classico...
+reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve >nul
+goto RESTART
 
 :MODERNO
-echo Aplicando menu moderno...
-reg delete "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}" /f 2>nul
-goto REINICIAR
+echo.
+echo   Aplicando menu moderno...
+reg delete "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}" /f >nul 2>&1
+goto RESTART
 
-:REINICIAR
-echo Reiniciando o Explorer...
+:RESTART
 taskkill /f /im explorer.exe >nul 2>&1
+timeout /t 2 /nobreak >nul
 start explorer.exe
-echo Concluido.
-pause
+echo   Explorer reiniciado.
+
+call "%~dp0_ui.bat" :sair %EXIT_CODE%
+endlocal
+exit /b %EXIT_CODE%

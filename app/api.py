@@ -8,10 +8,10 @@ import webbrowser
 from typing import Any
 
 from app.actions import catalogo_para_json, obter_acao
-from app.config import APP_VERSION, CREDITOS_URL, GITHUB_RELEASES, PASTA_BASE
+from app.config import APP_VERSION, CREDITOS_URL, PASTA_BASE
 from app.environment import preparar_ambiente
 from app.panels import get_panel, run_panel, write_selected_ids
-from app.runner import ScriptNaoEncontradoError, executar_acao
+from app.runner import ScriptNaoEncontradoError, executar_acao, usa_powershell_admin
 
 
 class PromptAuxiliarApi:
@@ -44,7 +44,6 @@ class PromptAuxiliarApi:
             "version": APP_VERSION,
             "pasta": PASTA_BASE,
             "creditos": CREDITOS_URL,
-            "releases": GITHUB_RELEASES,
         }
         return data
 
@@ -66,14 +65,19 @@ class PromptAuxiliarApi:
 
         try:
             threading.Thread(target=worker, daemon=True).start()
-            return {"ok": True, "message": f"{acao.nome} iniciado.", "action": acao.id}
+            msg = (
+                f"{acao.nome} — PowerShell (admin) iniciado."
+                if usa_powershell_admin(acao.id)
+                else f"{acao.nome} iniciado."
+            )
+            return {"ok": True, "message": msg, "action": acao.id}
         except ScriptNaoEncontradoError as e:
             with self._lock:
                 self._busy = False
             return {"ok": False, "message": str(e)}
 
     def open_link(self, kind: str) -> dict[str, Any]:
-        urls = {"releases": GITHUB_RELEASES, "creditos": CREDITOS_URL}
+        urls = {"creditos": CREDITOS_URL}
         url = urls.get(kind)
         if not url:
             return {"ok": False, "message": "Link inválido."}

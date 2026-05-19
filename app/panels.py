@@ -118,7 +118,7 @@ def get_panel(kind: PanelKind) -> dict[str, Any]:
         "subtitulo": (
             "Selecione os programas para instalar"
             if kind == "winget"
-            else "Selecione apps pré-instalados para remover"
+            else "Remova bloatware (Win10/11) — marque só o que existir no seu PC"
         ),
         "categorias": catalog["categorias"],
         "itens": itens,

@@ -12,7 +12,6 @@
     app: $("#app"),
     nav: $("#nav-categories"),
     grid: $("#actions-grid"),
-    stats: $("#stats"),
     search: $("#search"),
     title: $("#page-title"),
     subtitle: $("#page-subtitle"),
@@ -59,27 +58,33 @@
       $("#modal-title").textContent = title;
       $("#modal-body").textContent = body;
       const confirmBtn = $("#modal-confirm");
+      const cancelBtn = $("#modal-cancel");
       confirmBtn.style.background = danger
         ? "linear-gradient(135deg,#c42b1c,#e81123)"
         : "";
       let settled = false;
       const finish = (v) => {
-        if (!settled) {
-          settled = true;
-          resolve(v);
-        }
+        if (settled) return;
+        settled = true;
+        resolve(v);
       };
-      $("#modal-cancel").onclick = () => {
+      cancelBtn.onclick = () => {
         ui.modal.close();
         finish(false);
       };
-      ui.modal.addEventListener("close", () => finish(false), { once: true });
       confirmBtn.onclick = (e) => {
         e.preventDefault();
-        settled = true;
-        ui.modal.close();
         finish(true);
+        ui.modal.close();
       };
+      ui.modal.addEventListener(
+        "cancel",
+        (e) => {
+          e.preventDefault();
+          finish(false);
+        },
+        { once: true }
+      );
       ui.modal.showModal();
     });
   }
@@ -126,13 +131,6 @@
     });
   }
 
-  function renderStats(list) {
-    const perigos = list.filter((a) => a.risco === "perigo").length;
-    ui.stats.innerHTML = `
-      <div class="stat"><strong>${list.length}</strong><span>ações visíveis</span></div>
-      <div class="stat"><strong>${state.catalog.categorias.length}</strong><span>categorias</span></div>
-      <div class="stat"><strong>${perigos}</strong><span>alto risco</span></div>`;
-  }
 
   function acoesFiltradas() {
     let list = state.catalog.acoes;
@@ -151,7 +149,6 @@
 
   function renderGrid() {
     const list = acoesFiltradas();
-    renderStats(list);
     if (state.categoriaAtiva) {
       const cat = state.catalog.categorias.find((c) => c.nome === state.categoriaAtiva);
       ui.title.textContent = state.categoriaAtiva;
@@ -285,7 +282,7 @@
         if (kind === "folder") {
           const r = await api().open_data_folder();
           toast(r.message, r.ok ? "success" : "error");
-        } else if (kind === "releases" || kind === "creditos") {
+        } else if (kind === "creditos") {
           const r = await api().open_link(kind);
           toast(r.message, r.ok ? "success" : "error");
         }

@@ -1,23 +1,19 @@
-﻿@echo off
-chcp 65001 >nul
-title Limpeza de Temporarios - Prompt Auxiliar
-cls
-echo ========================================
-echo   LIMPEZA DE ARQUIVOS TEMPORARIOS
-echo   Prompt Auxiliar
-echo ========================================
-echo.
-set "SCRIPT=%~dp0limpeza_temporarios.ps1"
-if exist "%SCRIPT%" (
-    echo Executando script PowerShell...
-    powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPT%"
+@echo off
+setlocal EnableExtensions EnableDelayedExpansion
+call "%~dp0_ui.bat" :banner "Limpeza de temporarios" "Remove temporarios, esvazia a Lixeira e limpa cache das pastas Temp."
+
+call "%~dp0_ui.bat" :confirmar
+if errorlevel 1 call "%~dp0_ui.bat" :sair 0 & exit /b 0
+set "EXIT_CODE=0"
+title Limpeza de temporarios
+if exist "%~dp0limpeza_temporarios.ps1" (
+  powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0limpeza_temporarios.ps1"
+  if errorlevel 1 set "EXIT_CODE=1"
 ) else (
-    echo Script PS1 nao encontrado. Executando limpeza basica...
-    del /f /s /q "%TEMP%\*" 2>nul
-    for /d %%i in ("%TEMP%\*") do rd /s /q "%%i" 2>nul
-    del /f /s /q "C:\Windows\Temp\*" 2>nul
-    for /d %%i in ("C:\Windows\Temp\*") do rd /s /q "%%i" 2>nul
-    ipconfig /flushdns >nul
-    echo Limpeza basica concluida.
-    pause
+  echo   [1/1] Limpando TEMP da sessao...
+  del /q /f /s "%TEMP%\*" >nul 2>&1
 )
+
+call "%~dp0_ui.bat" :sair %EXIT_CODE%
+endlocal
+exit /b %EXIT_CODE%

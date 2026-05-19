@@ -1,4 +1,4 @@
-"""Interface nativa WebView2 (Edge) — substitui CustomTkinter."""
+"""Interface nativa WebView2 (Edge)."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ import sys
 
 from app.api import PromptAuxiliarApi
 from app.config import APP_VERSION
+from app.win_icon import aplicar_icone_por_titulo
 
 
 def _base_projeto() -> str:
@@ -25,8 +26,7 @@ def iniciar_webview() -> None:
     except ImportError as e:
         raise SystemExit(
             "Dependência 'pywebview' não instalada.\n"
-            "Execute: pip install -r requirements.txt\n"
-            "No Windows, instale também o WebView2 Runtime se necessário."
+            "Execute: pip install -r requirements.txt"
         ) from e
 
     index = _caminho_web_index()
@@ -36,7 +36,7 @@ def iniciar_webview() -> None:
     api = PromptAuxiliarApi()
     titulo = f"Prompt Auxiliar v{APP_VERSION}"
 
-    window = webview.create_window(
+    webview.create_window(
         titulo,
         url=index,
         js_api=api,
@@ -47,4 +47,5 @@ def iniciar_webview() -> None:
         text_select=True,
     )
 
+    aplicar_icone_por_titulo("Prompt Auxiliar")
     webview.start(gui="edgechromium", debug=False)

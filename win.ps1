@@ -150,5 +150,11 @@ if ($SetupOnly) {
     return
 }
 
+$atalhoPs1 = Join-Path $InstallRoot 'powershell\Criar-Atalho.ps1'
+if (Test-Path $atalhoPs1) {
+    Write-Host '  Criando atalhos (icone personalizado)…' -ForegroundColor DarkGray
+    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $atalhoPs1 -ProjectRoot $InstallRoot
+}
+
 Write-Host '  Abrindo interface…' -ForegroundColor Gray
 Start-PromptAuxiliarProcess -PythonInfo $python -ProjectRoot $InstallRoot -ExtraArgs @()

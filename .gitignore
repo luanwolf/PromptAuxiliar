@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+ENV/
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# PyInstaller
+*.manifest
+*.spec.bak
+
+# Ambiente e segredos
+.env
+.env.*
+!.env.example
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# IDEs e editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+
+# Cursor (local do workspace; não versionar estado da IDE)
+.cursor/
+
+# Logs e temporários locais
+*.log
+*.tmp
+*.temp
+.cache/
+
+# Build / artefatos locais
+out/
+output/
+*.exe
+!scripts/**/*.exe
+
+# Dados de usuário (ficam em C:\PromptAuxiliar, não no repo)
+# panels.json em cópias locais de teste, se existir na raiz:
+panels.json

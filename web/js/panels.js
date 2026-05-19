@@ -10,7 +10,6 @@
     cats: $("#panel-cats"),
     list: $("#panel-list"),
     count: $("#panel-selected-count"),
-    back: $("#panel-back"),
     selectAll: $("#panel-select-all"),
     selectNone: $("#panel-select-none"),
     save: $("#panel-save"),
@@ -279,13 +278,8 @@
 
   function bind() {
     if (bound) return;
-    if (!el.back) return;
     bound = true;
 
-    el.back.addEventListener("click", (e) => {
-      e.preventDefault();
-      close();
-    });
     el.selectAll.addEventListener("click", () => marcarCategoria(true));
     el.selectNone.addEventListener("click", () => marcarCategoria(false));
     el.save.addEventListener("click", salvar);
