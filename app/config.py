@@ -1,10 +1,14 @@
 """Constantes do Prompt Auxiliar."""
 
-APP_VERSION = "2.5.6"
+APP_VERSION = "2.5.10"
 PASTA_BASE = r"C:\PromptAuxiliar"
 PASTAS_NECESSARIAS = ("softwares", "registros")
 
+GITHUB_OWNER = "luanwolf"
+GITHUB_REPO = "PromptAuxiliar"
+GITHUB_BRANCH = "main"
+
 GITHUB_RAW_WIN = (
-    "https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/win.ps1"
+    f"https://raw.githubusercontent.com/{GITHUB_OWNER}/{GITHUB_REPO}/{GITHUB_BRANCH}/win.ps1"
 )
-CREDITOS_URL = "https://github.com/luanwolf"
+CREDITOS_URL = f"https://github.com/{GITHUB_OWNER}"

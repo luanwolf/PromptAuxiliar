@@ -44,6 +44,15 @@ function Update-PromptAuxPath {
     $env:Path = "$machine;$user"
 }
 
+function Test-PromptAuxPythonExe {
+    param([string]$ExePath)
+
+    if (-not $ExePath -or -not (Test-Path -LiteralPath $ExePath)) { return $null }
+    $v = & $ExePath -c "import sys; print(sys.version_info >= (3,10))" 2>$null
+    if ($v -eq 'True') { return @{ Cmd = $ExePath; Arg = @() } }
+    return $null
+}
+
 function Test-PromptAuxPythonCmd {
     param([string]$Cmd)
 
@@ -56,8 +65,28 @@ function Test-PromptAuxPythonCmd {
 
     $exe = Get-Command $Cmd -ErrorAction SilentlyContinue
     if (-not $exe) { return $null }
-    $v = & $exe.Source -c "import sys; print(sys.version_info >= (3,10))" 2>$null
-    if ($v -eq 'True') { return @{ Cmd = $exe.Source; Arg = @() } }
+    return Test-PromptAuxPythonExe -ExePath $exe.Source
+}
+
+function Find-PromptAuxPythonFromDisk {
+    $candidates = [System.Collections.Generic.List[string]]::new()
+
+    $roots = @(
+        (Join-Path $env:LOCALAPPDATA 'Programs\Python')
+        (Join-Path $env:ProgramFiles 'Python312')
+        (Join-Path $env:ProgramFiles 'Python311')
+        (Join-Path $env:ProgramFiles 'Python310')
+    ) | Where-Object { $_ -and (Test-Path $_) }
+
+    foreach ($root in $roots) {
+        Get-ChildItem -Path $root -Filter 'python.exe' -Recurse -ErrorAction SilentlyContinue |
+            ForEach-Object { $candidates.Add($_.FullName) }
+    }
+
+    foreach ($p in ($candidates | Sort-Object -Unique)) {
+        $info = Test-PromptAuxPythonExe -ExePath $p
+        if ($info) { return $info }
+    }
     return $null
 }
 
@@ -66,32 +95,93 @@ function Find-PromptAuxPython {
         $info = Test-PromptAuxPythonCmd -Cmd $cmd
         if ($info) { return $info }
     }
-    return $null
+    return Find-PromptAuxPythonFromDisk
+}
+
+function Test-WingetInstallOk {
+    param([int]$ExitCode)
+
+    if ($ExitCode -eq 0) { return $true }
+    # Já instalado / nada a fazer (códigos comuns do winget)
+    $ok = @(-1978335189, -1978335135, -1978335212, 2316632107)
+    return $ExitCode -in $ok
+}
+
+function Invoke-WingetInstallPython {
+    param([string]$PackageId, [string]$Scope)
+
+    $args = @(
+        'install', '--id', $PackageId, '-e', '-h',
+        '--accept-package-agreements', '--accept-source-agreements',
+        '--scope', $Scope
+    )
+    Write-Host "  winget install $PackageId (escopo: $Scope)…" -ForegroundColor DarkGray
+    & winget @args
+    return (Test-WingetInstallOk -ExitCode $LASTEXITCODE)
+}
+
+function Install-PromptAuxPythonViaWinget {
+    $ids = @('Python.Python.3.12', 'Python.Python.3.11', 'Python.Python.3.10')
+    $scopes = @('user', 'machine')
+
+    foreach ($id in $ids) {
+        foreach ($scope in $scopes) {
+            try {
+                if (Invoke-WingetInstallPython -PackageId $id -Scope $scope) {
+                    return $true
+                }
+            } catch {
+                Write-Host "  winget falhou ($id / $scope): $($_.Exception.Message)" -ForegroundColor DarkYellow
+            }
+        }
+    }
+    return $false
+}
+
+function Install-PromptAuxPythonViaOfficial {
+    $ver = '3.12.10'
+    $url = "https://www.python.org/ftp/python/$ver/python-$ver-amd64.exe"
+    $installer = Join-Path $env:TEMP "python-$ver-amd64.exe"
+
+    Write-Host "  Baixando instalador oficial Python $ver…" -ForegroundColor DarkGray
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    Invoke-WebRequest -Uri $url -OutFile $installer -UseBasicParsing
+
+    Write-Host '  Instalando Python (modo silencioso, adiciona ao PATH)…' -ForegroundColor DarkGray
+    $proc = Start-Process -FilePath $installer -ArgumentList @(
+        '/quiet',
+        'InstallAllUsers=0',
+        'PrependPath=1',
+        'Include_test=0',
+        'Include_launcher=1'
+    ) -Wait -PassThru
+
+    Remove-Item $installer -Force -ErrorAction SilentlyContinue
+    if ($proc.ExitCode -ne 0) {
+        throw "Instalador oficial retornou codigo $($proc.ExitCode)."
+    }
+    return $true
 }
 
 function Install-PromptAuxPython {
     Write-Host '  Python 3.10+ não encontrado.' -ForegroundColor Yellow
 
-    if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
-        throw @"
-winget não está disponível neste PC.
-Instale Python 3.10+ em https://www.python.org/downloads/ (marque 'Add python.exe to PATH') e execute o comando novamente.
-"@
+    $wingetOk = $false
+    if (Get-Command winget -ErrorAction SilentlyContinue) {
+        Write-Host '  Tentando instalar via winget…' -ForegroundColor DarkGray
+        $wingetOk = Install-PromptAuxPythonViaWinget
+    } else {
+        Write-Host '  winget não disponível neste PC.' -ForegroundColor DarkYellow
     }
 
-    Write-Host '  Instalando Python 3.12 via winget (pode pedir confirmação)…' -ForegroundColor DarkGray
-    winget install --id Python.Python.3.12 -e `
-        --accept-package-agreements --accept-source-agreements `
-        --scope user
-    if ($LASTEXITCODE -ne 0) {
-        throw @"
-Falha ao instalar Python via winget.
-Instale manualmente em https://www.python.org/downloads/ (marque 'Add python.exe to PATH') e execute novamente.
-"@
+    if (-not $wingetOk) {
+        Write-Host '  winget não concluiu — usando instalador python.org…' -ForegroundColor DarkYellow
+        Install-PromptAuxPythonViaOfficial | Out-Null
     }
 
+    Start-Sleep -Seconds 3
     Update-PromptAuxPath
-    Write-Host '  Python instalado. Verificando…' -ForegroundColor Green
+    Write-Host '  Verificando Python instalado…' -ForegroundColor Green
 }
 
 function Get-PromptAuxPython {
@@ -101,18 +191,29 @@ function Get-PromptAuxPython {
     Install-PromptAuxPython
     Update-PromptAuxPath
 
-    $info = Find-PromptAuxPython
-    if ($info) { return $info }
+    foreach ($i in 1..5) {
+        $info = Find-PromptAuxPython
+        if ($info) { return $info }
+        Start-Sleep -Seconds 2
+        Update-PromptAuxPath
+    }
 
     throw @"
 Python 3.10+ ainda não foi detectado após a instalação.
-Feche e abra um novo PowerShell (PATH atualizado) ou instale manualmente:
-https://www.python.org/downloads/
+Feche este PowerShell, abra um novo e execute o comando irm novamente.
+Ou instale manualmente: https://www.python.org/downloads/ (marque 'Add python.exe to PATH').
 "@
 }
 
 function Install-PromptAuxiliarSource {
     param([string]$Destination, [string]$Owner, [string]$Name, [string]$Ref)
+
+    $updatePs1 = Join-Path $Destination 'powershell\Update-PromptAuxiliar.ps1'
+    if (Test-Path -LiteralPath $updatePs1) {
+        . $updatePs1
+        Install-PromptAuxiliarSourceZip -Destination $Destination -Owner $Owner -Name $Name -Branch $Ref
+        return
+    }
 
     $zipUrl = "https://github.com/$Owner/$Name/archive/refs/heads/$Ref.zip"
     $tempZip = Join-Path ([System.IO.Path]::GetTempPath()) "PromptAuxiliar-$Ref.zip"
@@ -180,14 +281,30 @@ function Start-PromptAuxiliarProcess {
 Write-PromptAuxBanner
 
 $forceUpdate = $Update -or ($env:PROMPTAUX_UPDATE -eq '1')
-$isLocalClone = $ScriptDir -and ($InstallRoot -eq $ScriptDir)
-$needsDownload = -not $isLocalClone -and ($forceUpdate -or -not (Test-Path (Join-Path $InstallRoot 'main.py')))
-if ($needsDownload) {
+$updateModule = Join-Path $InstallRoot 'powershell\Update-PromptAuxiliar.ps1'
+$hasUpdateModule = Test-Path -LiteralPath $updateModule
+if ($hasUpdateModule) {
+    . $updateModule
+}
+
+$mainPy = Join-Path $InstallRoot 'main.py'
+$missingInstall = -not (Test-Path -LiteralPath $mainPy)
+
+if ($hasUpdateModule) {
+    if ($missingInstall -or $forceUpdate) {
+        Write-Host '  Instalando Prompt Auxiliar…' -ForegroundColor Gray
+        Update-PromptAuxiliarIfNewer -InstallRoot $InstallRoot -ScriptDir $ScriptDir -Force | Out-Null
+    } else {
+        Write-Host "  Usando instalação em: $InstallRoot" -ForegroundColor DarkGray
+        Update-PromptAuxiliarIfNewer -InstallRoot $InstallRoot -ScriptDir $ScriptDir -Force:$forceUpdate | Out-Null
+    }
+} elseif ($missingInstall -or $forceUpdate) {
     Write-Host '  Instalando Prompt Auxiliar…' -ForegroundColor Gray
     Install-PromptAuxiliarSource -Destination $InstallRoot -Owner $RepoOwner -Name $RepoName -Ref $Branch
     Write-Host "  Instalado em: $InstallRoot" -ForegroundColor Green
 } else {
     Write-Host "  Usando instalação em: $InstallRoot" -ForegroundColor DarkGray
+    Write-Host '  (Módulo de atualização ausente — execute irm novamente para obter a versão nova.)' -ForegroundColor DarkYellow
 }
 
 $env:PROMPTAUX_HOME = $InstallRoot

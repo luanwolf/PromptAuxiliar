@@ -48,7 +48,7 @@
         (i) =>
           i.nome.toLowerCase().includes(q) ||
           i.id.toLowerCase().includes(q) ||
-          i.descricao.toLowerCase().includes(q)
+          (i.descricao || "").toLowerCase().includes(q)
       );
     }
     return list;
@@ -118,15 +118,23 @@
     list.forEach((item) => {
       const row = document.createElement("label");
       row.className = "panel-row";
+      const tip = item.descricao || item.nome;
+      row.setAttribute("title", tip);
       const checked = state.selecionados.has(item.id);
+      const instaladoTag = item.instalado
+        ? '<span class="tag tag-installed">Instalado</span>'
+        : "";
       row.innerHTML = `
         <input type="checkbox" ${checked ? "checked" : ""} />
         <span class="panel-row-body">
           <strong>${escapeHtml(item.nome)}</strong>
           <span class="panel-row-id">${escapeHtml(item.id)}</span>
-          <span class="panel-row-desc">${escapeHtml(item.descricao)}</span>
+          <span class="panel-row-desc">${escapeHtml(item.descricao || "")}</span>
         </span>
-        <span class="panel-row-cat">${escapeHtml(item.categoria)}</span>
+        <span class="panel-row-meta">
+          ${instaladoTag}
+          <span class="panel-row-cat">${escapeHtml(item.categoria)}</span>
+        </span>
       `;
       const input = row.querySelector("input");
       input.addEventListener("change", () => {
@@ -184,13 +192,19 @@
 
     const fetchFn =
       kind === "winget" ? api().get_winget_panel : api().get_debloat_panel;
+    state.kind = kind;
+    window.appSetTitle(
+      kind === "winget" ? "Instalar via Winget" : "Debloat Windows 11",
+      "Lendo software instalado (winget list)…"
+    );
+    setViewVisible(true);
+    updateSidebarActive();
     const data = await fetchFn();
     if (!data.ok) {
       window.appToast(data.message, "error");
       return;
     }
 
-    state.kind = kind;
     state.data = data;
     state.categoria = null;
     window._panelBusca = "";
@@ -206,9 +220,11 @@
     el.run.className =
       kind === "debloat" ? "btn primary danger-run" : "btn primary";
 
-    window.appSetTitle(data.titulo, data.subtitulo);
-    setViewVisible(true);
-    updateSidebarActive();
+    const sub =
+      data.total_instalados != null
+        ? `${data.subtitulo} · ${data.total_instalados} instalado(s) no PC`
+        : data.subtitulo;
+    window.appSetTitle(data.titulo, sub);
     render();
   }
 

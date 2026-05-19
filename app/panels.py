@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 from app.config import PASTA_BASE
+from app.winget_installed import is_installed, refresh_installed
 
 PanelKind = Literal["winget", "debloat"]
 _SELECTION_FILE = "panels.json"
@@ -89,6 +90,7 @@ def write_selected_ids(kind: PanelKind, ids: list[str]) -> None:
 
 
 def get_panel(kind: PanelKind) -> dict[str, Any]:
+    refresh_installed(wait=True)
     catalog = _load_catalog(kind)
     selected = read_selected_ids(kind)
     primeira_carga = not _selection_path().is_file()
@@ -109,9 +111,11 @@ def get_panel(kind: PanelKind) -> dict[str, Any]:
                 "categoria": item["categoria"],
                 "descricao": item.get("descricao", ""),
                 "selecionado": sel,
+                "instalado": is_installed(pid),
             }
         )
 
+    instalados = sum(1 for i in itens if i["instalado"])
     return {
         "kind": kind,
         "titulo": "Instalar via Winget" if kind == "winget" else "Debloat Windows 11",
@@ -123,6 +127,7 @@ def get_panel(kind: PanelKind) -> dict[str, Any]:
         "categorias": catalog["categorias"],
         "itens": itens,
         "total_selecionados": sum(1 for i in itens if i["selecionado"]),
+        "total_instalados": instalados,
     }
 
 

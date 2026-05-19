@@ -3,6 +3,7 @@
     "Navegadores",
     "Produtividade",
     "Desenvolvimento",
+    "Inteligência artificial",
     "Mídia e criatividade",
     "Utilitários",
     "Personalização",
@@ -49,6 +50,14 @@
     {"id": "DBeaver.DBeaver.Community", "nome": "DBeaver", "categoria": "Desenvolvimento", "descricao": "Cliente universal de banco de dados."},
     {"id": "AutoHotkey.AutoHotkey", "nome": "AutoHotkey v2", "categoria": "Desenvolvimento", "descricao": "Automação de teclado e scripts no Windows."},
     {"id": "Neovim.Neovim", "nome": "Neovim", "categoria": "Desenvolvimento", "descricao": "Editor modal moderno."},
+    {"id": "Apache.NetBeans", "nome": "Apache NetBeans", "categoria": "Desenvolvimento", "descricao": "IDE para Java, PHP, HTML5 e outras linguagens."},
+
+    {"id": "Anysphere.Cursor", "nome": "Cursor", "categoria": "Inteligência artificial", "descricao": "Editor de código com IA integrada (baseado no VS Code)."},
+    {"id": "Anthropic.Claude", "nome": "Claude", "categoria": "Inteligência artificial", "descricao": "Assistente de IA da Anthropic para desktop."},
+    {"id": "j178.ChatGPT", "nome": "ChatGPT", "categoria": "Inteligência artificial", "descricao": "Cliente desktop para ChatGPT (não oficial)."},
+    {"id": "GitHub.Copilot", "nome": "GitHub Copilot CLI", "categoria": "Inteligência artificial", "descricao": "Assistente de código no terminal via linha de comando."},
+    {"id": "ElementLabs.LMStudio", "nome": "LM Studio", "categoria": "Inteligência artificial", "descricao": "Baixa e executa modelos de linguagem localmente no PC."},
+    {"id": "Ollama.Ollama", "nome": "Ollama", "categoria": "Inteligência artificial", "descricao": "Executa LLMs locais; ideal para uso via terminal ou integrações."},
 
     {"id": "VideoLAN.VLC", "nome": "VLC", "categoria": "Mídia e criatividade", "descricao": "Reprodutor multimídia."},
     {"id": "Spotify.Spotify", "nome": "Spotify", "categoria": "Mídia e criatividade", "descricao": "Streaming de música."},
@@ -60,6 +69,9 @@
     {"id": "HandBrake.HandBrake", "nome": "HandBrake", "categoria": "Mídia e criatividade", "descricao": "Conversor de vídeo."},
     {"id": "ImageGlass.ImageGlass", "nome": "ImageGlass", "categoria": "Mídia e criatividade", "descricao": "Visualizador de imagens leve e rápido."},
     {"id": "ytmdesktop.ytmdesktop", "nome": "YouTube Music Desktop", "categoria": "Mídia e criatividade", "descricao": "Cliente desktop para YouTube Music."},
+    {"id": "dotPDN.PaintDotNet", "nome": "Paint.NET", "categoria": "Mídia e criatividade", "descricao": "Editor de imagens gratuito com camadas e plugins."},
+    {"id": "clsid2.mpc-hc", "nome": "MPC-HC", "categoria": "Mídia e criatividade", "descricao": "Media Player Classic Home Cinema — reprodutor de vídeo leve."},
+    {"id": "CodecGuide.K-LiteCodecPack.Standard", "nome": "K-Lite Codec Pack Standard", "categoria": "Mídia e criatividade", "descricao": "Pacote de codecs para reproduzir formatos de vídeo e áudio no Windows."},
 
     {"id": "7zip.7zip", "nome": "7-Zip", "categoria": "Utilitários", "descricao": "Compactador de arquivos."},
     {"id": "M2Team.NanaZip", "nome": "NanaZip", "categoria": "Utilitários", "descricao": "Compactador moderno (fork do 7-Zip)."},
@@ -91,6 +103,7 @@
     {"id": "Rufus.Rufus", "nome": "Rufus", "categoria": "Utilitários", "descricao": "Criar pendrives bootáveis."},
     {"id": "BleachBit.BleachBit", "nome": "BleachBit", "categoria": "Utilitários", "descricao": "Limpeza de cache e arquivos temporários."},
     {"id": "QuickLook.QuickLook", "nome": "QuickLook", "categoria": "Utilitários", "descricao": "Pré-visualização de arquivos com barra de espaço."},
+    {"id": "OPAutoClicker.OPAutoClicker", "nome": "OP Auto Clicker", "categoria": "Utilitários", "descricao": "Autoclicker com intervalo e atalhos configuráveis."},
 
     {"id": "Rainmeter.Rainmeter", "nome": "Rainmeter", "categoria": "Personalização", "descricao": "Widgets e skins na área de trabalho."},
     {"id": "AmN.yasb", "nome": "YASB", "categoria": "Personalização", "descricao": "Barra de status customizável (Yet Another Status Bar)."},
@@ -100,6 +113,7 @@
 
     {"id": "Sandboxie.Plus", "nome": "Sandboxie Plus", "categoria": "Sistema e hardware", "descricao": "Executa programas em sandbox isolada."},
     {"id": "BitSum.ProcessLasso", "nome": "Process Lasso", "categoria": "Sistema e hardware", "descricao": "Prioridade e afinidade de CPU para processos."},
+    {"id": "TechPowerUp.GPU-Z", "nome": "GPU-Z", "categoria": "Sistema e hardware", "descricao": "Informações da placa de vídeo, BIOS, drivers e sensores."},
     {"id": "Guru3D.Afterburner", "nome": "MSI Afterburner", "categoria": "Sistema e hardware", "descricao": "Overclock e monitoramento de GPU."},
     {"id": "Wagnardsoft.DisplayDriverUninstaller", "nome": "DDU (Display Driver Uninstaller)", "categoria": "Sistema e hardware", "descricao": "Remove drivers de vídeo NVIDIA/AMD/Intel."},
     {"id": "CrystalDewWorld.CrystalDiskInfo", "nome": "CrystalDiskInfo", "categoria": "Sistema e hardware", "descricao": "Saúde e temperatura de discos (S.M.A.R.T.)."},

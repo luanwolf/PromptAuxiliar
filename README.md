@@ -8,7 +8,7 @@
     <img alt="Winget" src="https://img.shields.io/badge/Winget-pacotes-2EA043?logo=windows&logoColor=white" />
     <img alt="PowerShell" src="https://img.shields.io/badge/PowerShell-5.1+-5391FE?logo=powershell&logoColor=white" />
     <img alt="Batch" src="https://img.shields.io/badge/Batch-scripts-4D4D4D?logo=windowsterminal&logoColor=white" />
-    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.5.6-0c0f14" />
+    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.5.10-0c0f14" />
   </p>
 
   <p>
@@ -46,11 +46,25 @@ irm "https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/win.ps1" | i
 | Etapa | O que acontece |
 |-------|----------------|
 | 1. Download | Baixa o repositório para `%LOCALAPPDATA%\PromptAuxiliar` (ou usa a pasta atual se você já clonou o projeto) |
-| 2. Python | Procura **Python 3.10+** (`python` ou `py -3`). Se não existir, instala **Python 3.12** via `winget` |
+| 2. Python | Procura **Python 3.10+**. Se não existir, tenta **winget** (3.12/3.11/3.10); se falhar, baixa o instalador oficial em **python.org** (silencioso + PATH) |
 | 3. Dependências | Executa `pip install -r requirements.txt` |
 | 4. Pasta de dados | Prepara `C:\PromptAuxiliar` (softwares, registros, seleções) |
 | 5. Atalhos | Cria atalhos na Área de Trabalho e Menu Iniciar (com ícone do app) |
 | 6. Abrir app | Inicia a interface WebView2 |
+
+### Atualização automática (GitHub)
+
+Sempre que você abre pelo **`irm`**, pelo **`win.ps1`** ou pelo **atalho**, o app compara a versão local (`APP_VERSION` em `app/config.py`) com a versão na branch **`main`** do GitHub. Se houver versão mais nova, baixa o ZIP e atualiza `%LOCALAPPDATA%\PromptAuxiliar` antes de abrir.
+
+| Situação | Comportamento |
+|----------|----------------|
+| Atalho / `win.ps1` | Atualiza arquivos automaticamente e inicia o app |
+| `python main.py` (dev) | Só **avisa** no toast se houver versão nova (não substitui arquivos com o app aberto) |
+| Clone com `.git` | Atualização automática **desligada** (você controla pelo Git) |
+
+Para forçar atualização: `$env:PROMPTAUX_UPDATE = "1"` antes do `irm`. Para desligar: `$env:PROMPTAUX_SKIP_AUTO_UPDATE = "1"`.
+
+**Importante:** suba a versão em `app/config.py` (`APP_VERSION`) em cada release no GitHub — é isso que o comparador usa.
 
 **Variáveis opcionais** (antes do comando `irm`):
 
@@ -65,8 +79,9 @@ irm "https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/win.ps1" | i
 | `PROMPTAUX_HOME` | Pasta de instalação do app (padrão: `%LOCALAPPDATA%\PromptAuxiliar`) |
 | `PROMPTAUX_UPDATE` | `1` força baixar de novo o ZIP do GitHub |
 | `PROMPTAUX_BRANCH` | Branch do repositório (padrão: `main`) |
+| `PROMPTAUX_SKIP_AUTO_UPDATE` | `1` desativa verificação/baixa automática |
 
-> Se o Python for instalado agora, o PATH pode exigir um **PowerShell novo** na próxima execução. O script tenta atualizar o PATH na mesma sessão antes de continuar.
+> O script atualiza o PATH na mesma sessão e procura `python.exe` em pastas comuns (`%LOCALAPPDATA%\Programs\Python`, etc.). Se ainda falhar, abra um **PowerShell novo** e execute o `irm` de novo.
 
 ---
 

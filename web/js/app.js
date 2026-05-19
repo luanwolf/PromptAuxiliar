@@ -166,6 +166,7 @@
       const card = document.createElement("button");
       card.type = "button";
       card.className = `card risco-${acao.risco}`;
+      card.title = acao.descricao || acao.nome;
       card.style.animationDelay = `${Math.min(i * 0.03, 0.35)}s`;
       const tag =
         acao.risco !== "normal"
@@ -230,6 +231,9 @@
     showApp();
     renderNav();
     renderGrid();
+    if (initRes.update_available && initRes.update_message) {
+      toast(initRes.update_message, "info");
+    }
     if (initRes.primeira_vez) {
       $("#welcome-path").textContent = initRes.pasta;
       ui.welcome.showModal();

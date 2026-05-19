@@ -10,7 +10,9 @@ from typing import Any
 from app.actions import catalogo_para_json, obter_acao
 from app.config import APP_VERSION, CREDITOS_URL, PASTA_BASE
 from app.environment import preparar_ambiente
+from app.updater import check_for_update, should_skip_auto_update
 from app.panels import get_panel, run_panel, write_selected_ids
+from app.winget_installed import prefetch_installed_scan
 from app.runner import ScriptNaoEncontradoError, executar_acao, usa_powershell_admin
 
 
@@ -22,12 +24,19 @@ class PromptAuxiliarApi:
     def initialize(self) -> dict[str, Any]:
         try:
             primeira_vez = preparar_ambiente()
+            prefetch_installed_scan()
+            update_info: dict[str, Any] = {}
+            if not should_skip_auto_update():
+                update_info = check_for_update()
             return {
                 "ok": True,
                 "version": APP_VERSION,
                 "pasta": PASTA_BASE,
                 "primeira_vez": primeira_vez,
                 "message": "Ambiente pronto.",
+                "update_available": update_info.get("update_available", False),
+                "update_message": update_info.get("message", ""),
+                "remote_version": update_info.get("remote"),
             }
         except Exception as e:
             return {"ok": False, "message": str(e)}

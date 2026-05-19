@@ -11,9 +11,11 @@ if (-not $ProjectRoot) {
 $ProjectRoot = (Resolve-Path $ProjectRoot).Path
 
 $ico = Join-Path $ProjectRoot 'imagens\logo.ico'
+$launcher = Join-Path $ProjectRoot 'powershell\Atualizar-e-Iniciar.ps1'
 $main = Join-Path $ProjectRoot 'main.py'
-$python = (Get-Command python -ErrorAction SilentlyContinue).Source
-if (-not $python) { $python = 'python' }
+if (-not (Test-Path -LiteralPath $launcher)) {
+    throw "Atualizar-e-Iniciar.ps1 não encontrado em $ProjectRoot"
+}
 
 if (-not (Test-Path $ico)) {
     Write-Warning "Icone nao encontrado: $ico"
@@ -31,8 +33,8 @@ $targets = @(
 
 foreach ($lnkPath in $targets) {
     $s = (New-Object -ComObject WScript.Shell).CreateShortcut($lnkPath)
-    $s.TargetPath = $python
-    $s.Arguments = "`"$main`""
+    $s.TargetPath = 'powershell.exe'
+    $s.Arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$launcher`""
     $s.WorkingDirectory = $ProjectRoot
     $s.WindowStyle = 1
     $s.Description = 'Prompt Auxiliar — Winget e Debloat'
@@ -41,4 +43,4 @@ foreach ($lnkPath in $targets) {
     Write-Host "Atalho: $lnkPath" -ForegroundColor Green
 }
 
-Write-Host "Use o atalho para abrir com o icone correto (arquivos .py usam o icone do Python)." -ForegroundColor DarkGray
+Write-Host "O atalho verifica atualizacoes no GitHub antes de abrir o app." -ForegroundColor DarkGray
