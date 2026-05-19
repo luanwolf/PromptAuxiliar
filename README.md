@@ -7,7 +7,7 @@
     <img alt="WebView2" src="https://img.shields.io/badge/WebView2-Edge-0078D4?logo=microsoftedge&logoColor=white" />
     <img alt="Winget" src="https://img.shields.io/badge/Winget-pacotes-2EA043?logo=windows&logoColor=white" />
     <img alt="PowerShell" src="https://img.shields.io/badge/PowerShell-5.1+-5391FE?logo=powershell&logoColor=white" />
-    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.7.5-0078D4" />
+    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.7.8-0078D4" />
   </p>
 
   <p>
@@ -157,8 +157,8 @@ O painel detecta automaticamente o estado atual de cada ajuste no registro e exi
 **Fluxo de uso:**
 
 1. Selecione os tweaks desejados (caixas de seleção)
-2. Clique **Aplicar selecionados** — executa um script PowerShell com admin
-3. Um resumo consolidado mostra o resultado de cada ajuste com log salvo em `%TEMP%\PromptAuxiliar\logs\`
+2. Clique **Aplicar selecionados** — o UAC é solicitado diretamente pelo app (quando necessário) e um PowerShell é aberto
+3. Um resumo consolidado mostra o resultado de cada ajuste com log salvo em `C:\PromptAuxiliar\logs\`
 
 > Alguns tweaks requerem **reinicialização do Windows** (indicado com ↺). Tweaks com 🔒 requerem privilégio de Administrador.
 
@@ -169,7 +169,7 @@ O painel detecta automaticamente o estado atual de cada ajuste no registro e exi
 | Controle | Descrição |
 |----------|-----------|
 | **Verificar atualização** | Verifica se há nova versão no GitHub; muda para "Atualização disponível" se houver |
-| **Pasta de dados** | Abre `C:\PromptAuxiliar` no Explorer |
+| **Pasta de Dados / Logs** | Abre `C:\PromptAuxiliar` no Explorer (contém subpasta `logs\` com todos os logs) |
 | **Excluir Prompt Auxiliar** | Remove a instalação local completamente |
 | **GitHub · luanwolf** | Repositório e perfil |
 

@@ -842,8 +842,12 @@ function Start-PromptAuxiliarProcess {
 trap {
     Write-Host ''
     Write-Host "ERRO: $($_.Exception.Message)" -ForegroundColor Red
-    Write-Host 'Pressione Enter para fechar...' -ForegroundColor Yellow
-    Read-Host | Out-Null
+    Write-Host ''
+    foreach ($i in 5..1) {
+        Write-Host "  Fechando em ${i}s...`r" -NoNewline -ForegroundColor Yellow
+        Start-Sleep -Seconds 1
+    }
+    Write-Host ''
     exit 1
 }
 
@@ -894,9 +898,12 @@ Invoke-PromptAuxiliarInstallOrUpdate `
 
 if ($script:PromptAuxDeferredExit) {
     Write-Host ''
-    Write-Host '  Pressione Enter e feche esta janela.' -ForegroundColor Green
     Write-Host '  Outra janela concluira a atualizacao e abrira o app.' -ForegroundColor Green
-    Read-Host | Out-Null
+    foreach ($i in 5..1) {
+        Write-Host "  Fechando em ${i}s...`r" -NoNewline -ForegroundColor DarkGray
+        Start-Sleep -Seconds 1
+    }
+    Write-Host ''
     exit 0
 }
 
