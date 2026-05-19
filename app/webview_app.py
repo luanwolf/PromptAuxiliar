@@ -20,6 +20,19 @@ def _caminho_web_index() -> str:
     return os.path.join(_base_projeto(), "web", "index.html")
 
 
+def _definir_aumid() -> None:
+    """Sets the App User Model ID so Windows shows the app icon instead of python.exe."""
+    if sys.platform != "win32":
+        return
+    try:
+        import ctypes
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
+            "PromptAuxiliar.App.1"
+        )
+    except Exception:
+        pass
+
+
 def iniciar_webview() -> None:
     try:
         import webview
@@ -28,6 +41,8 @@ def iniciar_webview() -> None:
             "Dependência 'pywebview' não instalada.\n"
             "Execute: pip install -r requirements.txt"
         ) from e
+
+    _definir_aumid()
 
     index = _caminho_web_index()
     if not os.path.isfile(index):

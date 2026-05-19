@@ -39,11 +39,21 @@ def aplicar_icone_janela(hwnd: int, ico: str | None = None) -> bool:
     LR_LOADFROMFILE = 0x10
     IMAGE_ICON = 1
     WM_SETICON = 0x80
-    hicon = user32.LoadImageW(0, path, IMAGE_ICON, 0, 0, LR_LOADFROMFILE)
-    if not hicon:
+    ICON_SMALL = 0
+    ICON_BIG = 1
+
+    # Load big icon (32x32 or best match) for alt-tab / title bar
+    hicon_big = user32.LoadImageW(0, path, IMAGE_ICON, 32, 32, LR_LOADFROMFILE)
+    # Load small icon (16x16) for taskbar
+    hicon_small = user32.LoadImageW(0, path, IMAGE_ICON, 16, 16, LR_LOADFROMFILE)
+
+    if not hicon_big and not hicon_small:
         return False
-    user32.SendMessageW(hwnd, WM_SETICON, 0, hicon)  # ICON_BIG
-    user32.SendMessageW(hwnd, WM_SETICON, 1, hicon)  # ICON_SMALL
+
+    if hicon_big:
+        user32.SendMessageW(hwnd, WM_SETICON, ICON_BIG, hicon_big)
+    if hicon_small:
+        user32.SendMessageW(hwnd, WM_SETICON, ICON_SMALL, hicon_small)
     return True
 
 
