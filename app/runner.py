@@ -111,14 +111,10 @@ def _abrir_console_script(script: str, titulo: str) -> None:
     cwd = str(script_path.parent)
     bat = str(script_path)
     cmd_line = f'chcp 65001>nul & call "{bat}"'
-    env = os.environ.copy()
-    env["PROMPTAUX_FROM_APP"] = "1"
-
     flags = getattr(subprocess, "CREATE_NEW_CONSOLE", 0)
     subprocess.Popen(
         ["cmd.exe", "/c", cmd_line],
         cwd=cwd,
-        env=env,
         creationflags=flags,
     )
 

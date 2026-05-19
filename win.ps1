@@ -248,6 +248,127 @@ function Get-PromptAuxEssentialScriptNames {
     )
 }
 
+function Get-PromptAuxBatScriptNames {
+    return @(
+        '_ui.bat',
+        'aplicar_ajustes.bat',
+        'alternar_contexto.bat',
+        'ativar_office_kms.bat',
+        'ativar_windows.bat',
+        'ativar_windows_kms.bat',
+        'atualizar_softwares.bat',
+        'criar_atalhos.bat',
+        'gerenciar_inicializacao.bat',
+        'instalar_runtimes.bat',
+        'instalar_software.bat',
+        'limpeza_disco.bat',
+        'limpeza_malware.bat',
+        'limpeza_profunda.bat',
+        'limpeza_temporarios.bat',
+        'reparar_rede.bat',
+        'windows_utility.bat'
+    )
+}
+
+function Get-PromptAuxScriptPs1Names {
+    return @('limpeza_temporarios.ps1')
+}
+
+function Sync-PromptAuxRepoFile {
+    param(
+        [string]$InstallRoot,
+        [string]$RelativePath,
+        [string]$Owner,
+        [string]$Name,
+        [string]$Branch,
+        [string]$SourceRoot = ''
+    )
+    $dest = Join-Path $InstallRoot ($RelativePath -replace '/', '\')
+    $destDir = Split-Path -Parent $dest
+    if ($destDir -and -not (Test-Path -LiteralPath $destDir)) {
+        New-Item -ItemType Directory -Path $destDir -Force -ErrorAction SilentlyContinue | Out-Null
+    }
+
+    if ($SourceRoot) {
+        try {
+            $srcRoot = (Resolve-Path -LiteralPath $SourceRoot).Path
+            $dstRoot = (Resolve-Path -LiteralPath $InstallRoot).Path
+            if ($srcRoot -ieq $dstRoot) { $SourceRoot = '' }
+        } catch { }
+    }
+
+    if ($SourceRoot) {
+        $src = Join-Path $SourceRoot ($RelativePath -replace '/', '\')
+        if (Test-Path -LiteralPath $src) {
+            try {
+                Copy-Item -LiteralPath $src -Destination $dest -Force -ErrorAction Stop
+                return $true
+            } catch {
+                Write-Host "  Aviso: nao foi possivel copiar $RelativePath (arquivo em uso?)." -ForegroundColor DarkYellow
+            }
+        }
+    }
+
+    try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $cacheBust = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+        $urlPath = $RelativePath -replace '\\', '/'
+        $url = "https://raw.githubusercontent.com/$Owner/$Name/$Branch/$urlPath?_=$cacheBust"
+        $headers = @{ 'User-Agent' = 'PromptAuxiliar-Installer' }
+        $content = (Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 25 -Headers $headers).Content
+        if (-not $content -or $content.Trim().Length -lt 8) {
+            throw 'Resposta vazia do GitHub'
+        }
+        Write-PromptAuxUtf8NoBom -Path $dest -Content $content
+        return $true
+    } catch {
+        $hint = 'sem internet ou arquivo ainda nao publicado na branch main'
+        if ($_.Exception.Response -and $_.Exception.Response.StatusCode.value__ -eq 404) {
+            $hint = 'ainda nao publicado na branch main - faca push do repositorio'
+        }
+        Write-Host "  Aviso: $RelativePath - $hint" -ForegroundColor DarkYellow
+        return $false
+    }
+}
+
+function Sync-PromptAuxBatScriptsFromGitHub {
+    param(
+        [string]$InstallRoot,
+        [string]$Owner,
+        [string]$Name,
+        [string]$Branch,
+        [string]$SourceRoot = ''
+    )
+    $ok = 0
+    $fail = 0
+    foreach ($name in (Get-PromptAuxBatScriptNames)) {
+        if (Sync-PromptAuxRepoFile -InstallRoot $InstallRoot -RelativePath "scripts/$name" -Owner $Owner -Name $Name -Branch $Branch -SourceRoot $SourceRoot) {
+            $ok++
+        } else {
+            $fail++
+        }
+    }
+    foreach ($name in (Get-PromptAuxScriptPs1Names)) {
+        if (Sync-PromptAuxRepoFile -InstallRoot $InstallRoot -RelativePath "scripts/$name" -Owner $Owner -Name $Name -Branch $Branch -SourceRoot $SourceRoot) {
+            $ok++
+        } else {
+            $fail++
+        }
+    }
+    return @{ Ok = $ok; Fail = $fail }
+}
+
+function Sync-PromptAuxUiBatFromGitHub {
+    param(
+        [string]$InstallRoot,
+        [string]$Owner,
+        [string]$Name,
+        [string]$Branch,
+        [string]$SourceRoot = ''
+    )
+    Sync-PromptAuxRepoFile -InstallRoot $InstallRoot -RelativePath 'scripts/_ui.bat' -Owner $Owner -Name $Name -Branch $Branch -SourceRoot $SourceRoot | Out-Null
+}
+
 function Copy-PromptAuxEssentialScriptsLocal {
     param(
         [string]$InstallRoot,
@@ -277,40 +398,6 @@ function Copy-PromptAuxEssentialScriptsLocal {
     return $copied
 }
 
-function Sync-PromptAuxUiBatFromGitHub {
-    param(
-        [string]$InstallRoot,
-        [string]$Owner,
-        [string]$Name,
-        [string]$Branch,
-        [string]$SourceRoot = ''
-    )
-    $scriptsDir = Join-Path $InstallRoot 'scripts'
-    if (-not (Test-Path -LiteralPath $scriptsDir)) {
-        New-Item -ItemType Directory -Path $scriptsDir -Force | Out-Null
-    }
-    $dest = Join-Path $scriptsDir '_ui.bat'
-    if ($SourceRoot) {
-        $src = Join-Path $SourceRoot 'scripts\_ui.bat'
-        if (Test-Path -LiteralPath $src) {
-            Copy-Item -LiteralPath $src -Destination $dest -Force
-            return
-        }
-    }
-    try {
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        $cacheBust = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
-        $url = "https://raw.githubusercontent.com/$Owner/$Name/$Branch/scripts/_ui.bat?_=$cacheBust"
-        $headers = @{ 'User-Agent' = 'PromptAuxiliar-Installer' }
-        $content = (Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 25 -Headers $headers).Content
-        if ($content -and $content.Trim().Length -gt 20) {
-            Write-PromptAuxUtf8NoBom -Path $dest -Content $content
-        }
-    } catch {
-        Write-Host '  Aviso: scripts/_ui.bat nao sincronizado do GitHub.' -ForegroundColor DarkYellow
-    }
-}
-
 function Sync-PromptAuxEssentialScriptsFromGitHub {
     param(
         [string]$InstallRoot,
@@ -328,45 +415,8 @@ function Sync-PromptAuxEssentialScriptsFromGitHub {
     if ($SourceRoot) {
         Copy-PromptAuxEssentialScriptsLocal -InstallRoot $InstallRoot -SourceRoot $SourceRoot | Out-Null
     }
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    $headers = @{ 'User-Agent' = 'PromptAuxiliar-Installer' }
-    $cacheBust = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
     foreach ($name in $names) {
-        $dest = Join-Path $psDir $name
-        $needsDownload = -not (Test-Path -LiteralPath $dest)
-        if (-not $needsDownload) {
-            try {
-                $needsDownload = (Get-Item -LiteralPath $dest).Length -lt 80
-            } catch {
-                $needsDownload = $true
-            }
-        }
-        if (-not $needsDownload) { continue }
-
-        $copied = $false
-        if ($SourceRoot) {
-            $src = Join-Path $SourceRoot "powershell\$name"
-            if (Test-Path -LiteralPath $src) {
-                Copy-Item -LiteralPath $src -Destination $dest -Force
-                $copied = $true
-            }
-        }
-        if ($copied) { continue }
-
-        try {
-            $url = "https://raw.githubusercontent.com/$Owner/$Name/$Branch/powershell/${name}?_=$cacheBust"
-            $content = (Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 25 -Headers $headers).Content
-            if (-not $content -or $content.Trim().Length -lt 20) {
-                throw 'Resposta vazia do GitHub'
-            }
-            Write-PromptAuxUtf8NoBom -Path $dest -Content $content
-        } catch {
-            $hint = 'arquivo ausente no GitHub (branch main) ou sem internet'
-            if ($_.Exception.Response -and $_.Exception.Response.StatusCode.value__ -eq 404) {
-                $hint = 'ainda nao publicado na branch main do GitHub - faca push ou reinstale pelo ZIP'
-            }
-            Write-Host "  Aviso: powershell/$name - $hint" -ForegroundColor DarkYellow
-        }
+        Sync-PromptAuxRepoFile -InstallRoot $InstallRoot -RelativePath "powershell/$name" -Owner $Owner -Name $Name -Branch $Branch -SourceRoot $SourceRoot | Out-Null
     }
 }
 
@@ -752,21 +802,23 @@ if ($script:PromptAuxDeferredExit) {
     exit 0
 }
 
-try {
-    Sync-PromptAuxUiBatFromGitHub `
-        -InstallRoot $InstallRoot `
-        -Owner $RepoOwner `
-        -Name $RepoName `
-        -Branch $Branch `
-        -SourceRoot $ScriptDir
-    Sync-PromptAuxEssentialScriptsFromGitHub `
-        -InstallRoot $InstallRoot `
-        -Owner $RepoOwner `
-        -Name $RepoName `
-        -Branch $Branch `
-        -SourceRoot $ScriptDir
-} catch {
-    Write-Host '  Aviso: scripts auxiliares nao sincronizados.' -ForegroundColor DarkYellow
+Write-Host '  Sincronizando scripts (.bat) e auxiliares PowerShell...' -ForegroundColor DarkGray
+$batSync = Sync-PromptAuxBatScriptsFromGitHub `
+    -InstallRoot $InstallRoot `
+    -Owner $RepoOwner `
+    -Name $RepoName `
+    -Branch $Branch `
+    -SourceRoot $ScriptDir
+Sync-PromptAuxEssentialScriptsFromGitHub `
+    -InstallRoot $InstallRoot `
+    -Owner $RepoOwner `
+    -Name $RepoName `
+    -Branch $Branch `
+    -SourceRoot $ScriptDir
+if ($batSync.Fail -gt 0 -and $batSync.Ok -eq 0) {
+    Write-Host '  Aviso: nenhum script .bat foi sincronizado (verifique internet ou faca push no GitHub).' -ForegroundColor DarkYellow
+} elseif ($batSync.Fail -gt 0) {
+    Write-Host "  Aviso: $($batSync.Fail) script(s) .bat nao sincronizado(s); $($batSync.Ok) ok." -ForegroundColor DarkYellow
 }
 
 $env:PROMPTAUX_HOME = $InstallRoot
