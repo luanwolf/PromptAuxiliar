@@ -11,7 +11,12 @@ from app.actions import catalogo_para_json, obter_acao
 from app.config import APP_VERSION, CREDITOS_URL, PASTA_BASE
 from app.environment import preparar_ambiente
 from app.uninstall import paths_for_display, schedule_uninstall
-from app.updater import check_for_update, get_local_version, should_skip_auto_update
+from app.updater import (
+    check_for_update,
+    get_local_version,
+    launch_win_ps1_update,
+    should_skip_auto_update,
+)
 from app.panels import get_panel, run_panel, write_selected_ids
 from app.ui_settings import get_scripts_layout, get_theme, set_scripts_layout, set_theme
 from app.winget_installed import prefetch_installed_scan
@@ -121,6 +126,18 @@ class PromptAuxiliarApi:
         """Consulta APP_VERSION no GitHub (branch main) e compara com a instalação local."""
         try:
             return check_for_update()
+        except Exception as e:
+            return {"ok": False, "message": str(e)}
+
+    def launch_app_update(self) -> dict[str, Any]:
+        """Inicia win.ps1 remoto no PowerShell e fecha o app."""
+        try:
+            launch_win_ps1_update()
+            threading.Timer(0.5, self._quit_app).start()
+            return {
+                "ok": True,
+                "message": "Atualização iniciada no PowerShell. Esta janela será fechada.",
+            }
         except Exception as e:
             return {"ok": False, "message": str(e)}
 

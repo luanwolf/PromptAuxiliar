@@ -4,13 +4,14 @@ from __future__ import annotations
 
 import os
 import re
+import subprocess
 import sys
 import time
 import urllib.request
 from pathlib import Path
 from typing import Any
 
-from app.config import APP_VERSION, GITHUB_BRANCH, GITHUB_OWNER, GITHUB_REPO
+from app.config import APP_VERSION, GITHUB_BRANCH, GITHUB_OWNER, GITHUB_RAW_WIN, GITHUB_REPO
 
 _CONFIG_URL = (
     f"https://raw.githubusercontent.com/{GITHUB_OWNER}/{GITHUB_REPO}"
@@ -105,6 +106,24 @@ def should_skip_auto_update() -> bool:
         except OSError:
             pass
     return True
+
+
+def launch_win_ps1_update() -> None:
+    """Abre PowerShell com win.ps1 remoto (mesmo fluxo do instalador irm)."""
+    url = GITHUB_RAW_WIN.replace("'", "''")
+    comando = f'irm "{url}" | iex'
+    flags = getattr(subprocess, "CREATE_NEW_CONSOLE", 0)
+    subprocess.Popen(
+        [
+            "powershell.exe",
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-Command",
+            comando,
+        ],
+        creationflags=flags,
+    )
 
 
 def check_for_update() -> dict[str, Any]:

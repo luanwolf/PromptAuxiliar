@@ -493,6 +493,34 @@ input {
   gap: 0.35rem;
 }
 
+.card-head-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.card-head-top h3 {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-run-top {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent-bright);
+  opacity: 0;
+  transform: translateX(4px);
+  transition: opacity 0.2s, transform 0.2s;
+  white-space: nowrap;
+}
+
+.card:hover .card-run-top {
+  opacity: 1;
+  transform: translateX(0);
+}
+
 .card h3 {
   margin: 0;
   font-size: 0.95rem;
@@ -532,6 +560,7 @@ input {
   gap: 0.4rem;
   flex-shrink: 0;
   margin-left: auto;
+  min-height: 1.25rem;
 }
 
 .card-foot-right .tag {
@@ -555,19 +584,6 @@ input {
 .tag.risco-perigo {
   background: rgba(255, 107, 107, 0.15);
   color: var(--danger);
-}
-
-.card-run {
-  font-size: 0.75rem;
-  color: var(--accent-bright);
-  opacity: 0;
-  transform: translateX(-4px);
-  transition: opacity 0.2s, transform 0.2s;
-}
-
-.card:hover .card-run {
-  opacity: 1;
-  transform: translateX(0);
 }
 
 @keyframes card-in {

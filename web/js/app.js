@@ -72,7 +72,14 @@
    * @param {{ title: string, body: string, variant?: 'confirm'|'alert', danger?: boolean }} opts
    * @returns {Promise<boolean>} true = confirmar/OK, false = cancelar/Escape
    */
-  function showAppModal({ title, body, variant = "confirm", danger = false }) {
+  function showAppModal({
+    title,
+    body,
+    variant = "confirm",
+    danger = false,
+    confirmLabel,
+    cancelLabel,
+  }) {
     return new Promise((resolve) => {
       const modal = ui.modal;
       const confirmBtn = replaceModalButton("modal-confirm");
@@ -81,12 +88,16 @@
       $("#modal-body").textContent = body;
 
       const isAlert = variant === "alert";
-      cancelBtn.textContent = "Cancelar";
-      cancelBtn.hidden = false;
-      cancelBtn.classList.remove("hidden");
-      confirmBtn.textContent = isAlert ? "OK" : "Confirmar";
+      const isUpdate = variant === "update";
+      cancelBtn.textContent = cancelLabel || (isUpdate ? "Depois" : "Cancelar");
+      cancelBtn.hidden = isAlert;
+      cancelBtn.classList.toggle("hidden", isAlert);
+      confirmBtn.textContent =
+        confirmLabel || (isAlert ? "OK" : isUpdate ? "Atualizar" : "Confirmar");
       confirmBtn.style.background =
-        !isAlert && danger ? "linear-gradient(135deg,#c42b1c,#e81123)" : "";
+        !isAlert && !isUpdate && danger
+          ? "linear-gradient(135deg,#c42b1c,#e81123)"
+          : "";
 
       let done = false;
       const finish = (value) => {
@@ -251,7 +262,7 @@
         acao.risco !== "normal"
           ? `<span class="tag risco-${acao.risco}">${acao.risco === "perigo" ? "Alto risco" : "Atenção"}</span>`
           : "";
-      card.innerHTML = `<div class="card-head"><h3>${escapeHtml(acao.nome)}</h3><p>${escapeHtml(acao.descricao)}</p></div><div class="card-foot"><span class="card-foot-left"><span class="script-row-cat">${escapeHtml(acao.categoria)}</span></span><span class="card-foot-right">${tag}<span class="card-run">Executar →</span></span></div>`;
+      card.innerHTML = `<div class="card-head"><div class="card-head-top"><h3>${escapeHtml(acao.nome)}</h3><span class="card-run-top">Executar</span></div><p>${escapeHtml(acao.descricao)}</p></div><div class="card-foot"><span class="card-foot-left"><span class="script-row-cat">${escapeHtml(acao.categoria)}</span></span><span class="card-foot-right">${tag}</span></div>`;
       card.addEventListener("click", () => runAction(acao));
       ui.scriptsGrid.appendChild(card);
     });
@@ -388,7 +399,21 @@
           if (r.remote) {
             corpo = `Versão instalada: v${r.local}\nVersão no GitHub (branch main): v${r.remote}\n\n${r.message}`;
           }
-          await showAppModal({ title: titulo, body: corpo, variant: "alert" });
+          if (r.update_available) {
+            const atualizar = await showAppModal({
+              title: titulo,
+              body: `${corpo}\n\nO app será fechado e o PowerShell executará o instalador oficial (win.ps1).`,
+              variant: "update",
+              confirmLabel: "Atualizar",
+              cancelLabel: "Depois",
+            });
+            if (atualizar) {
+              const ur = await api().launch_app_update();
+              toast(ur.message, ur.ok ? "success" : "error");
+            }
+          } else {
+            await showAppModal({ title: titulo, body: corpo, variant: "alert" });
+          }
         } else if (kind === "uninstall") {
           const preview = await api().get_uninstall_preview();
           if (!preview.ok) {
