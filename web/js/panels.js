@@ -229,9 +229,12 @@
   function updateSidebarActive() {
     document.querySelectorAll(".nav-item").forEach((btn) => {
       const isPanel = btn.classList.contains("nav-painel");
+      const isScripts = btn.classList.contains("nav-scripts");
       if (isPanel) {
         const kind = btn.dataset.panelKind;
         btn.classList.toggle("active", kind === state.kind);
+      } else if (isScripts) {
+        btn.classList.toggle("active", !state.kind);
       } else if (state.kind) {
         btn.classList.remove("active");
       }
@@ -252,6 +255,8 @@
       "Lendo software instalado (winget list)…"
     );
     setViewVisible(true);
+    const scriptsToolbar = document.getElementById("scripts-toolbar");
+    if (scriptsToolbar) scriptsToolbar.classList.add("hidden");
     updateSidebarActive();
     const data = await fetchFn();
     if (!data.ok) {
@@ -295,9 +300,6 @@
     }
     setViewVisible(false);
     updateSidebarActive();
-    if (typeof window.appClearCategory === "function") {
-      window.appClearCategory();
-    }
     if (typeof window.appRefreshHome === "function") {
       window.appRefreshHome();
     }

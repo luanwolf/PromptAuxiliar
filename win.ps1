@@ -239,6 +239,44 @@ function Sync-PromptAuxUpdateModuleFromGitHub {
     Write-PromptAuxUtf8NoBom -Path $dest -Content $content
 }
 
+function Sync-PromptAuxEssentialScriptsFromGitHub {
+    param(
+        [string]$InstallRoot,
+        [string]$Owner,
+        [string]$Name,
+        [string]$Branch
+    )
+    $names = @(
+        'Atualizar-e-Iniciar.ps1',
+        'Criar-Atalho.ps1',
+        'Concluir-Troca-Instalacao.ps1',
+        'Reparar-Atalho.ps1'
+    )
+    $psDir = Join-Path $InstallRoot 'powershell'
+    if (-not (Test-Path -LiteralPath $psDir)) {
+        New-Item -ItemType Directory -Path $psDir -Force | Out-Null
+    }
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    foreach ($name in $names) {
+        $dest = Join-Path $psDir $name
+        if (Test-Path -LiteralPath $dest) { continue }
+        try {
+            $url = "https://raw.githubusercontent.com/$Owner/$Name/$Branch/powershell/$name"
+            $content = (Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 20).Content
+            Write-PromptAuxUtf8NoBom -Path $dest -Content $content
+        } catch {
+            Write-Host "  Aviso: nao foi possivel baixar powershell/$name" -ForegroundColor DarkYellow
+        }
+    }
+}
+
+function Repair-PromptAuxDesktopShortcuts {
+    param([string]$InstallRoot)
+    $criar = Join-Path $InstallRoot 'powershell\Criar-Atalho.ps1'
+    if (-not (Test-Path -LiteralPath $criar)) { return }
+    & powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File $criar -ProjectRoot $InstallRoot 2>$null
+}
+
 function Test-PromptAuxPathInUse {
     param([string]$Path)
     if (-not (Test-Path -LiteralPath $Path)) { return $false }
@@ -474,6 +512,12 @@ trap {
 
 Write-PromptAuxBanner
 
+try {
+    Sync-PromptAuxEssentialScriptsFromGitHub -InstallRoot $InstallRoot -Owner $RepoOwner -Name $RepoName -Branch $Branch
+} catch {
+    Write-Host '  Aviso: scripts auxiliares nao sincronizados do GitHub.' -ForegroundColor DarkYellow
+}
+
 $forceUpdate = $Update -or ($env:PROMPTAUX_UPDATE -eq '1')
 $script:PromptAuxDeferredExit = $false
 Invoke-PromptAuxiliarInstallOrUpdate `
@@ -506,11 +550,8 @@ if ($SetupOnly) {
     return
 }
 
-$atalhoPs1 = Join-Path $InstallRoot 'powershell\Criar-Atalho.ps1'
-if (Test-Path $atalhoPs1) {
-    Write-Host '  Criando atalhos...' -ForegroundColor DarkGray
-    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $atalhoPs1 -ProjectRoot $InstallRoot
-}
+Write-Host '  Atualizando atalhos...' -ForegroundColor DarkGray
+Repair-PromptAuxDesktopShortcuts -InstallRoot $InstallRoot
 
 Write-Host '  Abrindo interface...' -ForegroundColor Gray
 Start-PromptAuxiliarProcess -PythonInfo $python -ProjectRoot $InstallRoot -ExtraArgs @()

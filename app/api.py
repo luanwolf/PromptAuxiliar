@@ -13,7 +13,7 @@ from app.environment import preparar_ambiente
 from app.uninstall import paths_for_display, schedule_uninstall
 from app.updater import check_for_update, should_skip_auto_update
 from app.panels import get_panel, run_panel, write_selected_ids
-from app.ui_settings import get_theme, set_theme
+from app.ui_settings import get_scripts_layout, get_theme, set_scripts_layout, set_theme
 from app.winget_installed import prefetch_installed_scan
 from app.runner import ScriptNaoEncontradoError, executar_acao, usa_powershell_admin
 
@@ -37,6 +37,7 @@ class PromptAuxiliarApi:
                 "primeira_vez": primeira_vez,
                 "message": "Ambiente pronto.",
                 "theme": get_theme(),
+                "scripts_layout": get_scripts_layout(),
                 "update_available": update_info.get("update_available", False),
                 "update_message": update_info.get("message", ""),
                 "remote_version": update_info.get("remote"),
@@ -91,15 +92,27 @@ class PromptAuxiliarApi:
     def get_ui_settings(self) -> dict[str, Any]:
         try:
             preparar_ambiente()
-            return {"ok": True, "theme": get_theme()}
+            return {
+                "ok": True,
+                "theme": get_theme(),
+                "scripts_layout": get_scripts_layout(),
+            }
         except Exception as e:
-            return {"ok": False, "message": str(e), "theme": "dark"}
+            return {"ok": False, "message": str(e), "theme": "dark", "scripts_layout": "grid"}
 
     def save_ui_theme(self, theme: str) -> dict[str, Any]:
         try:
             preparar_ambiente()
             saved = set_theme(theme)
             return {"ok": True, "theme": saved}
+        except Exception as e:
+            return {"ok": False, "message": str(e)}
+
+    def save_scripts_layout(self, layout: str) -> dict[str, Any]:
+        try:
+            preparar_ambiente()
+            saved = set_scripts_layout(layout)
+            return {"ok": True, "scripts_layout": saved}
         except Exception as e:
             return {"ok": False, "message": str(e)}
 

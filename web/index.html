@@ -55,8 +55,8 @@
     <main class="main">
       <header class="topbar">
         <div class="topbar-copy">
-          <h2 id="page-title" class="page-title">Todas as ferramentas</h2>
-          <p id="page-subtitle" class="page-subtitle">Scripts e painéis Winget</p>
+          <h2 id="page-title" class="page-title">Scripts</h2>
+          <p id="page-subtitle" class="page-subtitle">Scripts .bat do Prompt Auxiliar</p>
         </div>
         <div class="topbar-actions">
           <button
@@ -86,7 +86,13 @@
       </header>
 
       <section id="view-home">
-        <section id="actions-grid" class="grid"></section>
+        <div id="scripts-toolbar" class="scripts-toolbar">
+          <div class="view-toggle" role="group" aria-label="Visualização dos scripts">
+            <button type="button" class="view-toggle-btn active" data-scripts-layout="grid" title="Grade">Grade</button>
+            <button type="button" class="view-toggle-btn" data-scripts-layout="list" title="Lista">Lista</button>
+          </div>
+        </div>
+        <section id="actions-grid" class="grid scripts-container"></section>
       </section>
 
       <section id="view-panel" class="panel-view hidden" hidden>

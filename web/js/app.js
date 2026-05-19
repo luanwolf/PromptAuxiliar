@@ -5,7 +5,13 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
-  const state = { catalog: null, categoriaAtiva: null, busca: "", busy: false };
+  const state = {
+    catalog: null,
+    busca: "",
+    busy: false,
+    scriptsLayout: "grid",
+    view: "scripts",
+  };
 
   const boot = { el: $("#boot"), status: $("#boot-status"), bar: $("#boot-bar-fill") };
   const ui = {
@@ -20,6 +26,8 @@
     welcome: $("#welcome"),
     toastRoot: $("#toast-root"),
     viewHome: $("#view-home"),
+    scriptsToolbar: $("#scripts-toolbar"),
+    scriptsGrid: $("#actions-grid"),
   };
 
   const PAINELS = [
@@ -136,53 +144,94 @@
     const div = document.createElement("div");
     div.className = "nav-divider";
     ui.nav.appendChild(div);
-    const allBtn = document.createElement("button");
-    allBtn.type = "button";
-    allBtn.className = `nav-item${state.categoriaAtiva === null ? " active" : ""}`;
-    allBtn.innerHTML = `Todas <span class="badge">${state.catalog.acoes.length}</span>`;
-    allBtn.addEventListener("click", () => selectCategory(null));
-    ui.nav.appendChild(allBtn);
-    state.catalog.categorias.forEach((cat) => {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = `nav-item${state.categoriaAtiva === cat.nome ? " active" : ""}`;
-      btn.innerHTML = `${cat.nome} <span class="badge">${cat.total}</span>`;
-      btn.addEventListener("click", () => selectCategory(cat.nome));
-      ui.nav.appendChild(btn);
+    const scriptsBtn = document.createElement("button");
+    scriptsBtn.type = "button";
+    scriptsBtn.className = `nav-item nav-scripts${state.view === "scripts" && !window.Panels?.isOpen() ? " active" : ""}`;
+    scriptsBtn.innerHTML = `Scripts <span class="badge">${state.catalog.acoes.length}</span>`;
+    scriptsBtn.addEventListener("click", () => openScriptsView());
+    ui.nav.appendChild(scriptsBtn);
+
+    const divFuture = document.createElement("div");
+    divFuture.className = "nav-divider nav-divider-future";
+    ui.nav.appendChild(divFuture);
+
+    const futureSlot = document.createElement("div");
+    futureSlot.className = "nav-future-slot";
+    futureSlot.setAttribute("aria-hidden", "true");
+    ui.nav.appendChild(futureSlot);
+  }
+
+  function openScriptsView() {
+    if (window.Panels?.isOpen()) window.Panels.close();
+    state.view = "scripts";
+    document.body.dataset.view = "scripts";
+    if (ui.scriptsToolbar) ui.scriptsToolbar.classList.remove("hidden");
+    renderNav();
+    renderScripts();
+  }
+
+  function setScriptsLayout(layout) {
+    state.scriptsLayout = layout === "list" ? "list" : "grid";
+    try {
+      localStorage.setItem("promptaux-scripts-layout", state.scriptsLayout);
+    } catch (_) {
+      /* ignore */
+    }
+    document.querySelectorAll("[data-scripts-layout]").forEach((btn) => {
+      btn.classList.toggle("active", btn.getAttribute("data-scripts-layout") === state.scriptsLayout);
     });
+    if (ui.scriptsGrid) {
+      ui.scriptsGrid.classList.toggle("scripts-list", state.scriptsLayout === "list");
+      ui.scriptsGrid.classList.toggle("grid", state.scriptsLayout === "grid");
+    }
+    const apiRef = api();
+    if (apiRef?.save_scripts_layout) apiRef.save_scripts_layout(state.scriptsLayout);
+    renderScripts();
   }
 
 
   function acoesFiltradas() {
     let list = state.catalog.acoes;
-    if (state.categoriaAtiva) list = list.filter((a) => a.categoria === state.categoriaAtiva);
     const q = state.busca.trim().toLowerCase();
     if (q) {
       list = list.filter(
         (a) =>
           a.nome.toLowerCase().includes(q) ||
           a.id.includes(q) ||
-          a.descricao.toLowerCase().includes(q)
+          a.descricao.toLowerCase().includes(q) ||
+          a.categoria.toLowerCase().includes(q)
       );
     }
     return list;
   }
 
-  function renderGrid() {
+  function renderScripts() {
     const list = acoesFiltradas();
-    if (state.categoriaAtiva) {
-      const cat = state.catalog.categorias.find((c) => c.nome === state.categoriaAtiva);
-      ui.title.textContent = state.categoriaAtiva;
-      ui.subtitle.textContent = cat ? cat.descricao : "";
-    } else {
-      ui.title.textContent = "Todas as ferramentas";
-      ui.subtitle.textContent = "Scripts .bat e painéis Winget/Debloat";
-    }
+    ui.title.textContent = "Scripts";
+    ui.subtitle.textContent = `${list.length} script(s) .bat disponíveis`;
+    if (ui.scriptsToolbar) ui.scriptsToolbar.classList.remove("hidden");
     if (!list.length) {
-      ui.grid.innerHTML = '<div class="empty-state"><p>Nenhuma ação encontrada.</p></div>';
+      ui.scriptsGrid.innerHTML = '<div class="empty-state"><p>Nenhum script encontrado.</p></div>';
       return;
     }
-    ui.grid.innerHTML = "";
+    ui.scriptsGrid.innerHTML = "";
+    if (state.scriptsLayout === "list") {
+      list.forEach((acao, i) => {
+        const row = document.createElement("button");
+        row.type = "button";
+        row.className = `script-row risco-${acao.risco}`;
+        row.title = acao.descricao || acao.nome;
+        row.style.animationDelay = `${Math.min(i * 0.02, 0.3)}s`;
+        const tag =
+          acao.risco !== "normal"
+            ? `<span class="tag risco-${acao.risco}">${acao.risco === "perigo" ? "Alto risco" : "Atenção"}</span>`
+            : "";
+        row.innerHTML = `<span class="script-row-main"><strong>${escapeHtml(acao.nome)}</strong><span class="script-row-desc">${escapeHtml(acao.descricao)}</span></span><span class="script-row-meta"><span class="script-row-cat">${escapeHtml(acao.categoria)}</span>${tag}<span class="card-run">Executar →</span></span>`;
+        row.addEventListener("click", () => runAction(acao));
+        ui.scriptsGrid.appendChild(row);
+      });
+      return;
+    }
     list.forEach((acao, i) => {
       const card = document.createElement("button");
       card.type = "button";
@@ -193,9 +242,9 @@
         acao.risco !== "normal"
           ? `<span class="tag risco-${acao.risco}">${acao.risco === "perigo" ? "Alto risco" : "Atenção"}</span>`
           : "<span></span>";
-      card.innerHTML = `<div class="card-head"><h3>${escapeHtml(acao.nome)}</h3><p>${escapeHtml(acao.descricao)}</p></div><div class="card-foot">${tag}<span class="card-run">Executar →</span></div>`;
+      card.innerHTML = `<div class="card-head"><h3>${escapeHtml(acao.nome)}</h3><p>${escapeHtml(acao.descricao)}</p></div><div class="card-foot">${tag}<span class="script-row-cat">${escapeHtml(acao.categoria)}</span><span class="card-run">Executar →</span></div>`;
       card.addEventListener("click", () => runAction(acao));
-      ui.grid.appendChild(card);
+      ui.scriptsGrid.appendChild(card);
     });
   }
 
@@ -221,13 +270,6 @@
     } finally {
       state.busy = false;
     }
-  }
-
-  function selectCategory(nome) {
-    if (window.Panels?.isOpen()) window.Panels.close();
-    state.categoriaAtiva = nome;
-    renderNav();
-    renderGrid();
   }
 
   async function init() {
@@ -257,9 +299,20 @@
     ui.version.textContent = `v${state.catalog.meta.version}`;
     setBootProgress(100, "Pronto.");
     await new Promise((r) => setTimeout(r, 300));
+    try {
+      const savedLayout = localStorage.getItem("promptaux-scripts-layout");
+      if (savedLayout === "grid" || savedLayout === "list") state.scriptsLayout = savedLayout;
+    } catch (_) {
+      /* ignore */
+    }
+    if (initRes.scripts_layout === "grid" || initRes.scripts_layout === "list") {
+      state.scriptsLayout = initRes.scripts_layout;
+    }
+    setScriptsLayout(state.scriptsLayout);
     showApp();
+    document.body.dataset.view = "scripts";
     renderNav();
-    renderGrid();
+    openScriptsView();
     if (initRes.update_available && initRes.update_message) {
       toast(initRes.update_message, "info");
     }
@@ -271,12 +324,10 @@
 
   window.appToast = toast;
   window.appConfirm = confirmDialog;
-  window.appClearCategory = () => {
-    state.categoriaAtiva = null;
-  };
   window.appSetTitle = (t, s) => {
     ui.title.textContent = t;
     ui.subtitle.textContent = s;
+    if (ui.scriptsToolbar) ui.scriptsToolbar.classList.add("hidden");
   };
   window.appRefreshHome = () => {
     ui.viewHome.classList.remove("hidden");
@@ -286,16 +337,11 @@
       p.classList.add("hidden");
       p.hidden = true;
     }
-    ui.title.textContent = state.categoriaAtiva || "Todas as ferramentas";
-    ui.subtitle.textContent = state.categoriaAtiva
-      ? ""
-      : "Scripts .bat e painéis Winget/Debloat";
-    ui.search.placeholder = "Buscar por nome ou descrição…";
+    ui.search.placeholder = "Buscar scripts…";
     ui.search.value = "";
     state.busca = "";
     window._panelBusca = "";
-    renderNav();
-    renderGrid();
+    openScriptsView();
   };
 
   function bindEvents() {
@@ -306,7 +352,12 @@
         return;
       }
       state.busca = ui.search.value;
-      renderGrid();
+      renderScripts();
+    });
+    document.querySelectorAll("[data-scripts-layout]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        setScriptsLayout(btn.getAttribute("data-scripts-layout"));
+      });
     });
     $$("[data-action]").forEach((el) => {
       el.addEventListener("click", async (e) => {
