@@ -10,6 +10,7 @@ from typing import Any
 from app.actions import catalogo_para_json, obter_acao
 from app.config import APP_VERSION, CREDITOS_URL, PASTA_BASE
 from app.environment import preparar_ambiente
+from app.uninstall import paths_for_display, schedule_uninstall
 from app.updater import check_for_update, should_skip_auto_update
 from app.panels import get_panel, run_panel, write_selected_ids
 from app.winget_installed import prefetch_installed_scan
@@ -84,6 +85,36 @@ class PromptAuxiliarApi:
             with self._lock:
                 self._busy = False
             return {"ok": False, "message": str(e)}
+
+    def check_for_updates(self) -> dict[str, Any]:
+        """Consulta APP_VERSION no GitHub (branch main) e compara com a instalação local."""
+        try:
+            return check_for_update()
+        except Exception as e:
+            return {"ok": False, "message": str(e)}
+
+    def get_uninstall_preview(self) -> dict[str, Any]:
+        return {"ok": True, "paths": paths_for_display()}
+
+    def uninstall_prompt_auxiliar(self) -> dict[str, Any]:
+        try:
+            schedule_uninstall()
+            threading.Timer(0.5, self._quit_app).start()
+            return {
+                "ok": True,
+                "message": "Exclusão agendada. O aplicativo será fechado em instantes.",
+            }
+        except Exception as e:
+            return {"ok": False, "message": str(e)}
+
+    def _quit_app(self) -> None:
+        try:
+            import webview
+
+            for window in webview.windows:
+                window.destroy()
+        except Exception:
+            pass
 
     def open_link(self, kind: str) -> dict[str, Any]:
         urls = {"creditos": CREDITOS_URL}

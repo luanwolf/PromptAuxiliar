@@ -266,6 +266,16 @@ input {
   border-top: 1px solid var(--border);
 }
 
+.btn-danger-ghost {
+  color: #f87171;
+}
+
+.btn-danger-ghost:hover {
+  color: #fca5a5;
+  background: rgba(248, 113, 113, 0.1);
+  border-color: rgba(248, 113, 113, 0.35);
+}
+
 .creditos {
   font-size: 0.75rem;
   color: var(--text-muted);
@@ -652,6 +662,7 @@ input {
   color: var(--text-muted);
   font-size: 0.9rem;
   line-height: 1.5;
+  white-space: pre-wrap;
 }
 
 .modal-body code {

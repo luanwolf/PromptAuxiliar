@@ -53,12 +53,49 @@
     }, 4200);
   }
 
+  function infoDialog({ title, body }) {
+    return new Promise((resolve) => {
+      $("#modal-title").textContent = title;
+      $("#modal-body").textContent = body;
+      const confirmBtn = $("#modal-confirm");
+      const cancelBtn = $("#modal-cancel");
+      confirmBtn.style.background = "";
+      confirmBtn.textContent = "OK";
+      cancelBtn.hidden = true;
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        cancelBtn.hidden = false;
+        confirmBtn.textContent = "Confirmar";
+        resolve();
+      };
+      confirmBtn.onclick = (e) => {
+        e.preventDefault();
+        ui.modal.close();
+        finish();
+      };
+      ui.modal.addEventListener(
+        "cancel",
+        (e) => {
+          e.preventDefault();
+          ui.modal.close();
+          finish();
+        },
+        { once: true }
+      );
+      ui.modal.showModal();
+    });
+  }
+
   function confirmDialog({ title, body, danger = false }) {
     return new Promise((resolve) => {
       $("#modal-title").textContent = title;
       $("#modal-body").textContent = body;
       const confirmBtn = $("#modal-confirm");
       const cancelBtn = $("#modal-cancel");
+      cancelBtn.hidden = false;
+      confirmBtn.textContent = "Confirmar";
       confirmBtn.style.background = danger
         ? "linear-gradient(135deg,#c42b1c,#e81123)"
         : "";
@@ -285,6 +322,35 @@
         const kind = el.getAttribute("data-action");
         if (kind === "folder") {
           const r = await api().open_data_folder();
+          toast(r.message, r.ok ? "success" : "error");
+        } else if (kind === "check-update") {
+          const r = await api().check_for_updates();
+          if (!r.ok) {
+            toast(r.message, "error");
+            return;
+          }
+          const titulo = r.update_available
+            ? "Atualização disponível"
+            : "Verificar atualização";
+          let corpo = r.message;
+          if (r.remote) {
+            corpo = `Versão instalada: v${r.local}\nVersão no GitHub (branch main): v${r.remote}\n\n${r.message}`;
+          }
+          await infoDialog({ title: titulo, body: corpo });
+        } else if (kind === "uninstall") {
+          const preview = await api().get_uninstall_preview();
+          if (!preview.ok) {
+            toast(preview.message || "Não foi possível preparar a exclusão.", "error");
+            return;
+          }
+          const lista = preview.paths.map((p) => `• ${p}`).join("\n");
+          const ok = await confirmDialog({
+            title: "Excluir Prompt Auxiliar",
+            body: `Tem certeza? Esta ação é permanente e não pode ser desfeita.\n\nPastas que serão removidas:\n${lista}\n\nAtalhos na Área de Trabalho e Menu Iniciar também serão apagados.\n\nO aplicativo será fechado em seguida.`,
+            danger: true,
+          });
+          if (!ok) return;
+          const r = await api().uninstall_prompt_auxiliar();
           toast(r.message, r.ok ? "success" : "error");
         } else if (kind === "creditos") {
           const r = await api().open_link(kind);
