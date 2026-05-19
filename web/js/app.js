@@ -397,7 +397,11 @@
             : "Verificar atualização";
           let corpo = r.message;
           if (r.remote) {
-            corpo = `Versão instalada: v${r.local}\nVersão no GitHub (branch main): v${r.remote}\n\n${r.message}`;
+            corpo = `Instalação: v${r.local}\nGitHub (main): v${r.remote}`;
+            if (r.running_version && r.running_version !== r.local) {
+              corpo += `\nEm execução: v${r.running_version}`;
+            }
+            corpo += `\n\n${r.message}`;
           }
           if (r.update_available) {
             const atualizar = await showAppModal({

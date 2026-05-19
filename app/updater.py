@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import base64
+import json
 import os
 import re
 import subprocess
@@ -12,11 +14,6 @@ from pathlib import Path
 from typing import Any
 
 from app.config import APP_VERSION, GITHUB_BRANCH, GITHUB_OWNER, GITHUB_RAW_WIN, GITHUB_REPO
-
-_CONFIG_URL = (
-    f"https://raw.githubusercontent.com/{GITHUB_OWNER}/{GITHUB_REPO}"
-    f"/{GITHUB_BRANCH}/app/config.py"
-)
 
 
 def _parse_version(text: str) -> str | None:
@@ -45,19 +42,67 @@ def compare_versions(local: str, remote: str) -> int:
     return 0
 
 
-def get_local_version() -> str:
-    """Versão do config.py que o processo Python carregou (instalação em execução)."""
+def _read_version_from_config_file(cfg: Path) -> str | None:
+    try:
+        if cfg.is_file():
+            return _parse_version(cfg.read_text(encoding="utf-8"))
+    except OSError:
+        pass
+    return None
+
+
+def _repo_settings() -> tuple[str, str, str]:
+    """Owner, repo e branch usados na consulta remota (do config carregado)."""
     try:
         from app import config as cfg_mod
 
-        cfg_path = Path(cfg_mod.__file__)
-        if cfg_path.is_file():
-            v = _parse_version(cfg_path.read_text(encoding="utf-8"))
-            if v:
-                return v
+        owner = getattr(cfg_mod, "GITHUB_OWNER", GITHUB_OWNER)
+        repo = getattr(cfg_mod, "GITHUB_REPO", GITHUB_REPO)
+        branch = getattr(cfg_mod, "GITHUB_BRANCH", GITHUB_BRANCH)
+        return str(owner), str(repo), str(branch)
+    except ImportError:
+        return GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH
+
+
+def _remote_config_url() -> str:
+    owner, repo, branch = _repo_settings()
+    return (
+        f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/app/config.py"
+    )
+
+
+def get_local_version() -> str:
+    """Versão do config.py que o processo Python carregou (código em execução)."""
+    try:
+        from app import config as cfg_mod
+
+        v = _read_version_from_config_file(Path(cfg_mod.__file__))
+        if v:
+            return v
     except (OSError, ImportError):
         pass
     return APP_VERSION
+
+
+def get_installed_version() -> str | None:
+    """Versão em %LOCALAPPDATA%\\PromptAuxiliar (ou PROMPTAUX_HOME), se existir."""
+    roots: list[Path] = []
+    home = os.environ.get("PROMPTAUX_HOME", "").strip()
+    if home:
+        roots.append(Path(home))
+    default = _default_install_root()
+    if default and default not in roots:
+        roots.append(default)
+    for root in roots:
+        v = _read_version_from_config_file(root / "app" / "config.py")
+        if v:
+            return v
+    return None
+
+
+def get_update_compare_version() -> str:
+    """Versão usada na checagem de update (instalação real, não só o clone de dev)."""
+    return get_installed_version() or get_local_version()
 
 
 def _default_install_root() -> Path | None:
@@ -68,13 +113,42 @@ def _default_install_root() -> Path | None:
     return root if (root / "main.py").is_file() else None
 
 
+def _fetch_remote_version_via_api(
+    owner: str, repo: str, branch: str, timeout: float
+) -> str | None:
+    api_url = (
+        f"https://api.github.com/repos/{owner}/{repo}/contents/app/config.py?ref={branch}"
+    )
+    req = urllib.request.Request(
+        api_url,
+        headers={
+            "User-Agent": "PromptAuxiliar",
+            "Accept": "application/vnd.github+json",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        payload = json.loads(resp.read().decode("utf-8", errors="replace"))
+    content = payload.get("content")
+    if not content:
+        return None
+    text = base64.b64decode(content).decode("utf-8", errors="replace")
+    return _parse_version(text)
+
+
 def fetch_remote_version(timeout: float = 20.0) -> str | None:
+    owner, repo, branch = _repo_settings()
+    url = f"{_remote_config_url()}?_={int(time.time())}"
     try:
-        url = f"{_CONFIG_URL}?_={int(time.time())}"
         req = urllib.request.Request(url, headers={"User-Agent": "PromptAuxiliar"})
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             text = resp.read().decode("utf-8", errors="replace")
-        return _parse_version(text)
+        version = _parse_version(text)
+        if version:
+            return version
+    except OSError:
+        pass
+    try:
+        return _fetch_remote_version_via_api(owner, repo, branch, timeout)
     except OSError:
         return None
 
@@ -128,34 +202,56 @@ def launch_win_ps1_update() -> None:
 
 def check_for_update() -> dict[str, Any]:
     """Retorna status da versão remota (não substitui arquivos — use win.ps1)."""
-    local = get_local_version()
+    running = get_local_version()
+    installed = get_installed_version()
+    local = get_update_compare_version()
     remote = fetch_remote_version()
+    owner, repo, branch = _repo_settings()
+    check_url = _remote_config_url()
+
     if not remote:
         return {
             "ok": True,
             "local": local,
+            "running_version": running,
+            "installed_version": installed,
             "remote": None,
             "update_available": False,
-            "message": "Não foi possível verificar atualizações online.",
+            "check_url": check_url,
+            "message": (
+                f"Não foi possível consultar {owner}/{repo} (branch {branch}). "
+                "Verifique sua conexão."
+            ),
         }
+
     cmp = compare_versions(local, remote)
     available = cmp < 0
+    running_note = ""
+    if installed and running != installed:
+        running_note = f" Código em execução: v{running}."
+
     if available:
         msg = (
-            f"Nova versão v{remote} disponível (você está na v{local}). "
-            "Feche o app e abra pelo atalho ou execute o instalador irm novamente."
+            f"Nova versão v{remote} disponível (instalação v{local}). "
+            "Use o botão Atualizar ou abra pelo atalho."
+            f"{running_note}"
         )
     elif cmp > 0:
         msg = (
-            f"Sua instalação (v{local}) é mais recente que a publicada no GitHub (v{remote}). "
-            "Aguarde a publicação no repositório ou use o clone de desenvolvimento."
+            f"A instalação (v{local}) é mais recente que a publicada no GitHub (v{remote}). "
+            "Confirme se fez push do app/config.py na branch main."
+            f"{running_note}"
         )
     else:
-        msg = f"Você está na versão mais recente (v{local})."
+        msg = f"Você está na versão mais recente (v{local}).{running_note}"
+
     return {
         "ok": True,
         "local": local,
+        "running_version": running,
+        "installed_version": installed,
         "remote": remote,
         "update_available": available,
+        "check_url": check_url,
         "message": msg,
     }
