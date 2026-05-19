@@ -835,31 +835,19 @@ input {
   transition: background 0.15s;
 }
 
-.panel-row-tooltip {
-  position: absolute;
-  left: 2.5rem;
-  right: 0.75rem;
-  bottom: calc(100% + 6px);
-  z-index: 20;
-  padding: 0.55rem 0.7rem;
+.panel-float-tooltip {
+  position: fixed;
+  z-index: 10000;
+  padding: 0.55rem 0.75rem;
   font-size: 0.78rem;
   line-height: 1.45;
   color: var(--text);
   background: rgba(18, 24, 34, 0.98);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
   pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.15s ease, visibility 0.15s ease;
-  max-width: min(420px, 92vw);
-}
-
-.panel-row:hover .panel-row-tooltip,
-.panel-row:focus-within .panel-row-tooltip {
-  opacity: 1;
-  visibility: visible;
+  max-width: min(420px, calc(100vw - 24px));
 }
 
 .panel-row:hover {

@@ -26,6 +26,59 @@
   };
 
   let bound = false;
+  let floatTipEl = null;
+
+  function ensureFloatTip() {
+    if (floatTipEl) return floatTipEl;
+    floatTipEl = document.createElement("div");
+    floatTipEl.id = "panel-float-tooltip";
+    floatTipEl.className = "panel-float-tooltip";
+    floatTipEl.hidden = true;
+    document.body.appendChild(floatTipEl);
+    return floatTipEl;
+  }
+
+  function positionFloatTip(row) {
+    const tip = floatTipEl;
+    if (!tip || tip.hidden) return;
+    const rect = row.getBoundingClientRect();
+    const margin = 10;
+    tip.style.left = "0px";
+    tip.style.top = "0px";
+    tip.style.maxWidth = `${Math.min(420, window.innerWidth - 24)}px`;
+    const tipRect = tip.getBoundingClientRect();
+    let left = rect.left;
+    let top = rect.bottom + margin;
+    if (top + tipRect.height > window.innerHeight - 8) {
+      top = rect.top - tipRect.height - margin;
+    }
+    if (left + tipRect.width > window.innerWidth - 12) {
+      left = window.innerWidth - tipRect.width - 12;
+    }
+    if (left < 12) left = 12;
+    if (top < 8) top = rect.bottom + margin;
+    tip.style.left = `${left}px`;
+    tip.style.top = `${top}px`;
+  }
+
+  function showFloatTip(row, text) {
+    if (!text) return;
+    const tip = ensureFloatTip();
+    tip.textContent = text;
+    tip.hidden = false;
+    positionFloatTip(row);
+  }
+
+  function hideFloatTip() {
+    if (floatTipEl) floatTipEl.hidden = true;
+  }
+
+  function bindRowTooltip(row, text) {
+    row.dataset.tip = text;
+    row.addEventListener("mouseenter", () => showFloatTip(row, text));
+    row.addEventListener("mouseleave", hideFloatTip);
+    row.addEventListener("mousemove", () => positionFloatTip(row));
+  }
 
   function api() {
     return window.pywebview && window.pywebview.api;
@@ -135,8 +188,8 @@
           ${instaladoTag}
           <span class="panel-row-cat">${escapeHtml(item.categoria)}</span>
         </span>
-        <span class="panel-row-tooltip" role="tooltip">${escapeHtml(tip)}</span>
       `;
+      bindRowTooltip(row, tip);
       const input = row.querySelector("input");
       input.addEventListener("change", () => {
         if (input.checked) state.selecionados.add(item.id);
@@ -231,6 +284,7 @@
   }
 
   function close() {
+    hideFloatTip();
     state.kind = null;
     state.data = null;
     state.categoria = null;
@@ -334,6 +388,10 @@
     el.selectInstalled.addEventListener("click", selecionarInstalados);
     el.save.addEventListener("click", salvar);
     el.run.addEventListener("click", executar);
+    const listWrap = el.list?.parentElement;
+    if (listWrap) {
+      listWrap.addEventListener("scroll", hideFloatTip, { passive: true });
+    }
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && state.kind) close();

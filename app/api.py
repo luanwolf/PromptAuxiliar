@@ -98,8 +98,8 @@ class PromptAuxiliarApi:
 
     def uninstall_prompt_auxiliar(self) -> dict[str, Any]:
         try:
+            threading.Timer(0.2, self._quit_app).start()
             schedule_uninstall()
-            threading.Timer(0.5, self._quit_app).start()
             return {
                 "ok": True,
                 "message": "Exclusão agendada. O aplicativo será fechado em instantes.",
