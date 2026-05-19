@@ -358,10 +358,14 @@ function Repair-PromptAuxDesktopShortcuts {
 function Test-PromptAuxPathInUse {
     param([string]$Path)
     if (-not (Test-Path -LiteralPath $Path)) { return $false }
-    $pattern = ($Path.TrimEnd('\') + '*')
-    $procs = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |
-        Where-Object { $_.ExecutablePath -and ($_.ExecutablePath -like $pattern) }
-    return [bool]$procs
+    $root = $Path.TrimEnd('\')
+    $pattern = ($root + '*')
+    $procs = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue
+    foreach ($p in $procs) {
+        if ($p.ExecutablePath -and ($p.ExecutablePath -like $pattern)) { return $true }
+        if ($p.CommandLine -and ($p.CommandLine -like "*$root*")) { return $true }
+    }
+    return $false
 }
 
 function Test-PromptAuxRunningFromPath {
@@ -372,6 +376,39 @@ function Test-PromptAuxRunningFromPath {
     } catch {
         return $false
     }
+}
+
+function Test-PromptAuxShouldDeferFolderSwap {
+    param([string]$Destination, [string]$ScriptDir)
+
+    if (-not (Test-Path -LiteralPath $Destination)) { return $false }
+
+    if (Test-PromptAuxRunningFromPath -InstallRoot $Destination -ScriptDir $ScriptDir) {
+        return $true
+    }
+    if (Test-PromptAuxPathInUse -Path $Destination) {
+        return $true
+    }
+
+    # irm | iex nao define $ScriptDir; atualizacao padrao em %LOCALAPPDATA% sempre adia troca
+    $defaultInstall = Join-Path $env:LOCALAPPDATA 'PromptAuxiliar'
+    if (Test-Path -LiteralPath $defaultInstall) {
+        try {
+            if ((Resolve-Path $Destination).Path -eq (Resolve-Path $defaultInstall).Path) {
+                return $true
+            }
+        } catch { }
+    }
+
+    try {
+        $destPath = (Resolve-Path $Destination).Path
+        $pwdPath = (Resolve-Path $PWD.Path).Path
+        if ($pwdPath.StartsWith($destPath, [StringComparison]::OrdinalIgnoreCase)) {
+            return $true
+        }
+    } catch { }
+
+    return $false
 }
 
 function Invoke-PromptAuxDeferredFolderSwap {
@@ -388,11 +425,16 @@ function Invoke-PromptAuxDeferredFolderSwap {
 `$dest = '$destEsc'
 `$staging = '$stageEsc'
 Start-Sleep -Seconds 2
-for (`$w = 0; `$w -lt 90; `$w++) {
-    `$pattern = (`$dest.TrimEnd('\') + '*')
-    `$procs = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |
-        Where-Object { `$_.ExecutablePath -and (`$_.ExecutablePath -like `$pattern) }
-    if (-not `$procs) { break }
+for (`$w = 0; `$w -lt 120; `$w++) {
+    `$root = `$dest.TrimEnd('\')
+    `$pattern = (`$root + '*')
+    `$busy = `$false
+    `$procs = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue
+    foreach (`$p in `$procs) {
+        if (`$p.ExecutablePath -and (`$p.ExecutablePath -like `$pattern)) { `$busy = `$true; break }
+        if (`$p.CommandLine -and (`$p.CommandLine -like "*`$root*")) { `$busy = `$true; break }
+    }
+    if (-not `$busy) { break }
     Start-Sleep -Seconds 1
 }
 if (Test-Path -LiteralPath `$dest) {
@@ -456,17 +498,8 @@ function Install-PromptAuxiliarSourceZip {
     Move-Item -Path $extracted.FullName -Destination $staging -Force
 
     $destExists = Test-Path -LiteralPath $Destination
-    $needsDeferred = $false
-    if ($destExists) {
-        if (Test-PromptAuxRunningFromPath -InstallRoot $Destination -ScriptDir $ScriptDir) {
-            $needsDeferred = $true
-        } elseif (Test-PromptAuxPathInUse -Path $Destination) {
-            $needsDeferred = $true
-        }
-    }
-
-    if ($needsDeferred) {
-        Write-Host '  Pasta em uso - atualizacao sera concluida ao fechar esta janela...' -ForegroundColor Cyan
+    if ($destExists -and (Test-PromptAuxShouldDeferFolderSwap -Destination $Destination -ScriptDir $ScriptDir)) {
+        Write-Host '  Pasta em uso - feche esta janela do PowerShell para concluir a atualizacao...' -ForegroundColor Cyan
         Invoke-PromptAuxDeferredFolderSwap -StagingPath $staging -Destination $Destination
         Remove-Item $tempZip -Force -ErrorAction SilentlyContinue
         Remove-Item $tempExtract -Force -ErrorAction SilentlyContinue
@@ -475,7 +508,15 @@ function Install-PromptAuxiliarSourceZip {
 
     if ($destExists) {
         Write-Host '  Substituindo arquivos da instalacao...' -ForegroundColor DarkGray
-        Remove-Item $Destination -Recurse -Force
+        try {
+            Remove-Item -LiteralPath $Destination -Recurse -Force -ErrorAction Stop
+        } catch {
+            Write-Host '  Nao foi possivel substituir agora - aguardando fechar esta janela...' -ForegroundColor Cyan
+            Invoke-PromptAuxDeferredFolderSwap -StagingPath $staging -Destination $Destination
+            Remove-Item $tempZip -Force -ErrorAction SilentlyContinue
+            Remove-Item $tempExtract -Force -ErrorAction SilentlyContinue
+            return @{ Deferred = $true }
+        }
     }
     New-Item -ItemType Directory -Path (Split-Path $Destination -Parent) -Force | Out-Null
     Move-Item -Path $staging -Destination $Destination -Force
