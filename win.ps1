@@ -48,8 +48,14 @@ function Test-PromptAuxPythonExe {
     param([string]$ExePath)
 
     if (-not $ExePath -or -not (Test-Path -LiteralPath $ExePath)) { return $null }
-    $v = & $ExePath -c "import sys; print(sys.version_info >= (3,10))" 2>$null
-    if ($v -eq 'True') { return @{ Cmd = $ExePath; Arg = @() } }
+
+    # Ignorar aliases do WindowsApps (redirecionam para Microsoft Store, nao sao Python real)
+    if ($ExePath -like '*\WindowsApps\*') { return $null }
+
+    try {
+        $v = & $ExePath -c "import sys; print(sys.version_info >= (3,10))" 2>$null
+        if ($v -eq 'True') { return @{ Cmd = $ExePath; Arg = @() } }
+    } catch { <# alias da Store pode jogar excecao; ignorar #> }
     return $null
 }
 
@@ -58,28 +64,41 @@ function Test-PromptAuxPythonCmd {
 
     if ($Cmd -eq 'py') {
         if (-not (Get-Command py -ErrorAction SilentlyContinue)) { return $null }
-        $v = & py -3 -c "import sys; print(sys.version_info >= (3,10))" 2>$null
-        if ($v -eq 'True') { return @{ Cmd = 'py'; Arg = @('-3') } }
+        try {
+            $v = & py -3 -c "import sys; print(sys.version_info >= (3,10))" 2>$null
+            if ($v -eq 'True') { return @{ Cmd = 'py'; Arg = @('-3') } }
+        } catch { }
         return $null
     }
 
     $exe = Get-Command $Cmd -ErrorAction SilentlyContinue
     if (-not $exe) { return $null }
+    # Ignorar aliases do WindowsApps que redirecionam para a Microsoft Store
+    if ($exe.Source -like '*\WindowsApps\*') { return $null }
     return Test-PromptAuxPythonExe -ExePath $exe.Source
 }
 
 function Find-PromptAuxPythonFromDisk {
     $candidates = [System.Collections.Generic.List[string]]::new()
 
-    $roots = @(
+    # Caminhos tipicos de instalacao usuario (winget --scope user) e sistema
+    $searchRoots = @(
         (Join-Path $env:LOCALAPPDATA 'Programs\Python')
-        (Join-Path $env:ProgramFiles 'Python312')
-        (Join-Path $env:ProgramFiles 'Python311')
-        (Join-Path $env:ProgramFiles 'Python310')
+        (Join-Path $env:LOCALAPPDATA 'Programs\Python\Python312')
+        (Join-Path $env:LOCALAPPDATA 'Programs\Python\Python311')
+        (Join-Path $env:LOCALAPPDATA 'Programs\Python\Python310')
+        (Join-Path $env:ProgramFiles  'Python312')
+        (Join-Path $env:ProgramFiles  'Python311')
+        (Join-Path $env:ProgramFiles  'Python310')
+        (Join-Path $env:ProgramFiles  'Python')
+        'C:\Python312'
+        'C:\Python311'
+        'C:\Python310'
     ) | Where-Object { $_ -and (Test-Path $_) }
 
-    foreach ($root in $roots) {
-        Get-ChildItem -Path $root -Filter 'python.exe' -Recurse -ErrorAction SilentlyContinue |
+    foreach ($root in $searchRoots) {
+        Get-ChildItem -Path $root -Filter 'python.exe' -Recurse -Depth 2 -ErrorAction SilentlyContinue |
+            Where-Object { $_.FullName -notlike '*\WindowsApps\*' } |
             ForEach-Object { $candidates.Add($_.FullName) }
     }
 
@@ -144,8 +163,12 @@ function Install-PromptAuxPythonViaOfficial {
     $installer = Join-Path $env:TEMP "python-$ver-amd64.exe"
 
     Write-Host "  Baixando instalador oficial Python $ver..." -ForegroundColor DarkGray
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    Invoke-WebRequest -Uri $url -OutFile $installer -UseBasicParsing
+    try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        Invoke-WebRequest -Uri $url -OutFile $installer -UseBasicParsing -TimeoutSec 120
+    } catch {
+        throw "Nao foi possivel baixar o instalador Python. Verifique a internet e tente novamente.`nURL: $url`nDetalhes: $($_.Exception.Message)"
+    }
 
     Write-Host '  Instalando Python (modo silencioso, adiciona ao PATH)...' -ForegroundColor DarkGray
     $proc = Start-Process -FilePath $installer -ArgumentList @(
@@ -153,33 +176,52 @@ function Install-PromptAuxPythonViaOfficial {
         'InstallAllUsers=0',
         'PrependPath=1',
         'Include_test=0',
-        'Include_launcher=1'
+        'Include_launcher=1',
+        'SimpleInstall=1'
     ) -Wait -PassThru
 
     Remove-Item $installer -Force -ErrorAction SilentlyContinue
-    if ($proc.ExitCode -ne 0) {
-        throw "Instalador oficial retornou codigo $($proc.ExitCode)."
+
+    # Codigos conhecidos: 0=ok, 1638=versao mais recente ja instalada
+    if ($proc.ExitCode -ne 0 -and $proc.ExitCode -ne 1638) {
+        throw "Instalador Python retornou codigo $($proc.ExitCode). Tente instalar manualmente: https://www.python.org/downloads/"
     }
     return $true
 }
 
+function Install-PromptAuxDisableStoreAlias {
+    # Desabilita os aliases do Windows App Execution para python/python3
+    # para que chamadas a 'python' nao abram a Microsoft Store
+    try {
+        $key = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\App Paths'
+        # Nao mexer no registro neste passo; apenas avisar o usuario
+        Write-Host '  Aviso: aliases do Windows App Execution (python.exe -> Store) detectados.' -ForegroundColor Yellow
+        Write-Host '  Se Python nao abrir apos instalar, desative em: Configuracoes > Aplicativos > Aliases de execucao do aplicativo.' -ForegroundColor Yellow
+    } catch { }
+}
+
 function Install-PromptAuxPython {
-    Write-Host '  Python 3.10+ não encontrado.' -ForegroundColor Yellow
+    Write-Host '  Python 3.10+ nao encontrado. Iniciando instalacao...' -ForegroundColor Yellow
+    Install-PromptAuxDisableStoreAlias
 
     $wingetOk = $false
     if (Get-Command winget -ErrorAction SilentlyContinue) {
         Write-Host '  Tentando instalar via winget...' -ForegroundColor DarkGray
         $wingetOk = Install-PromptAuxPythonViaWinget
+        if ($wingetOk) {
+            Write-Host '  Python instalado via winget.' -ForegroundColor Green
+        }
     } else {
-        Write-Host '  winget não disponível neste PC.' -ForegroundColor DarkYellow
+        Write-Host '  winget nao disponivel neste PC.' -ForegroundColor DarkYellow
     }
 
     if (-not $wingetOk) {
-        Write-Host '  winget não concluiu - usando instalador python.org...' -ForegroundColor DarkYellow
+        Write-Host '  Usando instalador oficial python.org...' -ForegroundColor DarkYellow
         Install-PromptAuxPythonViaOfficial | Out-Null
+        Write-Host '  Python instalado via python.org.' -ForegroundColor Green
     }
 
-    Start-Sleep -Seconds 3
+    Start-Sleep -Seconds 4
     Update-PromptAuxPath
     Write-Host '  Verificando Python instalado...' -ForegroundColor Green
 }
@@ -199,9 +241,14 @@ function Get-PromptAuxPython {
     }
 
     throw @"
-Python 3.10+ ainda não foi detectado após a instalação.
-Feche este PowerShell, abra um novo e execute o comando irm novamente.
-Ou instale manualmente: https://www.python.org/downloads/ (marque 'Add python.exe to PATH').
+Python 3.10+ nao foi detectado apos a instalacao.
+Possiveis causas:
+  1. O alias do Windows App Execution ainda intercepta 'python'. Desative em:
+     Configuracoes > Aplicativos > Aliases de execucao do aplicativo
+     (desative python.exe e python3.exe) e execute este instalador novamente.
+  2. O PATH nao foi atualizado. Feche este PowerShell, abra um novo e execute o irm novamente.
+  3. Instale manualmente: https://www.python.org/downloads/
+     (marque 'Add python.exe to PATH' durante a instalacao).
 "@
 }
 
