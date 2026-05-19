@@ -108,13 +108,13 @@ def _abrir_console_script(script: str, titulo: str) -> None:
     if not script_path.is_file():
         raise ScriptNaoEncontradoError(f"Script não encontrado: {script_path}")
 
-    cwd = str(script_path.parent)
     bat = str(script_path)
-    cmd_line = f'chcp 65001>nul & call "{bat}"'
     flags = getattr(subprocess, "CREATE_NEW_CONSOLE", 0)
+    # Passar string (não lista) evita list2cmdline que converte " em \"
+    # cmd.exe não entende \" — usa "" como escape; a lista quebra o call.
     subprocess.Popen(
-        ["cmd.exe", "/c", cmd_line],
-        cwd=cwd,
+        f'cmd.exe /c "{bat}"',
+        cwd=str(script_path.parent),
         creationflags=flags,
     )
 
