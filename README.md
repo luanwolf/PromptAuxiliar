@@ -8,7 +8,7 @@
     <img alt="Winget" src="https://img.shields.io/badge/Winget-pacotes-2EA043?logo=windows&logoColor=white" />
     <img alt="PowerShell" src="https://img.shields.io/badge/PowerShell-5.1+-5391FE?logo=powershell&logoColor=white" />
     <img alt="Batch" src="https://img.shields.io/badge/Batch-scripts-4D4D4D?logo=windowsterminal&logoColor=white" />
-    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.6.4-0c0f14" />
+    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.6.6-0c0f14" />
   </p>
 
   <p>
@@ -38,8 +38,10 @@ O **Prompt Auxiliar** centraliza tarefas comuns de manutenção e personalizaç�
 Abra o **PowerShell** e execute:
 
 ```powershell
-irm "https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/win.ps1" | iex
+irm "https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/install.ps1" | iex
 ```
+
+Também funciona com `win.ps1` direto; o instalador configura **RemoteSigned** no seu usuário e cria `Iniciar-PromptAuxiliar.cmd`, para os próximos comandos não precisarem de `-ExecutionPolicy Bypass`.
 
 **O que o instalador faz automaticamente**
 
@@ -49,8 +51,9 @@ irm "https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/win.ps1" | i
 | 2. Python | Procura **Python 3.10+**. Se não existir, tenta **winget** (3.12/3.11/3.10); se falhar, baixa o instalador oficial em **python.org** (silencioso + PATH) |
 | 3. Dependências | Executa `pip install -r requirements.txt` |
 | 4. Pasta de dados | Prepara `C:\PromptAuxiliar` (softwares, registros, seleções) |
-| 5. Atalhos | Cria atalhos na Área de Trabalho e Menu Iniciar (com ícone do app) |
-| 6. Abrir app | Inicia a interface WebView2 |
+| 5. Política | Define **RemoteSigned** (usuário) para scripts locais; gera `Iniciar-PromptAuxiliar.cmd` |
+| 6. Atalhos | Cria `Prompt Auxiliar vX.Y.Z.lnk` na Área de Trabalho e Menu Iniciar |
+| 7. Abrir app | Inicia a interface WebView2 |
 
 ### Atualização automática (GitHub)
 

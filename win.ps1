@@ -239,35 +239,113 @@ function Sync-PromptAuxUpdateModuleFromGitHub {
     Write-PromptAuxUtf8NoBom -Path $dest -Content $content
 }
 
-function Sync-PromptAuxEssentialScriptsFromGitHub {
-    param(
-        [string]$InstallRoot,
-        [string]$Owner,
-        [string]$Name,
-        [string]$Branch
-    )
-    $names = @(
+function Get-PromptAuxEssentialScriptNames {
+    return @(
         'Atualizar-e-Iniciar.ps1',
         'Criar-Atalho.ps1',
         'Concluir-Troca-Instalacao.ps1',
         'Reparar-Atalho.ps1'
     )
+}
+
+function Copy-PromptAuxEssentialScriptsLocal {
+    param(
+        [string]$InstallRoot,
+        [string]$SourceRoot
+    )
+    if (-not $SourceRoot) { return 0 }
+    try {
+        $srcRoot = (Resolve-Path -LiteralPath $SourceRoot).Path
+        $dstRoot = (Resolve-Path -LiteralPath $InstallRoot).Path
+        if ($srcRoot -eq $dstRoot) { return 0 }
+    } catch {
+        return 0
+    }
+    $copied = 0
     $psDir = Join-Path $InstallRoot 'powershell'
     if (-not (Test-Path -LiteralPath $psDir)) {
         New-Item -ItemType Directory -Path $psDir -Force | Out-Null
     }
+    foreach ($name in (Get-PromptAuxEssentialScriptNames)) {
+        $src = Join-Path $SourceRoot "powershell\$name"
+        $dest = Join-Path $psDir $name
+        if ((Test-Path -LiteralPath $src) -and (-not (Test-Path -LiteralPath $dest))) {
+            Copy-Item -LiteralPath $src -Destination $dest -Force
+            $copied++
+        }
+    }
+    return $copied
+}
+
+function Sync-PromptAuxEssentialScriptsFromGitHub {
+    param(
+        [string]$InstallRoot,
+        [string]$Owner,
+        [string]$Name,
+        [string]$Branch,
+        [string]$SourceRoot = ''
+    )
+    $names = Get-PromptAuxEssentialScriptNames
+    $psDir = Join-Path $InstallRoot 'powershell'
+    if (-not (Test-Path -LiteralPath $psDir)) {
+        New-Item -ItemType Directory -Path $psDir -Force | Out-Null
+    }
+    if ($SourceRoot) {
+        Copy-PromptAuxEssentialScriptsLocal -InstallRoot $InstallRoot -SourceRoot $SourceRoot | Out-Null
+    }
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    $headers = @{ 'User-Agent' = 'PromptAuxiliar-Installer' }
     foreach ($name in $names) {
         $dest = Join-Path $psDir $name
         if (Test-Path -LiteralPath $dest) { continue }
+        $copied = $false
+        if ($SourceRoot) {
+            $src = Join-Path $SourceRoot "powershell\$name"
+            if (Test-Path -LiteralPath $src) {
+                Copy-Item -LiteralPath $src -Destination $dest -Force
+                $copied = $true
+            }
+        }
+        if ($copied) { continue }
         try {
             $url = "https://raw.githubusercontent.com/$Owner/$Name/$Branch/powershell/$name"
-            $content = (Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 20).Content
+            $content = (Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 25 -Headers $headers).Content
             Write-PromptAuxUtf8NoBom -Path $dest -Content $content
         } catch {
-            Write-Host "  Aviso: nao foi possivel baixar powershell/$name" -ForegroundColor DarkYellow
+            $hint = 'arquivo ausente no GitHub (branch main) ou sem internet'
+            if ($_.Exception.Response -and $_.Exception.Response.StatusCode.value__ -eq 404) {
+                $hint = 'ainda nao publicado na branch main do GitHub - faca push ou reinstale pelo ZIP'
+            }
+            Write-Host "  Aviso: powershell/$name - $hint" -ForegroundColor DarkYellow
         }
     }
+}
+
+function Enable-PromptAuxiliarExecutionPolicy {
+    if ($env:PROMPTAUX_SKIP_EXEC_POLICY -eq '1') { return }
+    try {
+        Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force -ErrorAction Stop
+    } catch { }
+    try {
+        $userPolicy = Get-ExecutionPolicy -Scope CurrentUser
+        if ($userPolicy -in @('Undefined', 'Restricted', 'AllSigned')) {
+            Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force -ErrorAction Stop
+            Write-Host '  ExecutionPolicy: RemoteSigned (usuario) - scripts locais sem -Bypass' -ForegroundColor DarkGray
+        }
+    } catch {
+        Write-Host '  Aviso: nao foi possivel definir RemoteSigned. Atalhos usam launcher com Bypass.' -ForegroundColor DarkYellow
+    }
+}
+
+function Write-PromptAuxiliarCmdLauncher {
+    param([string]$InstallRoot)
+    $cmdPath = Join-Path $InstallRoot 'Iniciar-PromptAuxiliar.cmd'
+    $content = @"
+@echo off
+cd /d "%~dp0"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0win.ps1" %*
+"@
+    Write-PromptAuxUtf8NoBom -Path $cmdPath -Content $content
 }
 
 function Repair-PromptAuxDesktopShortcuts {
@@ -511,12 +589,7 @@ trap {
 }
 
 Write-PromptAuxBanner
-
-try {
-    Sync-PromptAuxEssentialScriptsFromGitHub -InstallRoot $InstallRoot -Owner $RepoOwner -Name $RepoName -Branch $Branch
-} catch {
-    Write-Host '  Aviso: scripts auxiliares nao sincronizados do GitHub.' -ForegroundColor DarkYellow
-}
+Enable-PromptAuxiliarExecutionPolicy
 
 $forceUpdate = $Update -or ($env:PROMPTAUX_UPDATE -eq '1')
 $script:PromptAuxDeferredExit = $false
@@ -535,6 +608,17 @@ if ($script:PromptAuxDeferredExit) {
     exit 0
 }
 
+try {
+    Sync-PromptAuxEssentialScriptsFromGitHub `
+        -InstallRoot $InstallRoot `
+        -Owner $RepoOwner `
+        -Name $RepoName `
+        -Branch $Branch `
+        -SourceRoot $ScriptDir
+} catch {
+    Write-Host '  Aviso: scripts auxiliares nao sincronizados.' -ForegroundColor DarkYellow
+}
+
 $env:PROMPTAUX_HOME = $InstallRoot
 $python = Get-PromptAuxPython
 Install-PromptAuxiliarPythonDeps -PythonInfo $python -ProjectRoot $InstallRoot
@@ -550,6 +634,7 @@ if ($SetupOnly) {
     return
 }
 
+Write-PromptAuxiliarCmdLauncher -InstallRoot $InstallRoot
 Write-Host '  Atualizando atalhos...' -ForegroundColor DarkGray
 Repair-PromptAuxDesktopShortcuts -InstallRoot $InstallRoot
 
