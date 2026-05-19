@@ -574,6 +574,10 @@ function Start-PromptAuxiliarProcess {
     Push-Location $ProjectRoot
     try {
         & $PythonInfo.Cmd @runArgs
+        $code = if ($null -ne $LASTEXITCODE) { $LASTEXITCODE } else { 0 }
+        if ($code -ne 0) {
+            throw "main.py encerrou com codigo $code"
+        }
     } finally {
         Pop-Location
     }

@@ -78,11 +78,11 @@ foreach ($root in $targets) {{
 }}
 $desk = [Environment]::GetFolderPath('Desktop')
 $sm = Join-Path $env:APPDATA 'Microsoft\\Windows\\Start Menu\\Programs'
-foreach ($dir in @($desk, $sm)) {
-    if (-not (Test-Path -LiteralPath $dir)) { continue }
+foreach ($dir in @($desk, $sm)) {{
+    if (-not (Test-Path -LiteralPath $dir)) {{ continue }}
     Get-ChildItem -LiteralPath $dir -Filter 'Prompt Auxiliar*.lnk' -File -ErrorAction SilentlyContinue |
         Remove-Item -Force -ErrorAction SilentlyContinue
-}
+}}
 """
     ps1 = Path(tempfile.gettempdir()) / "promptauxiliar-uninstall.ps1"
     _write_utf8_no_bom(ps1, script)
