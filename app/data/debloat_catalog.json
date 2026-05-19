@@ -15,7 +15,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Assistência remota Microsoft.",
       "padrao": true,
-      "descricao_detalhada": "Quick Assist: Assistência remota Microsoft. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: MicrosoftCorporationII.QuickAssist_8wekyb3d8bbwe."
+      "descricao_detalhada": "Assistência remota Microsoft."
     },
     {
       "id": "Microsoft.GetHelp_8wekyb3d8bbwe",
@@ -23,7 +23,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Suporte e ajuda Microsoft.",
       "padrao": true,
-      "descricao_detalhada": "Get Help: Suporte e ajuda Microsoft. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.GetHelp_8wekyb3d8bbwe."
+      "descricao_detalhada": "Suporte e ajuda Microsoft."
     },
     {
       "id": "Microsoft.Getstarted_8wekyb3d8bbwe",
@@ -31,7 +31,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Dicas e novidades do Windows.",
       "padrao": true,
-      "descricao_detalhada": "Tips (Dicas do Windows): Dicas e novidades do Windows. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.Getstarted_8wekyb3d8bbwe."
+      "descricao_detalhada": "Dicas e novidades do Windows."
     },
     {
       "id": "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe",
@@ -39,7 +39,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Hub do Microsoft 365.",
       "padrao": true,
-      "descricao_detalhada": "Office Hub: Hub do Microsoft 365. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe."
+      "descricao_detalhada": "Hub do Microsoft 365."
     },
     {
       "id": "Microsoft.OutlookForWindows_8wekyb3d8bbwe",
@@ -47,7 +47,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Cliente Outlook Mail.",
       "padrao": true,
-      "descricao_detalhada": "Outlook (novo): Cliente Outlook Mail. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.OutlookForWindows_8wekyb3d8bbwe."
+      "descricao_detalhada": "Cliente Outlook Mail."
     },
     {
       "id": "microsoft.windowscommunicationsapps_8wekyb3d8bbwe",
@@ -55,7 +55,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Apps de e-mail e agenda (legado).",
       "padrao": true,
-      "descricao_detalhada": "Mail e Calendário: Apps de e-mail e agenda (legado). App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: microsoft.windowscommunicationsapps_8wekyb3d8bbwe."
+      "descricao_detalhada": "Apps de e-mail e agenda (legado)."
     },
     {
       "id": "Microsoft.People_8wekyb3d8bbwe",
@@ -63,7 +63,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Contatos Microsoft.",
       "padrao": true,
-      "descricao_detalhada": "People: Contatos Microsoft. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.People_8wekyb3d8bbwe."
+      "descricao_detalhada": "Contatos Microsoft."
     },
     {
       "id": "Microsoft.YourPhone_8wekyb3d8bbwe",
@@ -71,7 +71,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Vincular smartphone (não remove em todas as builds).",
       "padrao": false,
-      "descricao_detalhada": "Phone Link: Vincular smartphone (não remove em todas as builds). App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.YourPhone_8wekyb3d8bbwe."
+      "descricao_detalhada": "Vincular smartphone (não remove em todas as builds)."
     },
     {
       "id": "Microsoft.Todos_8wekyb3d8bbwe",
@@ -79,7 +79,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Lista de tarefas.",
       "padrao": false,
-      "descricao_detalhada": "Microsoft To Do: Lista de tarefas. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.Todos_8wekyb3d8bbwe."
+      "descricao_detalhada": "Lista de tarefas."
     },
     {
       "id": "Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe",
@@ -87,7 +87,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Automação desktop (Power Automate).",
       "padrao": true,
-      "descricao_detalhada": "Power Automate: Automação desktop (Power Automate). App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe."
+      "descricao_detalhada": "Automação desktop (Power Automate)."
     },
     {
       "id": "Microsoft.WindowsFeedbackHub_8wekyb3d8bbwe",
@@ -95,7 +95,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Enviar feedback ao Windows.",
       "padrao": true,
-      "descricao_detalhada": "Feedback Hub: Enviar feedback ao Windows. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.WindowsFeedbackHub_8wekyb3d8bbwe."
+      "descricao_detalhada": "Enviar feedback ao Windows."
     },
     {
       "id": "Microsoft.WindowsMaps_8wekyb3d8bbwe",
@@ -103,7 +103,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "App de mapas.",
       "padrao": true,
-      "descricao_detalhada": "Mapas: App de mapas. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.WindowsMaps_8wekyb3d8bbwe."
+      "descricao_detalhada": "App de mapas."
     },
     {
       "id": "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe",
@@ -111,7 +111,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Gravação de áudio simples.",
       "padrao": true,
-      "descricao_detalhada": "Gravador de som: Gravação de áudio simples. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe."
+      "descricao_detalhada": "Gravação de áudio simples."
     },
     {
       "id": "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe",
@@ -119,7 +119,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Notas adesivas.",
       "padrao": false,
-      "descricao_detalhada": "Sticky Notes: Notas adesivas. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe."
+      "descricao_detalhada": "Notas adesivas."
     },
     {
       "id": "Microsoft.DevHome",
@@ -127,7 +127,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Painel para desenvolvedores (Win11).",
       "padrao": true,
-      "descricao_detalhada": "Dev Home: Painel para desenvolvedores (Win11). App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.DevHome."
+      "descricao_detalhada": "Painel para desenvolvedores (Win11)."
     },
     {
       "id": "Microsoft.BingNews_8wekyb3d8bbwe",
@@ -135,7 +135,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Notícias Bing / MSN.",
       "padrao": true,
-      "descricao_detalhada": "App de notícias curadas (Bing/MSN) pré-instalado no Windows. Consome dados e exibe conteúdo na barra de widgets; removível se você não usa notícias integradas ao sistema."
+      "descricao_detalhada": "Feed de notícias Bing/MSN integrado ao Windows. Exibe manchetes e widgets de notícias."
     },
     {
       "id": "Microsoft.BingWeather_8wekyb3d8bbwe",
@@ -143,7 +143,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Previsão do tempo.",
       "padrao": true,
-      "descricao_detalhada": "Clima (Bing): Previsão do tempo. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.BingWeather_8wekyb3d8bbwe."
+      "descricao_detalhada": "Previsão do tempo."
     },
     {
       "id": "Microsoft.549981C3F5F10_8wekyb3d8bbwe",
@@ -151,7 +151,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Assistente Cortana (onde ainda existir).",
       "padrao": true,
-      "descricao_detalhada": "Cortana: Assistente Cortana (onde ainda existir). App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.549981C3F5F10_8wekyb3d8bbwe."
+      "descricao_detalhada": "Assistente Cortana (onde ainda existir)."
     },
     {
       "id": "WindowsCamera_8wekyb3d8bbwe",
@@ -159,7 +159,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "App de câmera.",
       "padrao": false,
-      "descricao_detalhada": "Câmera: App de câmera. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: WindowsCamera_8wekyb3d8bbwe."
+      "descricao_detalhada": "App de câmera."
     },
     {
       "id": "Microsoft.WindowsAlarms_8wekyb3d8bbwe",
@@ -167,7 +167,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Alarmes, timer e relógio.",
       "padrao": false,
-      "descricao_detalhada": "Alarmes e Relógio: Alarmes, timer e relógio. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.WindowsAlarms_8wekyb3d8bbwe."
+      "descricao_detalhada": "Alarmes, timer e relógio."
     },
     {
       "id": "Microsoft.WindowsCalculator_8wekyb3d8bbwe",
@@ -175,7 +175,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Calculadora UWP (reinstale via winget se precisar).",
       "padrao": false,
-      "descricao_detalhada": "Calculadora: Calculadora UWP (reinstale via winget se precisar). App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.WindowsCalculator_8wekyb3d8bbwe."
+      "descricao_detalhada": "Calculadora UWP (reinstale via winget se precisar)."
     },
     {
       "id": "Microsoft.ScreenSketch_8wekyb3d8bbwe",
@@ -183,7 +183,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Captura de tela / Recorte.",
       "padrao": false,
-      "descricao_detalhada": "Snipping Tool (UWP): Captura de tela / Recorte. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.ScreenSketch_8wekyb3d8bbwe."
+      "descricao_detalhada": "Captura de tela / Recorte."
     },
     {
       "id": "Microsoft.Windows.Photos_8wekyb3d8bbwe",
@@ -191,7 +191,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Visualizador de fotos Microsoft.",
       "padrao": false,
-      "descricao_detalhada": "Fotos: Visualizador de fotos Microsoft. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.Windows.Photos_8wekyb3d8bbwe."
+      "descricao_detalhada": "Visualizador de fotos Microsoft."
     },
     {
       "id": "Microsoft.Whiteboard_8wekyb3d8bbwe",
@@ -199,7 +199,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Quadro branco colaborativo.",
       "padrao": true,
-      "descricao_detalhada": "Microsoft Whiteboard: Quadro branco colaborativo. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.Whiteboard_8wekyb3d8bbwe."
+      "descricao_detalhada": "Quadro branco colaborativo."
     },
     {
       "id": "Microsoft.Office.OneNote_8wekyb3d8bbwe",
@@ -207,7 +207,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "OneNote da Microsoft Store.",
       "padrao": true,
-      "descricao_detalhada": "OneNote (UWP): OneNote da Microsoft Store. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.Office.OneNote_8wekyb3d8bbwe."
+      "descricao_detalhada": "OneNote da Microsoft Store."
     },
     {
       "id": "Microsoft.MixedReality.Portal_8wekyb3d8bbwe",
@@ -215,7 +215,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Portal de realidade mista.",
       "padrao": true,
-      "descricao_detalhada": "Mixed Reality Portal: Portal de realidade mista. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.MixedReality.Portal_8wekyb3d8bbwe."
+      "descricao_detalhada": "Portal de realidade mista."
     },
     {
       "id": "Microsoft.Print3D_8wekyb3d8bbwe",
@@ -223,7 +223,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Impressão 3D.",
       "padrao": true,
-      "descricao_detalhada": "Print 3D: Impressão 3D. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.Print3D_8wekyb3d8bbwe."
+      "descricao_detalhada": "Impressão 3D."
     },
     {
       "id": "Microsoft.Microsoft3DViewer_8wekyb3d8bbwe",
@@ -231,7 +231,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Visualizador de modelos 3D.",
       "padrao": true,
-      "descricao_detalhada": "Visualizador 3D: Visualizador de modelos 3D. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.Microsoft3DViewer_8wekyb3d8bbwe."
+      "descricao_detalhada": "Visualizador de modelos 3D."
     },
     {
       "id": "9NBLGGH42THS",
@@ -239,7 +239,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Visualizador 3D (ID legado da Store).",
       "padrao": true,
-      "descricao_detalhada": "3D Viewer (legado): Visualizador 3D (ID legado da Store). App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: 9NBLGGH42THS."
+      "descricao_detalhada": "Visualizador 3D (ID legado da Store)."
     },
     {
       "id": "9NBLGGH5FV99",
@@ -247,7 +247,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Editor Paint 3D.",
       "padrao": true,
-      "descricao_detalhada": "Paint 3D: Editor Paint 3D. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: 9NBLGGH5FV99."
+      "descricao_detalhada": "Editor Paint 3D."
     },
     {
       "id": "Microsoft.Wallet_8wekyb3d8bbwe",
@@ -255,7 +255,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Carteira digital (descontinuado).",
       "padrao": true,
-      "descricao_detalhada": "Microsoft Pay / Wallet: Carteira digital (descontinuado). App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.Wallet_8wekyb3d8bbwe."
+      "descricao_detalhada": "Carteira digital (descontinuado)."
     },
     {
       "id": "MicrosoftCorporationII.MicrosoftFamily_8wekyb3d8bbwe",
@@ -263,7 +263,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Segurança familiar.",
       "padrao": true,
-      "descricao_detalhada": "Microsoft Family: Segurança familiar. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: MicrosoftCorporationII.MicrosoftFamily_8wekyb3d8bbwe."
+      "descricao_detalhada": "Segurança familiar."
     },
     {
       "id": "Microsoft.OneConnect_8wekyb3d8bbwe",
@@ -271,7 +271,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Planos móveis / dados celular.",
       "padrao": true,
-      "descricao_detalhada": "Mobile Plans: Planos móveis / dados celular. App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.OneConnect_8wekyb3d8bbwe."
+      "descricao_detalhada": "Planos móveis / dados celular."
     },
     {
       "id": "Microsoft.Messaging_8wekyb3d8bbwe",
@@ -279,7 +279,7 @@
       "categoria": "Apps Microsoft",
       "descricao": "Mensagens SMS (onde disponível).",
       "padrao": true,
-      "descricao_detalhada": "Messaging: Mensagens SMS (onde disponível). App UWP/Microsoft Store pré-instalado no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.Messaging_8wekyb3d8bbwe."
+      "descricao_detalhada": "Mensagens SMS (onde disponível)."
     },
     {
       "id": "Microsoft.GamingApp_8wekyb3d8bbwe",
@@ -287,7 +287,7 @@
       "categoria": "Xbox e gaming",
       "descricao": "App Xbox / PC Game Pass.",
       "padrao": true,
-      "descricao_detalhada": "App Xbox moderno no Windows: biblioteca de jogos, Game Pass, gravação e social. Remover desativa parte da integração Xbox no PC — avalie se você joga na plataforma."
+      "descricao_detalhada": "App Xbox no Windows: biblioteca de jogos, PC Game Pass, capturas e recursos sociais."
     },
     {
       "id": "Microsoft.XboxApp_8wekyb3d8bbwe",
@@ -295,7 +295,7 @@
       "categoria": "Xbox e gaming",
       "descricao": "App Xbox legado.",
       "padrao": true,
-      "descricao_detalhada": "Xbox Console Companion: App Xbox legado. Componente ou app da ecossistema Xbox no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.XboxApp_8wekyb3d8bbwe."
+      "descricao_detalhada": "App Xbox legado."
     },
     {
       "id": "Microsoft.XboxGamingOverlay_8wekyb3d8bbwe",
@@ -303,7 +303,7 @@
       "categoria": "Xbox e gaming",
       "descricao": "Overlay de jogos (Win+G).",
       "padrao": false,
-      "descricao_detalhada": "Xbox Game Bar: Overlay de jogos (Win+G). Componente ou app da ecossistema Xbox no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.XboxGamingOverlay_8wekyb3d8bbwe."
+      "descricao_detalhada": "Overlay de jogos (Win+G)."
     },
     {
       "id": "Microsoft.Xbox.TCUI_8wekyb3d8bbwe",
@@ -311,7 +311,7 @@
       "categoria": "Xbox e gaming",
       "descricao": "Componente de interface Xbox.",
       "padrao": false,
-      "descricao_detalhada": "Xbox TCUI: Componente de interface Xbox. Componente ou app da ecossistema Xbox no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.Xbox.TCUI_8wekyb3d8bbwe."
+      "descricao_detalhada": "Componente de interface Xbox."
     },
     {
       "id": "Microsoft.XboxSpeechToTextOverlay_8wekyb3d8bbwe",
@@ -319,7 +319,7 @@
       "categoria": "Xbox e gaming",
       "descricao": "Overlay de voz para jogos.",
       "padrao": true,
-      "descricao_detalhada": "Xbox Speech Overlay: Overlay de voz para jogos. Componente ou app da ecossistema Xbox no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.XboxSpeechToTextOverlay_8wekyb3d8bbwe."
+      "descricao_detalhada": "Overlay de voz para jogos."
     },
     {
       "id": "Microsoft.XboxIdentityProvider_8wekyb3d8bbwe",
@@ -327,7 +327,7 @@
       "categoria": "Xbox e gaming",
       "descricao": "Login/conta Xbox.",
       "padrao": false,
-      "descricao_detalhada": "Xbox Identity Provider: Login/conta Xbox. Componente ou app da ecossistema Xbox no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.XboxIdentityProvider_8wekyb3d8bbwe."
+      "descricao_detalhada": "Login/conta Xbox."
     },
     {
       "id": "Microsoft.XboxGameOverlay_8wekyb3d8bbwe",
@@ -335,7 +335,7 @@
       "categoria": "Xbox e gaming",
       "descricao": "Overlay de jogos Xbox.",
       "padrao": true,
-      "descricao_detalhada": "Xbox Game Overlay: Overlay de jogos Xbox. Componente ou app da ecossistema Xbox no Windows. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.XboxGameOverlay_8wekyb3d8bbwe."
+      "descricao_detalhada": "Overlay de jogos Xbox."
     },
     {
       "id": "Clipchamp.Clipchamp_yxz26nhyzhsrt",
@@ -343,7 +343,7 @@
       "categoria": "Entretenimento e mídia",
       "descricao": "Editor de vídeo.",
       "padrao": true,
-      "descricao_detalhada": "Clipchamp: Editor de vídeo. App de entretenimento pré-instalado (vídeo, música ou jogos casuais). Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Clipchamp.Clipchamp_yxz26nhyzhsrt."
+      "descricao_detalhada": "Editor de vídeo."
     },
     {
       "id": "Microsoft.ZuneVideo_8wekyb3d8bbwe",
@@ -351,7 +351,7 @@
       "categoria": "Entretenimento e mídia",
       "descricao": "Loja de vídeo Microsoft.",
       "padrao": true,
-      "descricao_detalhada": "Filmes e TV: Loja de vídeo Microsoft. App de entretenimento pré-instalado (vídeo, música ou jogos casuais). Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.ZuneVideo_8wekyb3d8bbwe."
+      "descricao_detalhada": "Loja de vídeo Microsoft."
     },
     {
       "id": "Microsoft.ZuneMusic_8wekyb3d8bbwe",
@@ -359,7 +359,7 @@
       "categoria": "Entretenimento e mídia",
       "descricao": "Player de música legado.",
       "padrao": true,
-      "descricao_detalhada": "Groove Music: Player de música legado. App de entretenimento pré-instalado (vídeo, música ou jogos casuais). Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.ZuneMusic_8wekyb3d8bbwe."
+      "descricao_detalhada": "Player de música legado."
     },
     {
       "id": "Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe",
@@ -367,7 +367,7 @@
       "categoria": "Entretenimento e mídia",
       "descricao": "Jogos de paciência Microsoft.",
       "padrao": true,
-      "descricao_detalhada": "Solitaire Collection: Jogos de paciência Microsoft. App de entretenimento pré-instalado (vídeo, música ou jogos casuais). Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe."
+      "descricao_detalhada": "Jogos de paciência Microsoft."
     },
     {
       "id": "Microsoft.Teams",
@@ -375,7 +375,7 @@
       "categoria": "Comunicação",
       "descricao": "Teams instalado via winget/desktop.",
       "padrao": false,
-      "descricao_detalhada": "Microsoft Teams (desktop): Teams instalado via winget/desktop. App de comunicação pré-instalado pela Microsoft ou parceiros. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.Teams."
+      "descricao_detalhada": "Chat e reuniões Microsoft."
     },
     {
       "id": "MicrosoftTeams_8wekyb3d8bbwe",
@@ -383,7 +383,7 @@
       "categoria": "Comunicação",
       "descricao": "Teams pré-instalado (app consumo).",
       "padrao": true,
-      "descricao_detalhada": "Microsoft Teams (consumo): Teams pré-instalado (app consumo). App de comunicação pré-instalado pela Microsoft ou parceiros. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: MicrosoftTeams_8wekyb3d8bbwe."
+      "descricao_detalhada": "Teams pré-instalado (app consumo)."
     },
     {
       "id": "Microsoft.SkypeApp_kzf8qxf38zg5c",
@@ -391,7 +391,7 @@
       "categoria": "Comunicação",
       "descricao": "Skype (se instalado).",
       "padrao": true,
-      "descricao_detalhada": "Skype: Skype (se instalado). App de comunicação pré-instalado pela Microsoft ou parceiros. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.SkypeApp_kzf8qxf38zg5c."
+      "descricao_detalhada": "Skype (se instalado)."
     },
     {
       "id": "Microsoft.BingFinance_8wekyb3d8bbwe",
@@ -399,7 +399,7 @@
       "categoria": "Windows 10 (legado)",
       "descricao": "App de finanças (Win10).",
       "padrao": true,
-      "descricao_detalhada": "Bing Finanças: App de finanças (Win10). App legado do Windows 10 que pode ainda aparecer no Windows 11. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.BingFinance_8wekyb3d8bbwe."
+      "descricao_detalhada": "App de finanças (Win10)."
     },
     {
       "id": "Microsoft.BingSports_8wekyb3d8bbwe",
@@ -407,7 +407,7 @@
       "categoria": "Windows 10 (legado)",
       "descricao": "Notícias esportivas (Win10).",
       "padrao": true,
-      "descricao_detalhada": "Bing Esportes: Notícias esportivas (Win10). App legado do Windows 10 que pode ainda aparecer no Windows 11. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.BingSports_8wekyb3d8bbwe."
+      "descricao_detalhada": "Notícias esportivas (Win10)."
     },
     {
       "id": "Microsoft.BingHealthAndFitness_8wekyb3d8bbwe",
@@ -415,7 +415,7 @@
       "categoria": "Windows 10 (legado)",
       "descricao": "Saúde e fitness (Win10).",
       "padrao": true,
-      "descricao_detalhada": "Bing Saúde: Saúde e fitness (Win10). App legado do Windows 10 que pode ainda aparecer no Windows 11. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.BingHealthAndFitness_8wekyb3d8bbwe."
+      "descricao_detalhada": "Saúde e fitness (Win10)."
     },
     {
       "id": "Microsoft.BingFoodAndDrink_8wekyb3d8bbwe",
@@ -423,7 +423,7 @@
       "categoria": "Windows 10 (legado)",
       "descricao": "Receitas e bebidas (Win10).",
       "padrao": true,
-      "descricao_detalhada": "Bing Comida: Receitas e bebidas (Win10). App legado do Windows 10 que pode ainda aparecer no Windows 11. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.BingFoodAndDrink_8wekyb3d8bbwe."
+      "descricao_detalhada": "Receitas e bebidas (Win10)."
     },
     {
       "id": "Microsoft.BingTravel_8wekyb3d8bbwe",
@@ -431,7 +431,7 @@
       "categoria": "Windows 10 (legado)",
       "descricao": "Viagens (Win10).",
       "padrao": true,
-      "descricao_detalhada": "Bing Viagens: Viagens (Win10). App legado do Windows 10 que pode ainda aparecer no Windows 11. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: Microsoft.BingTravel_8wekyb3d8bbwe."
+      "descricao_detalhada": "Viagens (Win10)."
     },
     {
       "id": "disney+",
@@ -439,7 +439,7 @@
       "categoria": "Pré-instalados (loja)",
       "descricao": "Streaming Disney (OEM/loja).",
       "padrao": true,
-      "descricao_detalhada": "Disney+: Streaming Disney (OEM/loja). App promocional ou de parceiro (OEM/loja) — pode não existir em todo PC. Remover reduz apps em segundo plano e espaço ocupado, mas não afeta arquivos pessoais. ID: disney+."
+      "descricao_detalhada": "Streaming Disney (OEM/loja)."
     },
     {
       "id": "Microsoft.OneDrive",
@@ -447,7 +447,7 @@
       "categoria": "Revisar antes de remover",
       "descricao": "Sync na nuvem — pode ser integrado ao Windows.",
       "padrao": false,
-      "descricao_detalhada": "Sincroniza pastas e arquivos com a nuvem Microsoft. Integrado ao Windows e ao Office; remover no debloat não apaga arquivos na nuvem, mas desativa sync automático local."
+      "descricao_detalhada": "Armazenamento em nuvem Microsoft."
     },
     {
       "id": "Microsoft.Edge",
@@ -455,7 +455,7 @@
       "categoria": "Revisar antes de remover",
       "descricao": "Navegador padrão — remoção avançada.",
       "padrao": false,
-      "descricao_detalhada": "Microsoft Edge: Navegador padrão — remoção avançada. Remoção sensível: pode afetar funcionalidades centrais do Windows. Atenção: remova apenas se não usar este recurso; alguns itens voltam após atualizações do Windows. ID: Microsoft.Edge."
+      "descricao_detalhada": "Navegador Chromium da Microsoft."
     },
     {
       "id": "Microsoft.MicrosoftEdge.Stable",
@@ -463,7 +463,7 @@
       "categoria": "Revisar antes de remover",
       "descricao": "ID alternativo do Edge.",
       "padrao": false,
-      "descricao_detalhada": "Microsoft Edge (Stable): ID alternativo do Edge. Remoção sensível: pode afetar funcionalidades centrais do Windows. Atenção: remova apenas se não usar este recurso; alguns itens voltam após atualizações do Windows. ID: Microsoft.MicrosoftEdge.Stable."
+      "descricao_detalhada": "ID alternativo do Edge."
     },
     {
       "id": "Microsoft.WindowsStore_8wekyb3d8bbwe",
@@ -471,7 +471,7 @@
       "categoria": "Revisar antes de remover",
       "descricao": "Loja de apps — não recomendado remover.",
       "padrao": false,
-      "descricao_detalhada": "Loja oficial de apps UWP do Windows. Não é recomendado remover: muitas atualizações e apps do sistema dependem da Microsoft Store para instalação e manutenção."
+      "descricao_detalhada": "Loja oficial de aplicativos do Windows. Necessária para instalar e atualizar muitos apps UWP."
     }
   ]
 }
