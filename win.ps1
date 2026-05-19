@@ -1,4 +1,4 @@
-# Prompt Auxiliar — instalador estilo one-liner (Chris Titus / WinUtil)
+﻿﻿# Prompt Auxiliar — instalador estilo one-liner (Chris Titus / WinUtil)
 # Uso: irm "https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/win.ps1" | iex
 #Requires -Version 5.1
 
@@ -205,36 +205,56 @@ Ou instale manualmente: https://www.python.org/downloads/ (marque 'Add python.ex
 "@
 }
 
-function Install-PromptAuxiliarSource {
-    param([string]$Destination, [string]$Owner, [string]$Name, [string]$Ref)
+function Test-PromptAuxPs1Syntax {
+    param([string]$Path)
+    if (-not (Test-Path -LiteralPath $Path)) { return $false }
+    $parseErrors = $null
+    $tokens = $null
+    $null = [System.Management.Automation.Language.Parser]::ParseFile($Path, [ref]$tokens, [ref]$parseErrors)
+    return (-not $parseErrors -or $parseErrors.Count -eq 0)
+}
 
-    $updatePs1 = Join-Path $Destination 'powershell\Update-PromptAuxiliar.ps1'
-    if (Test-Path -LiteralPath $updatePs1) {
-        . $updatePs1
-        Install-PromptAuxiliarSourceZip -Destination $Destination -Owner $Owner -Name $Name -Branch $Ref
-        return
+function Sync-PromptAuxUpdateModuleFromGitHub {
+    param(
+        [string]$InstallRoot,
+        [string]$Owner,
+        [string]$Name,
+        [string]$Branch
+    )
+    $psDir = Join-Path $InstallRoot 'powershell'
+    if (-not (Test-Path -LiteralPath $psDir)) {
+        New-Item -ItemType Directory -Path $psDir -Force | Out-Null
     }
+    $dest = Join-Path $psDir 'Update-PromptAuxiliar.ps1'
+    $url = "https://raw.githubusercontent.com/$Owner/$Name/$Branch/powershell/Update-PromptAuxiliar.ps1"
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    Invoke-WebRequest -Uri $url -OutFile $dest -UseBasicParsing
+}
 
-    $zipUrl = "https://github.com/$Owner/$Name/archive/refs/heads/$Ref.zip"
-    $tempZip = Join-Path ([System.IO.Path]::GetTempPath()) "PromptAuxiliar-$Ref.zip"
+function Install-PromptAuxiliarSourceZip {
+    param(
+        [string]$Destination,
+        [string]$Owner,
+        [string]$Name,
+        [string]$Branch
+    )
+
+    $zipUrl = "https://github.com/$Owner/$Name/archive/refs/heads/$Branch.zip"
+    $tempZip = Join-Path ([System.IO.Path]::GetTempPath()) "PromptAuxiliar-$Branch.zip"
     $tempExtract = Join-Path ([System.IO.Path]::GetTempPath()) "PromptAuxiliar-extract-$([Guid]::NewGuid().ToString('n'))"
 
-    Write-Host "  Baixando repositório ($Ref)…" -ForegroundColor DarkGray
-    try {
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        Invoke-WebRequest -Uri $zipUrl -OutFile $tempZip -UseBasicParsing
-    } catch {
-        throw "Falha ao baixar $zipUrl. Verifique sua conexão ou defina PROMPTAUX_REPO_OWNER / PROMPTAUX_BRANCH."
-    }
+    Write-Host "  Baixando branch $Branch do GitHub..." -ForegroundColor DarkGray
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    Invoke-WebRequest -Uri $zipUrl -OutFile $tempZip -UseBasicParsing
 
     if (Test-Path $tempExtract) { Remove-Item $tempExtract -Recurse -Force }
     Expand-Archive -Path $tempZip -DestinationPath $tempExtract -Force
 
     $extracted = Get-ChildItem -Path $tempExtract -Directory | Select-Object -First 1
-    if (-not $extracted) { throw 'Pacote ZIP inválido ou vazio.' }
+    if (-not $extracted) { throw 'Pacote ZIP invalido ou vazio.' }
 
     if (Test-Path $Destination) {
-        Write-Host "  Atualizando pasta de instalação…" -ForegroundColor DarkGray
+        Write-Host '  Substituindo arquivos da instalacao...' -ForegroundColor DarkGray
         Remove-Item $Destination -Recurse -Force
     }
     New-Item -ItemType Directory -Path (Split-Path $Destination -Parent) -Force | Out-Null
@@ -242,6 +262,60 @@ function Install-PromptAuxiliarSource {
 
     Remove-Item $tempZip -Force -ErrorAction SilentlyContinue
     Remove-Item $tempExtract -Force -ErrorAction SilentlyContinue
+}
+
+function Install-PromptAuxiliarSource {
+    param([string]$Destination, [string]$Owner, [string]$Name, [string]$Ref)
+    Install-PromptAuxiliarSourceZip -Destination $Destination -Owner $Owner -Name $Name -Branch $Ref
+}
+
+function Invoke-PromptAuxiliarInstallOrUpdate {
+    param(
+        [string]$InstallRoot,
+        [string]$ScriptDir,
+        [string]$Owner,
+        [string]$Name,
+        [string]$Branch,
+        [switch]$Force
+    )
+
+    $updateModule = Join-Path $InstallRoot 'powershell\Update-PromptAuxiliar.ps1'
+    $mainPy = Join-Path $InstallRoot 'main.py'
+    $missingInstall = -not (Test-Path -LiteralPath $mainPy)
+
+    try {
+        Sync-PromptAuxUpdateModuleFromGitHub -InstallRoot $InstallRoot -Owner $Owner -Name $Name -Branch $Branch
+    } catch {
+        Write-Host '  Aviso: nao foi possivel baixar Update-PromptAuxiliar.ps1 do GitHub.' -ForegroundColor DarkYellow
+    }
+
+    $moduleOk = Test-PromptAuxPs1Syntax -Path $updateModule
+
+    if (-not $moduleOk) {
+        Write-Host '  Script de atualizacao local invalido - reinstalando via ZIP...' -ForegroundColor Cyan
+        Install-PromptAuxiliarSourceZip -Destination $InstallRoot -Owner $Owner -Name $Name -Branch $Branch
+        $moduleOk = Test-PromptAuxPs1Syntax -Path $updateModule
+    }
+
+    if ($moduleOk) {
+        . $updateModule
+        if ($missingInstall -or $Force) {
+            Write-Host '  Instalando Prompt Auxiliar...' -ForegroundColor Gray
+            Update-PromptAuxiliarIfNewer -InstallRoot $InstallRoot -ScriptDir $ScriptDir -Force | Out-Null
+        } else {
+            Write-Host "  Usando instalacao em: $InstallRoot" -ForegroundColor DarkGray
+            Update-PromptAuxiliarIfNewer -InstallRoot $InstallRoot -ScriptDir $ScriptDir -Force:$Force | Out-Null
+        }
+        return
+    }
+
+    if ($missingInstall -or $Force) {
+        Write-Host '  Instalando Prompt Auxiliar...' -ForegroundColor Gray
+    } else {
+        Write-Host "  Usando instalacao em: $InstallRoot" -ForegroundColor DarkGray
+    }
+    Install-PromptAuxiliarSourceZip -Destination $InstallRoot -Owner $Owner -Name $Name -Branch $Branch
+    Write-Host "  Instalado em: $InstallRoot" -ForegroundColor Green
 }
 
 function Install-PromptAuxiliarPythonDeps {
@@ -277,35 +351,25 @@ function Start-PromptAuxiliarProcess {
     }
 }
 
-# ——— Execução ———
+# --- Execucao ---
+trap {
+    Write-Host ''
+    Write-Host "ERRO: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host 'Pressione Enter para fechar...' -ForegroundColor Yellow
+    Read-Host | Out-Null
+    exit 1
+}
+
 Write-PromptAuxBanner
 
 $forceUpdate = $Update -or ($env:PROMPTAUX_UPDATE -eq '1')
-$updateModule = Join-Path $InstallRoot 'powershell\Update-PromptAuxiliar.ps1'
-$hasUpdateModule = Test-Path -LiteralPath $updateModule
-if ($hasUpdateModule) {
-    . $updateModule
-}
-
-$mainPy = Join-Path $InstallRoot 'main.py'
-$missingInstall = -not (Test-Path -LiteralPath $mainPy)
-
-if ($hasUpdateModule) {
-    if ($missingInstall -or $forceUpdate) {
-        Write-Host '  Instalando Prompt Auxiliar…' -ForegroundColor Gray
-        Update-PromptAuxiliarIfNewer -InstallRoot $InstallRoot -ScriptDir $ScriptDir -Force | Out-Null
-    } else {
-        Write-Host "  Usando instalação em: $InstallRoot" -ForegroundColor DarkGray
-        Update-PromptAuxiliarIfNewer -InstallRoot $InstallRoot -ScriptDir $ScriptDir -Force:$forceUpdate | Out-Null
-    }
-} elseif ($missingInstall -or $forceUpdate) {
-    Write-Host '  Instalando Prompt Auxiliar…' -ForegroundColor Gray
-    Install-PromptAuxiliarSource -Destination $InstallRoot -Owner $RepoOwner -Name $RepoName -Ref $Branch
-    Write-Host "  Instalado em: $InstallRoot" -ForegroundColor Green
-} else {
-    Write-Host "  Usando instalação em: $InstallRoot" -ForegroundColor DarkGray
-    Write-Host '  (Módulo de atualização ausente — execute irm novamente para obter a versão nova.)' -ForegroundColor DarkYellow
-}
+Invoke-PromptAuxiliarInstallOrUpdate `
+    -InstallRoot $InstallRoot `
+    -ScriptDir $ScriptDir `
+    -Owner $RepoOwner `
+    -Name $RepoName `
+    -Branch $Branch `
+    -Force:$forceUpdate
 
 $env:PROMPTAUX_HOME = $InstallRoot
 $python = Get-PromptAuxPython
@@ -324,9 +388,9 @@ if ($SetupOnly) {
 
 $atalhoPs1 = Join-Path $InstallRoot 'powershell\Criar-Atalho.ps1'
 if (Test-Path $atalhoPs1) {
-    Write-Host '  Criando atalhos (icone personalizado)…' -ForegroundColor DarkGray
+    Write-Host '  Criando atalhos...' -ForegroundColor DarkGray
     & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $atalhoPs1 -ProjectRoot $InstallRoot
 }
 
-Write-Host '  Abrindo interface…' -ForegroundColor Gray
+Write-Host '  Abrindo interface...' -ForegroundColor Gray
 Start-PromptAuxiliarProcess -PythonInfo $python -ProjectRoot $InstallRoot -ExtraArgs @()

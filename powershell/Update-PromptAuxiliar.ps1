@@ -1,5 +1,6 @@
-# Verifica versão no GitHub e atualiza a pasta de instalação (ZIP da branch).
+﻿﻿# Verifica versao no GitHub e atualiza a pasta de instalacao (ZIP da branch).
 #Requires -Version 5.1
+# Encoding: UTF-8 with BOM (compativel com Windows PowerShell 5.1)
 
 function Get-PromptAuxRepoConfig {
     param([string]$InstallRoot)
@@ -44,7 +45,7 @@ function Get-PromptAuxRemoteVersion {
         $text = (Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 25).Content
         return Get-PromptAuxVersionFromConfigText -Text $text
     } catch {
-        Write-Host "  Não foi possível consultar atualizações ($url)." -ForegroundColor DarkYellow
+        Write-Host "  Nao foi possivel consultar atualizacoes ($url)." -ForegroundColor DarkYellow
         return $null
     }
 }
@@ -89,7 +90,7 @@ function Install-PromptAuxiliarSourceZip {
     $tempZip = Join-Path ([System.IO.Path]::GetTempPath()) "PromptAuxiliar-$Branch.zip"
     $tempExtract = Join-Path ([System.IO.Path]::GetTempPath()) "PromptAuxiliar-extract-$([Guid]::NewGuid().ToString('n'))"
 
-    Write-Host "  Baixando $Branch de GitHub…" -ForegroundColor DarkGray
+    Write-Host "  Baixando branch $Branch do GitHub..." -ForegroundColor DarkGray
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Invoke-WebRequest -Uri $zipUrl -OutFile $tempZip -UseBasicParsing
 
@@ -97,10 +98,10 @@ function Install-PromptAuxiliarSourceZip {
     Expand-Archive -Path $tempZip -DestinationPath $tempExtract -Force
 
     $extracted = Get-ChildItem -Path $tempExtract -Directory | Select-Object -First 1
-    if (-not $extracted) { throw 'Pacote ZIP inválido ou vazio.' }
+    if (-not $extracted) { throw 'Pacote ZIP invalido ou vazio.' }
 
     if (Test-Path $Destination) {
-        Write-Host '  Substituindo arquivos da instalação…' -ForegroundColor DarkGray
+        Write-Host '  Substituindo arquivos da instalacao...' -ForegroundColor DarkGray
         Remove-Item $Destination -Recurse -Force
     }
     New-Item -ItemType Directory -Path (Split-Path $Destination -Parent) -Force | Out-Null
@@ -118,7 +119,7 @@ function Update-PromptAuxiliarIfNewer {
     )
 
     if (Test-PromptAuxSkipAutoUpdate -InstallRoot $InstallRoot -ScriptDir $ScriptDir) {
-        Write-Host '  Atualização automática desativada (clone local / PROMPTAUX_SKIP_AUTO_UPDATE).' -ForegroundColor DarkGray
+        Write-Host '  Atualizacao automatica desativada (clone local / PROMPTAUX_SKIP_AUTO_UPDATE).' -ForegroundColor DarkGray
         return $false
     }
 
@@ -131,15 +132,17 @@ function Update-PromptAuxiliarIfNewer {
 
     if (-not $Force -and -not $missing -and $cmp -ge 0) {
         if ($local) {
-            Write-Host "  Versão local v$local (remota v$remote) — já atualizado." -ForegroundColor DarkGray
+            $msg = "  Versao local v$local (remota v$remote) - ja atualizado."
+            Write-Host $msg -ForegroundColor DarkGray
         }
         return $false
     }
 
     if ($remote) {
-        Write-Host "  Atualização disponível: v$local → v$remote" -ForegroundColor Cyan
+        $msg = "  Atualizacao disponivel: v$local -> v$remote"
+        Write-Host $msg -ForegroundColor Cyan
     } elseif ($missing) {
-        Write-Host '  Instalação não encontrada — baixando…' -ForegroundColor Cyan
+        Write-Host '  Instalacao nao encontrada - baixando...' -ForegroundColor Cyan
     }
 
     Install-PromptAuxiliarSourceZip -Destination $InstallRoot -Owner $repo.Owner -Name $repo.Name -Branch $repo.Branch
