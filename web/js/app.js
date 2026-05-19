@@ -51,13 +51,19 @@
     ui.app.hidden = false;
   }
 
+  function _setBtnLabel(btn, text) {
+    const span = btn.querySelector(".btn-label");
+    if (span) span.textContent = text;
+    else btn.textContent = text;
+  }
+
   function setUpdateAvailability(info) {
     const btn = document.querySelector('[data-action="check-update"]');
     if (!btn || !info) return;
     const pending = !!info.update_available;
     state.pendingUpdate = pending ? info : null;
     btn.classList.toggle("btn-update-pending", pending);
-    btn.textContent = pending ? "Atualização disponível" : "Verificar atualização";
+    _setBtnLabel(btn, pending ? "Atualização disponível" : "Verificar atualização");
     if (ui.version) {
       const local = info.local || info.installed_version || info.version;
       ui.version.textContent = pending && info.remote
@@ -458,7 +464,7 @@
           }
           // Primeira vez: verifica update
           el.disabled = true;
-          el.textContent = "Verificando…";
+          _setBtnLabel(el, "Verificando…");
           try {
             const r = await api().check_for_updates();
             if (!r.ok) {
@@ -478,7 +484,7 @@
             toast(String(e), "error");
           } finally {
             el.disabled = false;
-            if (!state.pendingUpdate) el.textContent = "Verificar atualização";
+            if (!state.pendingUpdate) _setBtnLabel(el, "Verificar atualização");
           }
         } else if (kind === "uninstall") {
           const preview = await api().get_uninstall_preview();

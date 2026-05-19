@@ -36,34 +36,36 @@ def aplicar_icone_janela(hwnd: int, ico: str | None = None) -> bool:
     if not __import__("os").path.isfile(path):
         return False
     user32 = ctypes.windll.user32
-    LR_LOADFROMFILE = 0x10
+    LR_LOADFROMFILE = 0x0010
+    LR_DEFAULTSIZE  = 0x0040
     IMAGE_ICON = 1
     WM_SETICON = 0x80
     ICON_SMALL = 0
-    ICON_BIG = 1
+    ICON_BIG   = 1
 
-    # Load big icon (32x32 or best match) for alt-tab / title bar
-    hicon_big = user32.LoadImageW(0, path, IMAGE_ICON, 32, 32, LR_LOADFROMFILE)
-    # Load small icon (16x16) for taskbar
-    hicon_small = user32.LoadImageW(0, path, IMAGE_ICON, 16, 16, LR_LOADFROMFILE)
-
-    if not hicon_big and not hicon_small:
+    # LR_DEFAULTSIZE lets Windows scale from whatever resolution is in the ICO
+    # (works with PNG-in-ICO containers on Windows Vista+)
+    flags = LR_LOADFROMFILE | LR_DEFAULTSIZE
+    hicon = user32.LoadImageW(0, path, IMAGE_ICON, 0, 0, flags)
+    if not hicon:
+        # Last-resort: load without any size hint
+        hicon = user32.LoadImageW(0, path, IMAGE_ICON, 0, 0, LR_LOADFROMFILE)
+    if not hicon:
         return False
 
-    if hicon_big:
-        user32.SendMessageW(hwnd, WM_SETICON, ICON_BIG, hicon_big)
-    if hicon_small:
-        user32.SendMessageW(hwnd, WM_SETICON, ICON_SMALL, hicon_small)
+    user32.SendMessageW(hwnd, WM_SETICON, ICON_SMALL, hicon)
+    user32.SendMessageW(hwnd, WM_SETICON, ICON_BIG,   hicon)
     return True
 
 
-def aplicar_icone_por_titulo(titulo_contem: str = "Prompt Auxiliar", atraso_s: float = 1.2) -> None:
+def aplicar_icone_por_titulo(titulo_contem: str = "Prompt Auxiliar", atraso_s: float = 0.25) -> None:
     if sys.platform != "win32":
         return
 
     def worker() -> None:
-        for _ in range(20):
-            time.sleep(atraso_s / 10)
+        # Retry for up to ~15 s (60 × 0.25 s) until the WebView2 window appears
+        for _ in range(60):
+            time.sleep(atraso_s)
             hwnd = _enum_windows(titulo_contem)
             if hwnd and aplicar_icone_janela(hwnd):
                 return
