@@ -18,868 +18,868 @@
       "nome": "Google Chrome",
       "categoria": "Navegadores",
       "descricao": "Navegador web Google.",
-      "descricao_detalhada": "Navegador da Google baseado em Chromium. Sincroniza favoritos e senhas, suporta extensões e é um dos navegadores mais usados no mundo."
+      "descricao_detalhada": "Navegador web da Google baseado em Chromium. Sincroniza favoritos, senhas e historico entre dispositivos. Suporta extensoes e e um dos navegadores mais usados no mundo."
     },
     {
       "id": "Mozilla.Firefox",
       "nome": "Mozilla Firefox",
       "categoria": "Navegadores",
       "descricao": "Navegador Firefox.",
-      "descricao_detalhada": "Navegador Firefox."
+      "descricao_detalhada": "Navegador independente com foco em privacidade e codigo aberto. Oferece bloqueio de rastreadores, sincronizacao de dados e amplo suporte a extensoes."
     },
     {
       "id": "Brave.Brave",
       "nome": "Brave",
       "categoria": "Navegadores",
       "descricao": "Navegador com bloqueio de anúncios.",
-      "descricao_detalhada": "Navegador com bloqueio de anúncios."
+      "descricao_detalhada": "Navegador Chromium com bloqueio de anuncios e rastreadores integrado. Visa paginas mais rapidas e menos consumo de dados em navegacao diaria."
     },
     {
       "id": "Opera.OperaGX",
       "nome": "Opera GX",
       "categoria": "Navegadores",
       "descricao": "Navegador focado em jogos.",
-      "descricao_detalhada": "Navegador focado em jogos."
+      "descricao_detalhada": "Navegador da Opera voltado a jogos e uso intenso no PC. Inclui limitador de recursos para CPU e RAM e integracoes com Twitch e mensageiros na barra lateral."
     },
     {
       "id": "Vivaldi.Vivaldi",
       "nome": "Vivaldi",
       "categoria": "Navegadores",
       "descricao": "Navegador personalizável.",
-      "descricao_detalhada": "Navegador personalizável."
+      "descricao_detalhada": "Navegador altamente personalizavel baseado em Chromium. Permite ajustar abas, atalhos, paineis e ferramentas integradas para quem quer controle fino da interface."
     },
     {
       "id": "Microsoft.Edge",
       "nome": "Microsoft Edge",
       "categoria": "Navegadores",
       "descricao": "Navegador Chromium da Microsoft.",
-      "descricao_detalhada": "Navegador Chromium da Microsoft."
+      "descricao_detalhada": "Navegador padrao da Microsoft baseado em Chromium. Integra perfis, colecao, leitura em voz alta e recursos de produtividade. Remover do sistema pode afetar WebView2 e apps que dependem do motor do Edge."
     },
     {
       "id": "LibreWolf.LibreWolf",
       "nome": "LibreWolf",
       "categoria": "Navegadores",
       "descricao": "Firefox focado em privacidade, sem telemetria.",
-      "descricao_detalhada": "Firefox focado em privacidade, sem telemetria."
+      "descricao_detalhada": "Fork do Firefox orientado a privacidade, sem telemetria padrao. Bloqueia rastreadores de forma agressiva e e indicado para quem quer navegacao mais discreta."
     },
     {
       "id": "Microsoft.PowerToys",
       "nome": "PowerToys",
       "categoria": "Produtividade",
       "descricao": "Ferramentas extras oficiais da Microsoft.",
-      "descricao_detalhada": "Utilitários oficiais da Microsoft: FancyZones, renomeação em lote, pré-visualização de arquivos, atalhos extras e outras ferramentas para usuários avançados."
+      "descricao_detalhada": "Conjunto de utilitarios oficiais da Microsoft para Windows. Inclui FancyZones, renomeacao em lote, pre-visualizacao rapida de arquivos e atalhos extras para usuarios avancados."
     },
     {
       "id": "Notepad++.Notepad++",
       "nome": "Notepad++",
       "categoria": "Produtividade",
       "descricao": "Editor de texto avançado.",
-      "descricao_detalhada": "Editor de texto avançado."
+      "descricao_detalhada": "Editor de texto e codigo leve para Windows. Destaca sintaxe em dezenas de linguagens, suporta abas, macros e plugins para edicao tecnica e logs."
     },
     {
       "id": "Adobe.Acrobat.Reader.64-bit",
       "nome": "Adobe Acrobat Reader",
       "categoria": "Produtividade",
       "descricao": "Leitor de PDF da Adobe.",
-      "descricao_detalhada": "Leitor oficial da Adobe para PDF. Abre, imprime, assina e comenta documentos; amplamente usado em empresas. A versão Reader é gratuita."
+      "descricao_detalhada": "Leitor oficial da Adobe para arquivos PDF. Abre, imprime, assina e comenta documentos com recursos amplos. A versao Reader e gratuita e muito usada em empresas."
     },
     {
       "id": "Foxit.FoxitReader",
       "nome": "Foxit PDF Reader",
       "categoria": "Produtividade",
       "descricao": "Leitor de PDF rápido e leve.",
-      "descricao_detalhada": "É uma popular família de softwares e ferramentas para criar, visualizar, editar e gerenciar arquivos PDF. O Foxit PDF Reader é a versão gratuita: leve, rápida e adequada para leitura diária de documentos."
+      "descricao_detalhada": "Familia de ferramentas para criar, visualizar e gerenciar PDFs. O Foxit PDF Reader e a versao gratuita: leve, rapida e adequada para leitura diaria de documentos."
     },
     {
       "id": "PDFgear.PDFgear",
       "nome": "PDFgear",
       "categoria": "Produtividade",
       "descricao": "Editor e leitor de PDF gratuito.",
-      "descricao_detalhada": "Editor e leitor de PDF gratuito."
+      "descricao_detalhada": "Leitor e editor de PDF gratuito para Windows. Permite anotar, converter e editar paginas sem assinatura obrigatoria em tarefas basicas."
     },
     {
       "id": "SumatraPDF.SumatraPDF",
       "nome": "Sumatra PDF",
       "categoria": "Produtividade",
       "descricao": "Leitor de PDF minimalista.",
-      "descricao_detalhada": "Leitor de PDF minimalista."
+      "descricao_detalhada": "Leitor de PDF e ebooks extremamente leve e rapido. Interface minimalista, abre documentos quase instantaneamente e consome poucos recursos."
     },
     {
       "id": "TheDocumentFoundation.LibreOffice",
       "nome": "LibreOffice",
       "categoria": "Produtividade",
       "descricao": "Suíte office gratuita.",
-      "descricao_detalhada": "Suíte office gratuita com Writer, Calc, Impress e Draw. Compatível com arquivos Microsoft Office e alternativa completa ao pacote Office pago."
+      "descricao_detalhada": "Suite office gratuita com Writer, Calc, Impress e Draw. Compativel com formatos Microsoft Office e serve como alternativa completa a pacotes pagos."
     },
     {
       "id": "Notion.Notion",
       "nome": "Notion",
       "categoria": "Produtividade",
       "descricao": "Notas e organização.",
-      "descricao_detalhada": "Notas e organização."
+      "descricao_detalhada": "Workspace para notas, bases de dados e documentos colaborativos. Organiza projetos, wikis e tarefas em paginas flexiveis com sincronizacao na nuvem."
     },
     {
       "id": "Obsidian.Obsidian",
       "nome": "Obsidian",
       "categoria": "Produtividade",
       "descricao": "Notas em Markdown.",
-      "descricao_detalhada": "Notas em Markdown."
+      "descricao_detalhada": "Aplicativo de notas em Markdown com links entre paginas. Ideal para segundo cerebro, estudo e documentacao pessoal com grafos de conhecimento."
     },
     {
       "id": "Microsoft.OneDrive",
       "nome": "OneDrive",
       "categoria": "Produtividade",
       "descricao": "Armazenamento em nuvem Microsoft.",
-      "descricao_detalhada": "Armazenamento em nuvem Microsoft."
+      "descricao_detalhada": "Servico de armazenamento e sincronizacao de arquivos na nuvem da Microsoft. Integra pastas do Windows e backup de documentos. Remover do sistema desativa essa sincronizacao integrada e pode afetar backups automaticos."
     },
     {
       "id": "Espanso.Espanso",
       "nome": "Espanso",
       "categoria": "Produtividade",
       "descricao": "Atalhos de texto e expansão de snippets.",
-      "descricao_detalhada": "Atalhos de texto e expansão de snippets."
+      "descricao_detalhada": "Ferramenta de expansao de texto multiplataforma. Substitui abreviacoes por trechos longos em qualquer aplicativo, util para respostas padrao e codigo repetitivo."
     },
     {
       "id": "AppFlowy.AppFlowy",
       "nome": "AppFlowy",
       "categoria": "Produtividade",
       "descricao": "Workspace open-source estilo Notion.",
-      "descricao_detalhada": "Workspace open-source estilo Notion."
+      "descricao_detalhada": "Workspace open-source inspirado em Notion para notas e bases. Foca em privacidade e dados locais, com opcao de sincronizacao propria."
     },
     {
       "id": "Microsoft.VisualStudioCode",
       "nome": "Visual Studio Code",
       "categoria": "Desenvolvimento",
       "descricao": "Editor de código da Microsoft.",
-      "descricao_detalhada": "Editor de código da Microsoft."
+      "descricao_detalhada": "Editor de codigo leve da Microsoft com ecossistema enorme de extensoes. Suporta depuracao, Git integrado e praticamente todas as linguagens de programacao."
     },
     {
       "id": "VSCodium.VSCodium",
       "nome": "VSCodium",
       "categoria": "Desenvolvimento",
       "descricao": "VS Code sem telemetria da Microsoft.",
-      "descricao_detalhada": "VS Code sem telemetria da Microsoft."
+      "descricao_detalhada": "Build do VS Code sem telemetria e marcas da Microsoft. Mesma base de extensoes e interface, voltado a quem prefere codigo aberto no editor."
     },
     {
       "id": "Git.Git",
       "nome": "Git",
       "categoria": "Desenvolvimento",
       "descricao": "Controle de versão.",
-      "descricao_detalhada": "Controle de versão."
+      "descricao_detalhada": "Sistema distribuido de controle de versao amplamente adotado. Registra historico de codigo, branches e merges; base para fluxos de trabalho em equipe e open source."
     },
     {
       "id": "GitHub.GitHubDesktop",
       "nome": "GitHub Desktop",
       "categoria": "Desenvolvimento",
       "descricao": "Cliente Git com interface gráfica.",
-      "descricao_detalhada": "Cliente Git com interface gráfica."
+      "descricao_detalhada": "Cliente grafico do GitHub para repositorios Git. Facilita commits, pull requests e sincronizacao sem depender apenas da linha de comando."
     },
     {
       "id": "Python.Python.3.12",
       "nome": "Python 3.12",
       "categoria": "Desenvolvimento",
       "descricao": "Linguagem Python.",
-      "descricao_detalhada": "Linguagem Python."
+      "descricao_detalhada": "Linguagem de programacao Python em versao 3.12. Usada em ciencia de dados, automacao, web e scripts; inclui interpretador e pip para pacotes."
     },
     {
       "id": "OpenJS.NodeJS.LTS",
       "nome": "Node.js LTS",
       "categoria": "Desenvolvimento",
       "descricao": "Runtime JavaScript.",
-      "descricao_detalhada": "Runtime JavaScript."
+      "descricao_detalhada": "Runtime JavaScript LTS para servidor e ferramentas de build. Executa npm, bundlers e backends em Node com suporte de longo prazo."
     },
     {
       "id": "Docker.DockerDesktop",
       "nome": "Docker Desktop",
       "categoria": "Desenvolvimento",
       "descricao": "Containers Docker.",
-      "descricao_detalhada": "Containers Docker."
+      "descricao_detalhada": "Plataforma para criar e rodar containers no Windows. Isola aplicacoes e ambientes de desenvolvimento de forma reproduzivel entre maquinas."
     },
     {
       "id": "Postman.Postman",
       "nome": "Postman",
       "categoria": "Desenvolvimento",
       "descricao": "Cliente API REST.",
-      "descricao_detalhada": "Cliente API REST."
+      "descricao_detalhada": "Cliente para testar e documentar APIs HTTP. Envia requisicoes REST, organiza colecoes e automatiza testes de integracao."
     },
     {
       "id": "Microsoft.WindowsTerminal",
       "nome": "Windows Terminal",
       "categoria": "Desenvolvimento",
       "descricao": "Terminal moderno do Windows.",
-      "descricao_detalhada": "Terminal moderno do Windows."
+      "descricao_detalhada": "Terminal moderno do Windows com abas e temas. Agrupa PowerShell, CMD e outros shells em uma interface rapida e personalizavel."
     },
     {
       "id": "Microsoft.OpenJDK.21",
       "nome": "OpenJDK 21",
       "categoria": "Desenvolvimento",
       "descricao": "Java OpenJDK da Microsoft.",
-      "descricao_detalhada": "Java OpenJDK da Microsoft."
+      "descricao_detalhada": "Distribuicao OpenJDK 21 mantida pela Microsoft. Runtime Java para aplicacoes e ferramentas que exigem JVM atualizada no Windows."
     },
     {
       "id": "Rustlang.Rust.MSVC",
       "nome": "Rust (MSVC)",
       "categoria": "Desenvolvimento",
       "descricao": "Linguagem Rust.",
-      "descricao_detalhada": "Linguagem Rust."
+      "descricao_detalhada": "Toolchain da linguagem Rust com toolchain MSVC. Compila programas seguros em memoria para sistemas e aplicacoes de alto desempenho."
     },
     {
       "id": "GoLang.Go",
       "nome": "Go",
       "categoria": "Desenvolvimento",
       "descricao": "Linguagem Go.",
-      "descricao_detalhada": "Linguagem Go."
+      "descricao_detalhada": "Linguagem Go da Google com compilador e ferramentas. Focada em simplicidade, concorrencia e binarios unicos para servicos e CLI."
     },
     {
       "id": "JetBrains.Toolbox",
       "nome": "JetBrains Toolbox",
       "categoria": "Desenvolvimento",
       "descricao": "Gerenciador de IDEs JetBrains.",
-      "descricao_detalhada": "Gerenciador de IDEs JetBrains."
+      "descricao_detalhada": "Gerenciador central de IDEs JetBrains. Instala, atualiza e abre IntelliJ, PyCharm, WebStorm e outros produtos da suite."
     },
     {
       "id": "DBeaver.DBeaver.Community",
       "nome": "DBeaver",
       "categoria": "Desenvolvimento",
       "descricao": "Cliente universal de banco de dados.",
-      "descricao_detalhada": "Cliente universal de banco de dados."
+      "descricao_detalhada": "Cliente universal gratuito para bancos de dados SQL e NoSQL. Edita consultas, visualiza esquemas e exporta dados de varios servidores."
     },
     {
       "id": "AutoHotkey.AutoHotkey",
       "nome": "AutoHotkey v2",
       "categoria": "Desenvolvimento",
       "descricao": "Automação de teclado e scripts no Windows.",
-      "descricao_detalhada": "Automação de teclado e scripts no Windows."
+      "descricao_detalhada": "Linguagem de automacao para Windows. Cria atalhos, macros de teclado e mouse e scripts que controlam janelas e aplicativos."
     },
     {
       "id": "Neovim.Neovim",
       "nome": "Neovim",
       "categoria": "Desenvolvimento",
       "descricao": "Editor modal moderno.",
-      "descricao_detalhada": "Editor modal moderno."
+      "descricao_detalhada": "Editor de texto modal derivado do Vim, extensivel em Lua. Muito usado no terminal com plugins para IDE leve e edicao rapida."
     },
     {
       "id": "Apache.NetBeans",
       "nome": "Apache NetBeans",
       "categoria": "Desenvolvimento",
       "descricao": "IDE para Java, PHP, HTML5 e outras linguagens.",
-      "descricao_detalhada": "IDE para Java, PHP, HTML5 e outras linguagens."
+      "descricao_detalhada": "IDE open-source para Java, PHP, HTML5 e outras stacks. Oferece depuracao, gerenciamento de projetos Maven/Gradle e suporte a aplicacoes enterprise."
     },
     {
       "id": "Anysphere.Cursor",
       "nome": "Cursor",
       "categoria": "Inteligência artificial",
       "descricao": "Editor de código com IA integrada (baseado no VS Code).",
-      "descricao_detalhada": "Editor de código com IA integrada, baseado no VS Code. Autocomplete inteligente, chat com o projeto e refatoração assistida."
+      "descricao_detalhada": "Editor de codigo com IA integrada, baseado no VS Code. Oferece autocomplete inteligente, chat com o projeto e refatoracao assistida no fluxo de desenvolvimento."
     },
     {
       "id": "Anthropic.Claude",
       "nome": "Claude",
       "categoria": "Inteligência artificial",
       "descricao": "Assistente de IA da Anthropic para desktop.",
-      "descricao_detalhada": "Assistente de IA da Anthropic para desktop."
+      "descricao_detalhada": "Aplicativo desktop do assistente Claude da Anthropic. Conversa com modelos de linguagem para redacao, analise e tarefas de conhecimento geral."
     },
     {
       "id": "j178.ChatGPT",
       "nome": "ChatGPT",
       "categoria": "Inteligência artificial",
       "descricao": "Cliente desktop para ChatGPT (não oficial).",
-      "descricao_detalhada": "Cliente desktop para ChatGPT (não oficial)."
+      "descricao_detalhada": "Cliente desktop nao oficial para acessar ChatGPT. Abre a interface de conversa em janela propria sem depender apenas do navegador."
     },
     {
       "id": "GitHub.Copilot",
       "nome": "GitHub Copilot CLI",
       "categoria": "Inteligência artificial",
       "descricao": "Assistente de código no terminal via linha de comando.",
-      "descricao_detalhada": "Assistente de código no terminal via linha de comando."
+      "descricao_detalhada": "Assistente de codigo da GitHub na linha de comando. Sugere comandos e explicacoes no terminal para acelerar tarefas de desenvolvimento."
     },
     {
       "id": "ElementLabs.LMStudio",
       "nome": "LM Studio",
       "categoria": "Inteligência artificial",
       "descricao": "Baixa e executa modelos de linguagem localmente no PC.",
-      "descricao_detalhada": "Baixa e executa modelos de linguagem localmente no PC."
+      "descricao_detalhada": "Interface para baixar e executar modelos de linguagem localmente. Permite chat offline com LLMs escolhidos pelo usuario no proprio PC."
     },
     {
       "id": "Ollama.Ollama",
       "nome": "Ollama",
       "categoria": "Inteligência artificial",
       "descricao": "Executa LLMs locais; ideal para uso via terminal ou integrações.",
-      "descricao_detalhada": "Executa modelos de linguagem localmente no PC. Baixa e roda LLMs sem depender apenas de serviços na nuvem."
+      "descricao_detalhada": "Executa modelos de linguagem localmente via linha de comando ou API. Baixa LLMs e roda inferencia sem depender so de servicos na nuvem."
     },
     {
       "id": "VideoLAN.VLC",
       "nome": "VLC",
       "categoria": "Mídia e criatividade",
       "descricao": "Reprodutor multimídia.",
-      "descricao_detalhada": "Reprodutor multimídia."
+      "descricao_detalhada": "Reprodutor multimidia universal gratuito. Abre praticamente qualquer formato de video e audio sem instalar codecs extras."
     },
     {
       "id": "Spotify.Spotify",
       "nome": "Spotify",
       "categoria": "Mídia e criatividade",
       "descricao": "Streaming de música.",
-      "descricao_detalhada": "Streaming de música."
+      "descricao_detalhada": "Servico de streaming de musica e podcasts. Reproduz playlists, descobre artistas e sincroniza biblioteca entre dispositivos com conta."
     },
     {
       "id": "OBSProject.OBSStudio",
       "nome": "OBS Studio",
       "categoria": "Mídia e criatividade",
       "descricao": "Gravação e transmissão.",
-      "descricao_detalhada": "Gravação e transmissão."
+      "descricao_detalhada": "Software gratuito de gravacao e transmissao ao vivo. Captura tela, cameras e audio para streams em Twitch, YouTube e reunioes."
     },
     {
       "id": "GIMP.GIMP.3",
       "nome": "GIMP",
       "categoria": "Mídia e criatividade",
       "descricao": "Editor de imagens.",
-      "descricao_detalhada": "Editor de imagens."
+      "descricao_detalhada": "Editor de imagens raster gratuito e poderoso. Alternativa open-source ao Photoshop para retoque, camadas, mascaras e exportacao."
     },
     {
       "id": "Audacity.Audacity",
       "nome": "Audacity",
       "categoria": "Mídia e criatividade",
       "descricao": "Editor de áudio.",
-      "descricao_detalhada": "Editor de áudio."
+      "descricao_detalhada": "Editor de audio multitrilha gratuito. Grava, corta, aplica efeitos e exporta podcasts e musicas com plugins disponiveis."
     },
     {
       "id": "KDE.Krita",
       "nome": "Krita",
       "categoria": "Mídia e criatividade",
       "descricao": "Pintura digital.",
-      "descricao_detalhada": "Pintura digital."
+      "descricao_detalhada": "Aplicativo de pintura digital e ilustracao. Pinceis avancados, mesas digitalizadoras e animacao leve para artistas e quadrinhos."
     },
     {
       "id": "Daum.PotPlayer",
       "nome": "PotPlayer",
       "categoria": "Mídia e criatividade",
       "descricao": "Reprodutor de vídeo popular.",
-      "descricao_detalhada": "Reprodutor de vídeo popular."
+      "descricao_detalhada": "Reprodutor de video para Windows muito popular na Asia. Suporta legendas avancadas, filtros e formatos variados com interface configuravel."
     },
     {
       "id": "HandBrake.HandBrake",
       "nome": "HandBrake",
       "categoria": "Mídia e criatividade",
       "descricao": "Conversor de vídeo.",
-      "descricao_detalhada": "Conversor de vídeo."
+      "descricao_detalhada": "Conversor de video open-source. Transcodifica DVDs e arquivos para H.264, H.265 e outros formatos com perfis predefinidos."
     },
     {
       "id": "ImageGlass.ImageGlass",
       "nome": "ImageGlass",
       "categoria": "Mídia e criatividade",
       "descricao": "Visualizador de imagens leve e rápido.",
-      "descricao_detalhada": "Visualizador de imagens leve e rápido."
+      "descricao_detalhada": "Visualizador de imagens leve e rapido. Navega por pastas, suporta formatos comuns e atalhos para quem abre muitas fotos no dia a dia."
     },
     {
       "id": "ytmdesktop.ytmdesktop",
       "nome": "YouTube Music Desktop",
       "categoria": "Mídia e criatividade",
       "descricao": "Cliente desktop para YouTube Music.",
-      "descricao_detalhada": "Cliente desktop para YouTube Music."
+      "descricao_detalhada": "Cliente desktop nao oficial para YouTube Music. Toca biblioteca e playlists em janela propria com atalhos de midia."
     },
     {
       "id": "dotPDN.PaintDotNet",
       "nome": "Paint.NET",
       "categoria": "Mídia e criatividade",
       "descricao": "Editor de imagens gratuito com camadas e plugins.",
-      "descricao_detalhada": "Editor de imagens gratuito com camadas e plugins."
+      "descricao_detalhada": "Editor de imagens gratuito para Windows com camadas e plugins. Meio-termo entre Paint e GIMP para edicao rapida e efeitos."
     },
     {
       "id": "clsid2.mpc-hc",
       "nome": "MPC-HC",
       "categoria": "Mídia e criatividade",
       "descricao": "Media Player Classic Home Cinema — reprodutor de vídeo leve.",
-      "descricao_detalhada": "Media Player Classic Home Cinema — reprodutor de vídeo leve."
+      "descricao_detalhada": "Media Player Classic Home Cinema, reprodutor de video leve. Interface simples, baixo consumo e suporte a legendas e filtros DirectShow."
     },
     {
       "id": "CodecGuide.K-LiteCodecPack.Standard",
       "nome": "K-Lite Codec Pack Standard",
       "categoria": "Mídia e criatividade",
       "descricao": "Pacote de codecs para reproduzir formatos de vídeo e áudio no Windows.",
-      "descricao_detalhada": "Pacote de codecs e filtros para reproduzir a maioria dos formatos de vídeo e áudio no Windows, inclusive com players como MPC-HC."
+      "descricao_detalhada": "Pacote de codecs e filtros DirectShow para Windows. Permite reproduzir a maioria dos formatos de video e audio em players como MPC-HC."
     },
     {
       "id": "7zip.7zip",
       "nome": "7-Zip",
       "categoria": "Utilitários",
       "descricao": "Compactador de arquivos.",
-      "descricao_detalhada": "Compactador open-source. Abre e cria ZIP, 7z, RAR e muitos outros formatos com alta compressão."
+      "descricao_detalhada": "Compactador open-source de arquivos. Abre e cria ZIP, 7z, RAR e muitos formatos com alta taxa de compressao e interface simples."
     },
     {
       "id": "M2Team.NanaZip",
       "nome": "NanaZip",
       "categoria": "Utilitários",
       "descricao": "Compactador moderno (fork do 7-Zip).",
-      "descricao_detalhada": "Compactador moderno (fork do 7-Zip)."
+      "descricao_detalhada": "Compactador moderno derivado do 7-Zip com interface atualizada. Integra-se ao Explorer e oferece compressao rapida no estilo Windows 11."
     },
     {
       "id": "RARLab.WinRAR",
       "nome": "WinRAR",
       "categoria": "Utilitários",
       "descricao": "Compactador RAR/ZIP.",
-      "descricao_detalhada": "Compactador RAR/ZIP."
+      "descricao_detalhada": "Compactador comercial muito usado para RAR e ZIP. Cria arquivos divididos, criptografia e reparo; trial prolongado apos instalacao."
     },
     {
       "id": "ShareX.ShareX",
       "nome": "ShareX",
       "categoria": "Utilitários",
       "descricao": "Capturas de tela avançadas.",
-      "descricao_detalhada": "Capturas de tela avançadas."
+      "descricao_detalhada": "Ferramenta avancada de captura de tela e gravacao. Anotacoes, upload automatico, OCR e dezenas de fluxos de trabalho configuraveis."
     },
     {
       "id": "Flameshot.Flameshot",
       "nome": "Flameshot",
       "categoria": "Utilitários",
       "descricao": "Captura de tela com anotações.",
-      "descricao_detalhada": "Captura de tela com anotações."
+      "descricao_detalhada": "Captura de tela com editor integrado. Recorta regiao, desenha setas e texto e copia ou salva rapidamente."
     },
     {
       "id": "Skillbrains.Lightshot",
       "nome": "Lightshot",
       "categoria": "Utilitários",
       "descricao": "Captura e compartilhamento rápido de tela.",
-      "descricao_detalhada": "Captura e compartilhamento rápido de tela."
+      "descricao_detalhada": "Captura de area da tela e compartilhamento rapido. Gera link ou salva imagem com edicao minima em poucos cliques."
     },
     {
       "id": "FilesCommunity.Files",
       "nome": "Files",
       "categoria": "Utilitários",
       "descricao": "Gerenciador de arquivos moderno.",
-      "descricao_detalhada": "Gerenciador de arquivos moderno."
+      "descricao_detalhada": "Gerenciador de arquivos alternativo com design moderno. Abas, layout em colunas e integracao com nuvem alem do Explorer padrao."
     },
     {
       "id": "voidtools.Everything",
       "nome": "Everything",
       "categoria": "Utilitários",
       "descricao": "Busca instantânea de arquivos.",
-      "descricao_detalhada": "Busca instantânea de arquivos."
+      "descricao_detalhada": "Busca instantanea de arquivos e pastas por nome no Windows. Indexa NTFS em segundos e filtra resultados enquanto voce digita."
     },
     {
       "id": "AntibodySoftware.WizTree",
       "nome": "WizTree",
       "categoria": "Utilitários",
       "descricao": "Análise visual do uso de disco.",
-      "descricao_detalhada": "Análise visual do uso de disco."
+      "descricao_detalhada": "Analisa uso de disco com mapa visual de pastas. Mostra quais diretorios ocupam mais espaco para liberar armazenamento rapidamente."
     },
     {
       "id": "CodeSector.TeraCopy",
       "nome": "TeraCopy",
       "categoria": "Utilitários",
       "descricao": "Cópia e movimentação de arquivos acelerada.",
-      "descricao_detalhada": "Cópia e movimentação de arquivos acelerada."
+      "descricao_detalhada": "Acelera e gerencia copias grandes de arquivos. Fila de transferencias, verificacao e retomada em caso de erro no Explorer."
     },
     {
       "id": "Bitwarden.Bitwarden",
       "nome": "Bitwarden",
       "categoria": "Utilitários",
       "descricao": "Gerenciador de senhas.",
-      "descricao_detalhada": "Gerenciador de senhas."
+      "descricao_detalhada": "Gerenciador de senhas open-source com cofre criptografado. Sincroniza logins entre dispositivos e preenche formularios com extensao."
     },
     {
       "id": "AgileBits.1Password",
       "nome": "1Password",
       "categoria": "Utilitários",
       "descricao": "Gerenciador de senhas premium.",
-      "descricao_detalhada": "Gerenciador de senhas premium."
+      "descricao_detalhada": "Gerenciador de senhas premium para familias e equipes. Armazena credenciais, cartoes e notas seguras com auditoria de seguranca."
     },
     {
       "id": "Proton.ProtonAuthenticator",
       "nome": "Proton Authenticator",
       "categoria": "Utilitários",
       "descricao": "Autenticação em dois fatores (2FA).",
-      "descricao_detalhada": "Autenticação em dois fatores (2FA)."
+      "descricao_detalhada": "Aplicativo de autenticacao em dois fatores da Proton. Gera codigos TOTP para proteger contas em servicos online."
     },
     {
       "id": "Malwarebytes.Malwarebytes",
       "nome": "Malwarebytes",
       "categoria": "Utilitários",
       "descricao": "Proteção antimalware.",
-      "descricao_detalhada": "Proteção antimalware."
+      "descricao_detalhada": "Ferramenta de protecao contra malware e ameacas. Escaneia e remove adware, ransomware e travas suspeitas alem do antivirus padrao."
     },
     {
       "id": "PuTTY.PuTTY",
       "nome": "PuTTY",
       "categoria": "Utilitários",
       "descricao": "Cliente SSH/Telnet.",
-      "descricao_detalhada": "Cliente SSH/Telnet."
+      "descricao_detalhada": "Cliente SSH e Telnet classico para Windows. Conecta a servidores remotos, sessoes serial e tuneis para administracao de rede."
     },
     {
       "id": "WinSCP.WinSCP",
       "nome": "WinSCP",
       "categoria": "Utilitários",
       "descricao": "Cliente SFTP/SCP.",
-      "descricao_detalhada": "Cliente SFTP/SCP."
+      "descricao_detalhada": "Cliente grafico para SFTP, SCP e FTP. Transfere arquivos entre PC e servidores com editor integrado e sessoes salvas."
     },
     {
       "id": "TeamViewer.TeamViewer",
       "nome": "TeamViewer",
       "categoria": "Utilitários",
       "descricao": "Acesso remoto.",
-      "descricao_detalhada": "Acesso remoto."
+      "descricao_detalhada": "Software de acesso remoto e suporte tecnico. Controla outro computador pela internet para manutencao e reunioes com tela compartilhada."
     },
     {
       "id": "AnyDesk.AnyDesk",
       "nome": "AnyDesk",
       "categoria": "Utilitários",
       "descricao": "Acesso remoto leve.",
-      "descricao_detalhada": "Acesso remoto leve."
+      "descricao_detalhada": "Acesso remoto leve entre computadores. Conexao rapida por ID para suporte e trabalho remoto com baixa latencia."
     },
     {
       "id": "RustDesk.RustDesk",
       "nome": "RustDesk",
       "categoria": "Utilitários",
       "descricao": "Acesso remoto open-source.",
-      "descricao_detalhada": "Acesso remoto open-source."
+      "descricao_detalhada": "Alternativa open-source a TeamViewer para desktop remoto. Pode ser auto-hospedado e nao exige conta comercial para uso basico."
     },
     {
       "id": "qBittorrent.qBittorrent",
       "nome": "qBittorrent",
       "categoria": "Utilitários",
       "descricao": "Cliente BitTorrent.",
-      "descricao_detalhada": "Cliente BitTorrent."
+      "descricao_detalhada": "Cliente BitTorrent gratuito sem anuncios. Baixa torrents com busca integrada, filas e controle de banda."
     },
     {
       "id": "Proton.ProtonVPN",
       "nome": "Proton VPN",
       "categoria": "Utilitários",
       "descricao": "VPN com plano gratuito.",
-      "descricao_detalhada": "VPN com plano gratuito."
+      "descricao_detalhada": "Servico de VPN da Proton com plano gratuito limitado. Criptografa trafego e oculta IP para privacidade em redes publicas."
     },
     {
       "id": "Tailscale.Tailscale",
       "nome": "Tailscale",
       "categoria": "Utilitários",
       "descricao": "VPN mesh para rede privada.",
-      "descricao_detalhada": "VPN mesh para rede privada."
+      "descricao_detalhada": "VPN mesh baseada em WireGuard para rede privada. Conecta PCs e servidores como se estivessem na mesma LAN, sem abrir portas manualmente."
     },
     {
       "id": "LocalSend.LocalSend",
       "nome": "LocalSend",
       "categoria": "Utilitários",
       "descricao": "Envio de arquivos na rede local.",
-      "descricao_detalhada": "Envio de arquivos na rede local."
+      "descricao_detalhada": "Envia arquivos entre dispositivos na rede local sem nuvem. Funciona entre Windows, Android e outros com protocolo aberto."
     },
     {
       "id": "CPUID.CPU-Z",
       "nome": "CPU-Z",
       "categoria": "Utilitários",
       "descricao": "Informações de CPU e hardware.",
-      "descricao_detalhada": "Informações de CPU e hardware."
+      "descricao_detalhada": "Exibe informacoes detalhadas do processador, placa-mae e memoria. Util para identificar hardware, clocks e revisao de CPU."
     },
     {
       "id": "REALiX.HWiNFO",
       "nome": "HWiNFO",
       "categoria": "Utilitários",
       "descricao": "Monitoramento de hardware.",
-      "descricao_detalhada": "Monitoramento de hardware."
+      "descricao_detalhada": "Monitora sensores de hardware em tempo real. Temperaturas, voltagens, ventoinhas e relatórios completos para diagnostico de PC."
     },
     {
       "id": "RevoUninstaller.RevoUninstaller",
       "nome": "Revo Uninstaller",
       "categoria": "Utilitários",
       "descricao": "Desinstalação profunda de programas.",
-      "descricao_detalhada": "Desinstalação profunda de programas."
+      "descricao_detalhada": "Desinstalador que remove programas e residuos de registro. Varre restos deixados pelo desinstalador padrao do Windows."
     },
     {
       "id": "Klocman.BulkCrapUninstaller",
       "nome": "Bulk Crap Uninstaller",
       "categoria": "Utilitários",
       "descricao": "Desinstalador em lote para apps residuais.",
-      "descricao_detalhada": "Desinstalador em lote para apps residuais."
+      "descricao_detalhada": "Desinstalador em lote para apps de fabricante e bloatware. Localiza entradas ocultas e remove varios programas de uma vez."
     },
     {
       "id": "Rufus.Rufus",
       "nome": "Rufus",
       "categoria": "Utilitários",
       "descricao": "Criar pendrives bootáveis.",
-      "descricao_detalhada": "Criar pendrives bootáveis."
+      "descricao_detalhada": "Cria pendrives bootaveis a partir de imagens ISO. Prepara instalacao de Windows ou Linux em midia USB de forma simples."
     },
     {
       "id": "BleachBit.BleachBit",
       "nome": "BleachBit",
       "categoria": "Utilitários",
       "descricao": "Limpeza de cache e arquivos temporários.",
-      "descricao_detalhada": "Limpeza de cache e arquivos temporários."
+      "descricao_detalhada": "Limpa cache, cookies e arquivos temporarios do sistema e aplicativos. Libera espaco e reduz rastros locais de navegacao."
     },
     {
       "id": "QuickLook.QuickLook",
       "nome": "QuickLook",
       "categoria": "Utilitários",
       "descricao": "Pré-visualização de arquivos com barra de espaço.",
-      "descricao_detalhada": "Pré-visualização de arquivos com barra de espaço."
+      "descricao_detalhada": "Pre-visualiza arquivos ao pressionar a barra de espaco no Explorer. Suporta PDF, imagens, video e dezenas de formatos sem abrir o app completo."
     },
     {
       "id": "OPAutoClicker.OPAutoClicker",
       "nome": "OP Auto Clicker",
       "categoria": "Utilitários",
       "descricao": "Autoclicker com intervalo e atalhos configuráveis.",
-      "descricao_detalhada": "Autoclicker com intervalo e atalhos configuráveis."
+      "descricao_detalhada": "Autoclicker com intervalo e atalhos configuraveis. Repete cliques do mouse em jogos ou tarefas repetitivas quando permitido."
     },
     {
       "id": "Rainmeter.Rainmeter",
       "nome": "Rainmeter",
       "categoria": "Personalização",
       "descricao": "Widgets e skins na área de trabalho.",
-      "descricao_detalhada": "Widgets e skins na área de trabalho."
+      "descricao_detalhada": "Plataforma de skins e widgets na area de trabalho. Exibe relogio, sistema, clima e medidores customizaveis com temas da comunidade."
     },
     {
       "id": "AmN.yasb",
       "nome": "YASB",
       "categoria": "Personalização",
       "descricao": "Barra de status customizável (Yet Another Status Bar).",
-      "descricao_detalhada": "Barra de status customizável (Yet Another Status Bar)."
+      "descricao_detalhada": "Barra de status customizavel para Windows (Yet Another Status Bar). Mostra CPU, rede, audio e modulos configuraveis no topo ou rodape."
     },
     {
       "id": "RamenSoftware.Windhawk",
       "nome": "Windhawk",
       "categoria": "Personalização",
       "descricao": "Mods e tweaks para o shell do Windows.",
-      "descricao_detalhada": "Mods e tweaks para o shell do Windows."
+      "descricao_detalhada": "Plataforma de mods para o shell do Windows. Aplica ajustes na barra de tarefas, Explorer e menus via modulos sem editar registro manualmente."
     },
     {
       "id": "ArminOsaj.AutoDarkMode",
       "nome": "Auto Dark Mode",
       "categoria": "Personalização",
       "descricao": "Alterna tema claro/escuro automaticamente.",
-      "descricao_detalhada": "Alterna tema claro/escuro automaticamente."
+      "descricao_detalhada": "Alterna automaticamente entre tema claro e escuro do Windows. Segue horario do dia ou por do sol para conforto visual."
     },
     {
       "id": "OpenRGB.OpenRGB",
       "nome": "OpenRGB",
       "categoria": "Personalização",
       "descricao": "Controle de iluminação RGB unificado.",
-      "descricao_detalhada": "Controle de iluminação RGB unificado."
+      "descricao_detalhada": "Controla iluminacao RGB de varias marcas em um so app. Unifica perifericos e fans sem instalar um software por fabricante."
     },
     {
       "id": "Sandboxie.Plus",
       "nome": "Sandboxie Plus",
       "categoria": "Sistema e hardware",
       "descricao": "Executa programas em sandbox isolada.",
-      "descricao_detalhada": "Executa programas em sandbox isolada."
+      "descricao_detalhada": "Executa programas em ambiente isolado (sandbox). Limita alteracoes no sistema ao testar software desconhecido ou navegacao arriscada."
     },
     {
       "id": "BitSum.ProcessLasso",
       "nome": "Process Lasso",
       "categoria": "Sistema e hardware",
       "descricao": "Prioridade e afinidade de CPU para processos.",
-      "descricao_detalhada": "Prioridade e afinidade de CPU para processos."
+      "descricao_detalhada": "Gerencia prioridade e afinidade de CPU por processo. Evita que apps pesados monopolizem nucleos e melhora responsividade do sistema."
     },
     {
       "id": "TechPowerUp.GPU-Z",
       "nome": "GPU-Z",
       "categoria": "Sistema e hardware",
       "descricao": "Informações da placa de vídeo, BIOS, drivers e sensores.",
-      "descricao_detalhada": "Mostra informações da placa de vídeo: modelo, BIOS, driver, clocks e sensores em tempo real."
+      "descricao_detalhada": "Mostra informacoes da placa de video: modelo, BIOS, driver, clocks e sensores em tempo real. Referencia para overclockers e diagnostico de GPU."
     },
     {
       "id": "Guru3D.Afterburner",
       "nome": "MSI Afterburner",
       "categoria": "Sistema e hardware",
       "descricao": "Overclock e monitoramento de GPU.",
-      "descricao_detalhada": "Overclock e monitoramento de GPU."
+      "descricao_detalhada": "Ferramenta de overclock e monitoramento de GPU da MSI. Ajusta clocks, ventoinhas e exibe OSD com FPS e temperaturas em jogos."
     },
     {
       "id": "Wagnardsoft.DisplayDriverUninstaller",
       "nome": "DDU (Display Driver Uninstaller)",
       "categoria": "Sistema e hardware",
       "descricao": "Remove drivers de vídeo NVIDIA/AMD/Intel.",
-      "descricao_detalhada": "Remove drivers de vídeo NVIDIA/AMD/Intel."
+      "descricao_detalhada": "Remove completamente drivers de video NVIDIA, AMD ou Intel. Usado antes de reinstalar driver limpo para corrigir artefatos ou falhas."
     },
     {
       "id": "CrystalDewWorld.CrystalDiskInfo",
       "nome": "CrystalDiskInfo",
       "categoria": "Sistema e hardware",
       "descricao": "Saúde e temperatura de discos (S.M.A.R.T.).",
-      "descricao_detalhada": "Saúde e temperatura de discos (S.M.A.R.T.)."
+      "descricao_detalhada": "Monitora saude de discos via S.M.A.R.T. Alerta temperatura, horas de uso e setores problematicos em HDDs e SSDs."
     },
     {
       "id": "CrystalDewWorld.CrystalDiskMark",
       "nome": "CrystalDiskMark",
       "categoria": "Sistema e hardware",
       "descricao": "Benchmark de leitura/gravação de discos.",
-      "descricao_detalhada": "Benchmark de leitura/gravação de discos."
+      "descricao_detalhada": "Benchmark de leitura e gravacao de discos. Mede velocidade sequencial e aleatoria para comparar SSDs e pendrives."
     },
     {
       "id": "Rem0o.FanControl",
       "nome": "FanControl",
       "categoria": "Sistema e hardware",
       "descricao": "Controle de ventoinhas da placa-mãe/GPU.",
-      "descricao_detalhada": "Controle de ventoinhas da placa-mãe/GPU."
+      "descricao_detalhada": "Controla curvas de ventoinhas da placa-mae e GPU. Ajusta rpm conforme temperatura para equilibrar ruido e refrigeracao."
     },
     {
       "id": "Piriform.Speccy",
       "nome": "Speccy",
       "categoria": "Sistema e hardware",
       "descricao": "Resumo detalhado do hardware do PC.",
-      "descricao_detalhada": "Resumo detalhado do hardware do PC."
+      "descricao_detalhada": "Resumo legivel de todo o hardware do PC. Lista CPU, RAM, placas e temperaturas em uma unica tela."
     },
     {
       "id": "abbodi1406.vcredist",
       "nome": "Visual C++ Redistributable (All-in-One)",
       "categoria": "Runtimes e componentes",
       "descricao": "Pacote AIO dos runtimes VC++ (2005–2022) via winget.",
-      "descricao_detalhada": "Pacote AIO dos runtimes VC++ (2005–2022) via winget."
+      "descricao_detalhada": "Pacote que instala varias versoes do Visual C++ Redistributable de uma vez. Necessario para muitos jogos e aplicativos compilados em C++ no Windows."
     },
     {
       "id": "Microsoft.DotNet.DesktopRuntime.8",
       "nome": ".NET Desktop Runtime 8",
       "categoria": "Runtimes e componentes",
       "descricao": "Runtime .NET para apps desktop.",
-      "descricao_detalhada": "Runtime .NET para apps desktop."
+      "descricao_detalhada": "Runtime .NET 8 para aplicativos desktop Windows. Bibliotecas exigidas por programas construidos em WPF e WinForms na versao atual."
     },
     {
       "id": "Microsoft.DotNet.DesktopRuntime.6",
       "nome": ".NET Desktop Runtime 6",
       "categoria": "Runtimes e componentes",
       "descricao": "Runtime .NET LTS para apps legados.",
-      "descricao_detalhada": "Runtime .NET LTS para apps legados."
+      "descricao_detalhada": "Runtime .NET 6 LTS para apps desktop legados. Mantem compatibilidade com software que ainda nao migrou para .NET 8."
     },
     {
       "id": "Microsoft.DirectX",
       "nome": "DirectX End-User Runtime",
       "categoria": "Runtimes e componentes",
       "descricao": "Componentes DirectX para jogos antigos.",
-      "descricao_detalhada": "Componentes DirectX para jogos antigos."
+      "descricao_detalhada": "Instalador de componentes DirectX legados (junho 2010). Corrige erros de DLL ausente em jogos antigos que dependem de D3DX."
     },
     {
       "id": "Oracle.JavaRuntimeEnvironment",
       "nome": "Java Runtime (JRE)",
       "categoria": "Runtimes e componentes",
       "descricao": "Runtime Java para apps que ainda dependem de JRE.",
-      "descricao_detalhada": "Runtime Java para apps que ainda dependem de JRE."
+      "descricao_detalhada": "Java Runtime Environment para executar apps Java sem JDK completo. Ainda exigido por ferramentas e instaladores corporativos antigos."
     },
     {
       "id": "Discord.Discord",
       "nome": "Discord",
       "categoria": "Comunicação",
       "descricao": "Chat e comunidades.",
-      "descricao_detalhada": "Chat e comunidades."
+      "descricao_detalhada": "Plataforma de chat por voz e texto para comunidades e jogos. Servidores, canais e chamadas em grupo com compartilhamento de tela."
     },
     {
       "id": "Zoom.Zoom",
       "nome": "Zoom",
       "categoria": "Comunicação",
       "descricao": "Videoconferência.",
-      "descricao_detalhada": "Videoconferência."
+      "descricao_detalhada": "Aplicativo de videoconferencia para reunioes e webinars. Salas com video, chat e gravacao muito usadas em trabalho remoto."
     },
     {
       "id": "Telegram.TelegramDesktop",
       "nome": "Telegram Desktop",
       "categoria": "Comunicação",
       "descricao": "Cliente Telegram.",
-      "descricao_detalhada": "Cliente Telegram."
+      "descricao_detalhada": "Cliente oficial do Telegram para PC. Mensagens, grupos, canais e arquivos sincronizados com o celular via nuvem."
     },
     {
       "id": "WhatsApp.WhatsApp",
       "nome": "WhatsApp",
       "categoria": "Comunicação",
       "descricao": "WhatsApp para desktop.",
-      "descricao_detalhada": "WhatsApp para desktop."
+      "descricao_detalhada": "WhatsApp para desktop vinculado ao celular. Envia mensagens e arquivos pelo PC enquanto o telefone permanece conectado."
     },
     {
       "id": "SlackTechnologies.Slack",
       "nome": "Slack",
       "categoria": "Comunicação",
       "descricao": "Comunicação para equipes.",
-      "descricao_detalhada": "Comunicação para equipes."
+      "descricao_detalhada": "Comunicacao em equipe por canais e mensagens diretas. Integra bots e ferramentas de trabalho para empresas e projetos."
     },
     {
       "id": "Microsoft.Teams",
       "nome": "Microsoft Teams",
       "categoria": "Comunicação",
       "descricao": "Chat e reuniões Microsoft.",
-      "descricao_detalhada": "Chat e reuniões Microsoft."
+      "descricao_detalhada": "Plataforma de chat, chamadas e reunioes da Microsoft. Usada em empresas com Microsoft 365 para colaboracao e compartilhamento de arquivos."
     },
     {
       "id": "Signal.Signal",
       "nome": "Signal",
       "categoria": "Comunicação",
       "descricao": "Mensagens com foco em privacidade.",
-      "descricao_detalhada": "Mensagens com foco em privacidade."
+      "descricao_detalhada": "Mensageiro com criptografia de ponta a ponta por padrao. Foco em privacidade para conversas e chamadas seguras."
     },
     {
       "id": "Skype.Skype",
       "nome": "Skype",
       "categoria": "Comunicação",
       "descricao": "Chamadas e mensagens Skype.",
-      "descricao_detalhada": "Chamadas e mensagens Skype."
+      "descricao_detalhada": "Servico de chamadas de voz e video e mensagens da Microsoft. Historico longo em comunicacao internacional e chamadas para telefones."
     },
     {
       "id": "Valve.Steam",
       "nome": "Steam",
       "categoria": "Jogos",
       "descricao": "Loja e launcher de jogos.",
-      "descricao_detalhada": "Loja e launcher de jogos para PC: compras, downloads, atualizações, nuvem de saves e comunidade."
+      "descricao_detalhada": "Loja e launcher de jogos para PC da Valve. Compras, downloads, atualizacoes, nuvem de saves, Workshop e comunidade integrados."
     },
     {
       "id": "EpicGames.EpicGamesLauncher",
       "nome": "Epic Games Launcher",
       "categoria": "Jogos",
       "descricao": "Loja Epic Games.",
-      "descricao_detalhada": "Loja Epic Games."
+      "descricao_detalhada": "Launcher da Epic Games Store. Instala jogos gratuitos semanais, Fortnite e titulos exclusivos da loja."
     },
     {
       "id": "Ubisoft.Connect",
       "nome": "Ubisoft Connect",
       "categoria": "Jogos",
       "descricao": "Launcher Ubisoft.",
-      "descricao_detalhada": "Launcher Ubisoft."
+      "descricao_detalhada": "Launcher e servico online da Ubisoft. Ativa jogos Ubisoft, conquistas, amigos e sincronizacao de progresso."
     },
     {
       "id": "ElectronicArts.EADesktop",
       "nome": "EA App",
       "categoria": "Jogos",
       "descricao": "Launcher Electronic Arts.",
-      "descricao_detalhada": "Launcher Electronic Arts."
+      "descricao_detalhada": "Launcher da Electronic Arts (EA App). Substitui Origin para biblioteca EA Play e titulos como FIFA e Battlefield."
     },
     {
       "id": "GOG.Galaxy",
       "nome": "GOG Galaxy",
       "categoria": "Jogos",
       "descricao": "Loja GOG.",
-      "descricao_detalhada": "Loja GOG."
+      "descricao_detalhada": "Cliente da loja GOG sem DRM obrigatorio. Organiza biblioteca de jogos classicos e modernos sem launcher pesado."
     },
     {
       "id": "ItchIo.Itch",
       "nome": "itch.io",
       "categoria": "Jogos",
       "descricao": "Loja e launcher de jogos indie.",
-      "descricao_detalhada": "Loja e launcher de jogos indie."
+      "descricao_detalhada": "Loja e launcher focados em jogos indie e experimentais. Distribui demos, game jams e projetos de desenvolvedores independentes."
     },
     {
       "id": "HydraLauncher.Hydra",
       "nome": "Hydra Launcher",
       "categoria": "Jogos",
       "descricao": "Launcher de jogos com biblioteca unificada.",
-      "descricao_detalhada": "Launcher de jogos com biblioteca unificada."
+      "descricao_detalhada": "Launcher que unifica bibliotecas de varias lojas em uma interface. Organiza jogos instalados de diferentes fontes em um so lugar."
     },
     {
       "id": "PrismLauncher.PrismLauncher",
       "nome": "Prism Launcher",
       "categoria": "Jogos",
       "descricao": "Launcher de Minecraft (fork do MultiMC).",
-      "descricao_detalhada": "Launcher de Minecraft (fork do MultiMC)."
+      "descricao_detalhada": "Launcher open-source de Minecraft derivado do MultiMC. Gerencia instancias, mods e versoes Java com perfis separados."
     },
     {
       "id": "Parsec.Parsec",
       "nome": "Parsec",
       "categoria": "Jogos",
       "descricao": "Game streaming de baixa latência.",
-      "descricao_detalhada": "Game streaming de baixa latência."
+      "descricao_detalhada": "Streaming de jogos e desktop com baixa latencia. Joga em PC remoto ou compartilha maquina para co-op online."
     },
     {
       "id": "Playnite.Playnite",
       "nome": "Playnite",
       "categoria": "Jogos",
       "descricao": "Biblioteca unificada de jogos.",
-      "descricao_detalhada": "Biblioteca unificada de jogos."
+      "descricao_detalhada": "Biblioteca unificada que agrega jogos de Steam, Epic, GOG e outros. Inicia titulos e organiza capas em um catalogo so."
     },
     {
       "id": "HeroicGamesLauncher.HeroicGamesLauncher",
       "nome": "Heroic Games Launcher",
       "categoria": "Jogos",
       "descricao": "Launcher open-source para Epic/GOG/Amazon.",
-      "descricao_detalhada": "Launcher open-source para Epic/GOG/Amazon."
+      "descricao_detalhada": "Launcher open-source para Epic Games, GOG e Amazon Games. Alternativa leve ao cliente oficial da Epic no Linux e Windows."
     }
   ]
 }
