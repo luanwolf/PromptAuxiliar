@@ -87,8 +87,8 @@ function Write-PASummary {
         Write-Host "  ATENCAO: reinicie o computador para que as alteracoes tenham efeito." -ForegroundColor Yellow
     }
 
-    # Salvar log
-    $logDir = Join-Path $env:TEMP "PromptAuxiliar\logs"
+    # Salvar log em C:\PromptAuxiliar\logs
+    $logDir = 'C:\PromptAuxiliar\logs'
     if (-not (Test-Path $logDir)) { New-Item $logDir -ItemType Directory -Force | Out-Null }
     $logFile = Join-Path $logDir "$($Titulo -replace '[\\/:*?""<>|]','_')-$(Get-Date -Format 'yyyyMMdd-HHmmss').log"
     $logLines = @(

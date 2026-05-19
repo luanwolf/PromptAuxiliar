@@ -266,9 +266,21 @@
   // ── Bind events ──────────────────────────────────────────────────────────
   function bind() {
     const detectBtn = document.getElementById("tweaks-detect-btn");
-    const applyBtn = document.getElementById("tweaks-apply-btn");
-    const selAll = document.getElementById("tweaks-select-all");
-    const selNone = document.getElementById("tweaks-select-none");
+    const applyBtn  = document.getElementById("tweaks-apply-btn");
+    const logsBtn   = document.getElementById("tweaks-logs-btn");
+    const selAll    = document.getElementById("tweaks-select-all");
+    const selNone   = document.getElementById("tweaks-select-none");
+
+    if (logsBtn) {
+      logsBtn.addEventListener("click", async () => {
+        try {
+          const r = await api().open_logs_folder();
+          if (window.appToast) window.appToast(r.message, r.ok ? "success" : "error");
+        } catch (e) {
+          if (window.appToast) window.appToast(String(e), "error");
+        }
+      });
+    }
 
     if (detectBtn) {
       detectBtn.addEventListener("click", () => redetect());

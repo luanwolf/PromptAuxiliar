@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ctypes
 import json
 import os
 import subprocess
@@ -11,7 +12,8 @@ import uuid
 from pathlib import Path
 from typing import Any
 
-_PS_RUN = Path(os.environ.get("TEMP", ".")) / "PromptAuxiliar" / "run"
+_PS_RUN   = Path(os.environ.get("TEMP", ".")) / "PromptAuxiliar" / "run"
+_LOGS_DIR = Path(r"C:\PromptAuxiliar\logs")
 _CATALOG_REL = Path(__file__).parent / "data" / "tweaks_catalog.json"
 
 
@@ -106,19 +108,10 @@ def _build_apply_script(
     needs_admin: bool,
     needs_restart: bool,
 ) -> str:
+    """Gera o script PowerShell para aplicar os tweaks selecionados.
+    A elevação de admin é feita pelo Python antes de chamar este script.
+    """
     lines: list[str] = []
-
-    if needs_admin:
-        lines += [
-            "if (-not ([Security.Principal.WindowsPrincipal]",
-            "    [Security.Principal.WindowsIdentity]::GetCurrent()",
-            ").IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {",
-            "    $argList = \"-NoProfile -ExecutionPolicy Bypass -File `\"$PSCommandPath`\"\"",
-            "    Start-Process powershell.exe -Verb RunAs -ArgumentList $argList",
-            "    exit",
-            "}",
-            "",
-        ]
 
     lines += [
         "$Host.UI.RawUI.WindowTitle = 'Prompt Auxiliar - Tweaks'",
@@ -191,7 +184,7 @@ def _build_apply_script(
         "Write-Host '  ================================================' -ForegroundColor DarkCyan",
         "",
         "# ---- Salvar log em arquivo",
-        "$logDir = Join-Path $env:TEMP 'PromptAuxiliar\\logs'",
+        r"$logDir = 'C:\PromptAuxiliar\logs'",
         "if (-not (Test-Path $logDir)) { New-Item $logDir -ItemType Directory -Force | Out-Null }",
         "$logFile = Join-Path $logDir \"tweaks-$(Get-Date -Format 'yyyyMMdd-HHmmss').log\"",
         "$logLines = @(",
@@ -239,24 +232,39 @@ def apply_tweaks(ids: list[str]) -> dict[str, Any]:
     if not selected:
         return {"ok": False, "message": "Nenhum ajuste selecionado."}
 
-    needs_admin = any(tw.get("requer_admin") for tw in selected)
+    needs_admin   = any(tw.get("requer_admin")    for tw in selected)
     needs_restart = any(tw.get("requer_reiniciar") for tw in selected)
 
     ps_script = _build_apply_script(selected, needs_admin, needs_restart)
 
     _PS_RUN.mkdir(parents=True, exist_ok=True)
+    _LOGS_DIR.mkdir(parents=True, exist_ok=True)
     ps1 = _PS_RUN / f"tweaks_{uuid.uuid4().hex}.ps1"
     ps1.write_text(ps_script, encoding="utf-8-sig")
 
-    flags = getattr(subprocess, "CREATE_NEW_CONSOLE", 0)
-    subprocess.Popen(
-        f'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "{ps1}"',
-        creationflags=flags,
-    )
+    ps_args = f'-NoProfile -ExecutionPolicy Bypass -File "{ps1}"'
+
+    if needs_admin and sys.platform == "win32":
+        # Solicita elevação diretamente do Python via ShellExecuteW (mais confiável que auto-elevação no PS1)
+        ret = ctypes.windll.shell32.ShellExecuteW(
+            None, "runas", "powershell.exe", ps_args, None, 1
+        )
+        if ret <= 32:
+            return {
+                "ok": False,
+                "message": (
+                    f"Não foi possível iniciar o PowerShell como administrador (código {ret}). "
+                    "Verifique se o UAC está habilitado e tente novamente."
+                ),
+            }
+    else:
+        flags = getattr(subprocess, "CREATE_NEW_CONSOLE", 0x00000010)
+        subprocess.Popen(f'powershell.exe {ps_args}', creationflags=flags)
 
     return {
         "ok": True,
-        "message": f"{len(selected)} ajuste(s) em aplicação.",
+        "message": f"{len(selected)} ajuste(s) em aplicação."
+        + (" (UAC solicitado)" if needs_admin else ""),
     }
 
 

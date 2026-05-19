@@ -1,8 +1,9 @@
 """Constantes do Prompt Auxiliar."""
 
-APP_VERSION = "2.7.6"
+APP_VERSION = "2.7.7"
 PASTA_BASE = r"C:\PromptAuxiliar"
-PASTAS_NECESSARIAS = ("softwares", "registros")
+PASTA_LOGS = r"C:\PromptAuxiliar\logs"
+PASTAS_NECESSARIAS = ("softwares", "registros", "logs")
 
 GITHUB_OWNER = "luanwolf"
 GITHUB_REPO = "PromptAuxiliar"

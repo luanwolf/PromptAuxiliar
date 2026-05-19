@@ -8,7 +8,7 @@ import webbrowser
 from typing import Any
 
 from app.actions import catalogo_para_json, obter_acao
-from app.config import APP_VERSION, CREDITOS_URL, PASTA_BASE
+from app.config import APP_VERSION, CREDITOS_URL, PASTA_BASE, PASTA_LOGS
 from app.environment import preparar_ambiente
 from app.uninstall import paths_for_display, schedule_uninstall
 from app.updater import check_for_update, get_local_version, launch_win_ps1_update
@@ -50,6 +50,11 @@ class PromptAuxiliarApi:
             os.startfile(PASTA_BASE)
             return {"ok": True, "message": "Pasta aberta."}
         return {"ok": False, "message": f"Pasta não encontrada: {PASTA_BASE}"}
+
+    def open_logs_folder(self) -> dict[str, Any]:
+        os.makedirs(PASTA_LOGS, exist_ok=True)
+        os.startfile(PASTA_LOGS)
+        return {"ok": True, "message": "Pasta de logs aberta."}
 
     def get_catalog(self) -> dict[str, Any]:
         data = catalogo_para_json()
