@@ -365,6 +365,19 @@
       "restart_explorer": false,
       "requer_admin": false,
       "requer_reiniciar": false
+    },
+    {
+      "id": "context_menu_classic",
+      "label": "Menu de contexto clássico (Win 10)",
+      "descricao": "Ativa o menu de contexto completo do botão direito estilo Windows 10. Para desativar, use o script 'Alternar menu de contexto'.",
+      "categoria": "interface",
+      "detect": "Test-Path 'HKCU:\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32'",
+      "apply": [
+        "if (-not (Test-Path 'HKCU:\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32')) { New-Item -Path 'HKCU:\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32' -Force | Out-Null }; Set-ItemProperty -Path 'HKCU:\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32' -Name '(default)' -Value '' -Type String -Force"
+      ],
+      "restart_explorer": true,
+      "requer_admin": false,
+      "requer_reiniciar": false
     }
   ]
 }

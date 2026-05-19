@@ -283,21 +283,12 @@ function Install-PromptAuxiliarSourceZip {
     Move-Item -Path $extracted.FullName -Destination $staging -Force
 
     $destExists = Test-Path -LiteralPath $Destination
-    if ($destExists -and (Test-PromptAuxShouldDeferFolderSwap -Destination $Destination -ScriptDir $ScriptDir)) {
-        Write-Host '  Atualizacao adiada: feche ESTA janela (Enter) para concluir a copia dos arquivos.' -ForegroundColor Cyan
-        Write-Host '  O atalho da nova versao ja foi criado na Area de Trabalho.' -ForegroundColor DarkGray
-        Invoke-PromptAuxDeferredFolderSwap -StagingPath $staging -Destination $Destination
-        Remove-Item $tempZip -Force -ErrorAction SilentlyContinue
-        Remove-Item $tempExtract -Force -ErrorAction SilentlyContinue
-        return @{ Deferred = $true }
-    }
-
     if ($destExists) {
         Write-Host '  Substituindo arquivos da instalacao...' -ForegroundColor DarkGray
         try {
             Remove-Item -LiteralPath $Destination -Recurse -Force -ErrorAction Stop
         } catch {
-            Write-Host '  Nao foi possivel substituir agora - aguardando fechar esta janela...' -ForegroundColor Cyan
+            Write-Host '  Arquivo em uso - atualizacao sera aplicada apos fechar esta janela.' -ForegroundColor Cyan
             Invoke-PromptAuxDeferredFolderSwap -StagingPath $staging -Destination $Destination
             Remove-Item $tempZip -Force -ErrorAction SilentlyContinue
             Remove-Item $tempExtract -Force -ErrorAction SilentlyContinue

@@ -792,7 +792,7 @@ $forceUpdate = $Update -or ($env:PROMPTAUX_UPDATE -eq '1')
 if ($forceUpdate) {
     Write-Host '  Aguardando o app encerrar...' -ForegroundColor DarkGray
     $waitRoot = $InstallRoot.TrimEnd('\')
-    $waitDeadline = (Get-Date).AddSeconds(15)
+    $waitDeadline = (Get-Date).AddSeconds(30)
     do {
         Start-Sleep -Milliseconds 600
         $still = $false
@@ -802,6 +802,8 @@ if ($forceUpdate) {
             if ($p.CommandLine -and ($p.CommandLine -like "*$waitRoot*")) { $still = $true; break }
         }
     } while ($still -and (Get-Date) -lt $waitDeadline)
+    # Pequena pausa extra para liberar handles de arquivo apos processos encerrarem
+    Start-Sleep -Milliseconds 1500
 }
 $script:PromptAuxDeferredExit = $false
 Invoke-PromptAuxiliarInstallOrUpdate `

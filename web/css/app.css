@@ -1218,33 +1218,10 @@ button.panel-row.script-action-row:hover .script-run-hint {
 }
 
 /* ── Tweaks view ────────────────────────────────────────────────────────── */
-.tweaks-view {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  height: 100%;
-  overflow: hidden;
-  padding: 0;
-}
-
 body[data-view="tweaks"] .nav-tweaks {
   background: var(--nav-active-bg);
   border-color: var(--nav-active-border);
   color: var(--text);
-}
-
-.tweaks-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.tweaks-legend {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-left: auto;
 }
 
 .tweaks-row {

@@ -40,7 +40,6 @@ _ACOES: tuple[Acao, ...] = (
     Acao("ativar-windows-kms", "Ativar Windows (KMS)", "ativar_windows_kms.bat", "Sistema", "Ativação Windows — use por sua conta e risco.", "key", "perigo"),
     Acao("ativar-windows-slmgr", "Ativar Windows (slmgr)", "ativar_windows.bat", "Sistema", "slmgr /ato.", "key", "perigo"),
     Acao("criar-atalhos", "Criar atalhos (GodMode e BIOS)", "criar_atalhos.bat", "Sistema", "GodMode e atalho reinício BIOS.", "desktop"),
-    Acao("alternar-contexto", "Alternar menu de contexto", "alternar_contexto.bat", "Sistema", "Menu clássico Win10 ou moderno Win11.", "cursor"),
     Acao("gerenciar-inicializacao", "Apps de inicialização", "gerenciar_inicializacao.bat", "Sistema", "Configurações de inicialização.", "rocket"),
     Acao("reparar-rede", "Reparar conexão de rede", "reparar_rede.bat", "Sistema", "IP, DNS, Winsock e TCP/IP.", "wifi"),
 )
