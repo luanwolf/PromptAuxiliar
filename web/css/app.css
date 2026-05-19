@@ -676,6 +676,11 @@ input {
   gap: 0.5rem;
 }
 
+.modal-foot .hidden,
+.modal-foot [hidden] {
+  display: none !important;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

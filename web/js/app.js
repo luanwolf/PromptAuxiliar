@@ -53,68 +53,44 @@
     }, 4200);
   }
 
-  function infoDialog({ title, body }) {
-    return new Promise((resolve) => {
-      $("#modal-title").textContent = title;
-      $("#modal-body").textContent = body;
-      const confirmBtn = $("#modal-confirm");
-      const cancelBtn = $("#modal-cancel");
-      confirmBtn.style.background = "";
-      confirmBtn.textContent = "OK";
-      cancelBtn.hidden = true;
-      let settled = false;
-      const finish = () => {
-        if (settled) return;
-        settled = true;
-        cancelBtn.hidden = false;
-        confirmBtn.textContent = "Confirmar";
-        resolve();
-      };
-      confirmBtn.onclick = (e) => {
-        e.preventDefault();
-        ui.modal.close();
-        finish();
-      };
-      ui.modal.addEventListener(
-        "cancel",
-        (e) => {
-          e.preventDefault();
-          ui.modal.close();
-          finish();
-        },
-        { once: true }
-      );
-      ui.modal.showModal();
-    });
+  function replaceModalButton(id) {
+    const btn = document.getElementById(id);
+    const clone = btn.cloneNode(true);
+    btn.replaceWith(clone);
+    return clone;
   }
 
-  function confirmDialog({ title, body, danger = false }) {
+  /**
+   * @param {{ title: string, body: string, variant?: 'confirm'|'alert', danger?: boolean }} opts
+   * @returns {Promise<boolean>} true = confirmar/OK, false = cancelar/Escape
+   */
+  function showAppModal({ title, body, variant = "confirm", danger = false }) {
     return new Promise((resolve) => {
+      const modal = ui.modal;
+      const confirmBtn = replaceModalButton("modal-confirm");
+      const cancelBtn = replaceModalButton("modal-cancel");
       $("#modal-title").textContent = title;
       $("#modal-body").textContent = body;
-      const confirmBtn = $("#modal-confirm");
-      const cancelBtn = $("#modal-cancel");
+
+      const isAlert = variant === "alert";
+      cancelBtn.textContent = "Cancelar";
       cancelBtn.hidden = false;
-      confirmBtn.textContent = "Confirmar";
-      confirmBtn.style.background = danger
-        ? "linear-gradient(135deg,#c42b1c,#e81123)"
-        : "";
-      let settled = false;
-      const finish = (v) => {
-        if (settled) return;
-        settled = true;
-        resolve(v);
+      cancelBtn.classList.remove("hidden");
+      confirmBtn.textContent = isAlert ? "OK" : "Confirmar";
+      confirmBtn.style.background =
+        !isAlert && danger ? "linear-gradient(135deg,#c42b1c,#e81123)" : "";
+
+      let done = false;
+      const finish = (value) => {
+        if (done) return;
+        done = true;
+        if (modal.open) modal.close();
+        resolve(value);
       };
-      cancelBtn.onclick = () => {
-        ui.modal.close();
-        finish(false);
-      };
-      confirmBtn.onclick = (e) => {
-        e.preventDefault();
-        finish(true);
-        ui.modal.close();
-      };
-      ui.modal.addEventListener(
+
+      cancelBtn.addEventListener("click", () => finish(false));
+      confirmBtn.addEventListener("click", () => finish(true));
+      modal.addEventListener(
         "cancel",
         (e) => {
           e.preventDefault();
@@ -122,8 +98,16 @@
         },
         { once: true }
       );
-      ui.modal.showModal();
+      modal.showModal();
     });
+  }
+
+  function infoDialog(opts) {
+    return showAppModal({ ...opts, variant: "alert" });
+  }
+
+  function confirmDialog(opts) {
+    return showAppModal({ ...opts, variant: "confirm" });
   }
 
   function escapeHtml(s) {
@@ -336,7 +320,7 @@
           if (r.remote) {
             corpo = `Versão instalada: v${r.local}\nVersão no GitHub (branch main): v${r.remote}\n\n${r.message}`;
           }
-          await infoDialog({ title: titulo, body: corpo });
+          await showAppModal({ title: titulo, body: corpo, variant: "alert" });
         } else if (kind === "uninstall") {
           const preview = await api().get_uninstall_preview();
           if (!preview.ok) {
