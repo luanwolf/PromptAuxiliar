@@ -244,6 +244,14 @@
       toast(initRes.message, "error");
       return;
     }
+    if (window.PromptAuxTheme) {
+      if (initRes.theme) {
+        window.PromptAuxTheme.apply(initRes.theme);
+      } else {
+        await window.PromptAuxTheme.syncFromServer();
+      }
+      window.PromptAuxTheme.bindToggle();
+    }
     setBootProgress(70, "Carregando ações…");
     state.catalog = await a.get_catalog();
     ui.version.textContent = `v${state.catalog.meta.version}`;

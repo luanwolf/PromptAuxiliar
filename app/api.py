@@ -13,6 +13,7 @@ from app.environment import preparar_ambiente
 from app.uninstall import paths_for_display, schedule_uninstall
 from app.updater import check_for_update, should_skip_auto_update
 from app.panels import get_panel, run_panel, write_selected_ids
+from app.ui_settings import get_theme, set_theme
 from app.winget_installed import prefetch_installed_scan
 from app.runner import ScriptNaoEncontradoError, executar_acao, usa_powershell_admin
 
@@ -35,6 +36,7 @@ class PromptAuxiliarApi:
                 "pasta": PASTA_BASE,
                 "primeira_vez": primeira_vez,
                 "message": "Ambiente pronto.",
+                "theme": get_theme(),
                 "update_available": update_info.get("update_available", False),
                 "update_message": update_info.get("message", ""),
                 "remote_version": update_info.get("remote"),
@@ -84,6 +86,21 @@ class PromptAuxiliarApi:
         except ScriptNaoEncontradoError as e:
             with self._lock:
                 self._busy = False
+            return {"ok": False, "message": str(e)}
+
+    def get_ui_settings(self) -> dict[str, Any]:
+        try:
+            preparar_ambiente()
+            return {"ok": True, "theme": get_theme()}
+        except Exception as e:
+            return {"ok": False, "message": str(e), "theme": "dark"}
+
+    def save_ui_theme(self, theme: str) -> dict[str, Any]:
+        try:
+            preparar_ambiente()
+            saved = set_theme(theme)
+            return {"ok": True, "theme": saved}
+        except Exception as e:
             return {"ok": False, "message": str(e)}
 
     def check_for_updates(self) -> dict[str, Any]:

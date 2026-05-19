@@ -1,9 +1,17 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Prompt Auxiliar</title>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("promptaux-theme");
+        if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
   <link rel="stylesheet" href="css/app.css" />
 </head>
 <body>
@@ -50,9 +58,31 @@
           <h2 id="page-title" class="page-title">Todas as ferramentas</h2>
           <p id="page-subtitle" class="page-subtitle">Scripts e painéis Winget</p>
         </div>
-        <label class="search">
-          <input id="search" type="search" placeholder="Buscar…" autocomplete="off" />
-        </label>
+        <div class="topbar-actions">
+          <button
+            type="button"
+            class="btn icon theme-toggle"
+            id="theme-toggle"
+            title="Usar modo claro"
+            aria-label="Alternar tema claro ou escuro"
+            aria-pressed="false"
+          >
+            <span class="ico theme-icon-sun" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+              </svg>
+            </span>
+            <span class="ico theme-icon-moon hidden" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z" />
+              </svg>
+            </span>
+          </button>
+          <label class="search">
+            <input id="search" type="search" placeholder="Buscar…" autocomplete="off" />
+          </label>
+        </div>
       </header>
 
       <section id="view-home">
@@ -97,6 +127,7 @@
     </form>
   </dialog>
 
+  <script src="js/theme.js"></script>
   <script src="js/panels.js"></script>
   <script src="js/app.js"></script>
 </body>

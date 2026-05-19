@@ -11,10 +11,10 @@ if (-not $ProjectRoot) {
 $ProjectRoot = (Resolve-Path $ProjectRoot).Path
 
 $ico = Join-Path $ProjectRoot 'imagens\logo.ico'
-$launcher = Join-Path $ProjectRoot 'powershell\Atualizar-e-Iniciar.ps1'
+$launcher = Join-Path $ProjectRoot 'win.ps1'
 $main = Join-Path $ProjectRoot 'main.py'
 if (-not (Test-Path -LiteralPath $launcher)) {
-    throw "Atualizar-e-Iniciar.ps1 não encontrado em $ProjectRoot"
+    throw "win.ps1 nao encontrado em $ProjectRoot"
 }
 
 if (-not (Test-Path $ico)) {
@@ -43,4 +43,4 @@ foreach ($lnkPath in $targets) {
     Write-Host "Atalho: $lnkPath" -ForegroundColor Green
 }
 
-Write-Host "O atalho verifica atualizacoes no GitHub antes de abrir o app." -ForegroundColor DarkGray
+Write-Host "O atalho abre win.ps1 (verifica atualizacoes no GitHub antes do app)." -ForegroundColor DarkGray

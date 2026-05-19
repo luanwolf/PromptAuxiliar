@@ -111,15 +111,12 @@ function Invoke-PromptAuxDeferredFolderSwap {
     )
     $destEsc = $Destination.Replace("'", "''")
     $stageEsc = $StagingPath.Replace("'", "''")
-    $launcher = Join-Path $Destination 'powershell\Atualizar-e-Iniciar.ps1'
-    $launcherEsc = $launcher.Replace("'", "''")
     $ps1 = Join-Path ([System.IO.Path]::GetTempPath()) 'promptauxiliar-update-swap.ps1'
     $content = @"
 # Prompt Auxiliar - troca de pasta apos atualizacao
 `$ErrorActionPreference = 'SilentlyContinue'
 `$dest = '$destEsc'
 `$staging = '$stageEsc'
-`$launcher = '$launcherEsc'
 Start-Sleep -Seconds 2
 for (`$w = 0; `$w -lt 90; `$w++) {
     `$pattern = (`$dest.TrimEnd('\') + '*')
@@ -136,10 +133,22 @@ if (Test-Path -LiteralPath `$dest) {
 }
 New-Item -ItemType Directory -Path (Split-Path `$dest -Parent) -Force | Out-Null
 Move-Item -LiteralPath `$staging -Destination `$dest -Force
-if (Test-Path -LiteralPath `$launcher) {
+`$concluir = Join-Path `$dest 'powershell\Concluir-Troca-Instalacao.ps1'
+if (Test-Path -LiteralPath `$concluir) {
     Start-Process -FilePath 'powershell.exe' -ArgumentList @(
-        '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', `$launcher
+        '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', `$concluir, '-Destination', `$dest
     ) -WindowStyle Normal
+} else {
+    `$criar = Join-Path `$dest 'powershell\Criar-Atalho.ps1'
+    if (Test-Path -LiteralPath `$criar) {
+        & powershell.exe -NoProfile -ExecutionPolicy Bypass -File `$criar -ProjectRoot `$dest
+    }
+    `$win = Join-Path `$dest 'win.ps1'
+    if (Test-Path -LiteralPath `$win) {
+        Start-Process -FilePath 'powershell.exe' -ArgumentList @(
+            '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', `$win
+        ) -WindowStyle Normal
+    }
 }
 "@
     Write-PromptAuxUtf8NoBom -Path $ps1 -Content $content
@@ -207,6 +216,14 @@ function Install-PromptAuxiliarSourceZip {
     return @{ Deferred = $false }
 }
 
+function Update-PromptAuxiliarRefreshShortcuts {
+    param([string]$InstallRoot)
+    $criar = Join-Path $InstallRoot 'powershell\Criar-Atalho.ps1'
+    if (-not (Test-Path -LiteralPath $criar)) { return }
+    Write-Host '  Atualizando atalhos...' -ForegroundColor DarkGray
+    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $criar -ProjectRoot $InstallRoot
+}
+
 function Update-PromptAuxiliarIfNewer {
     param(
         [string]$InstallRoot,
@@ -246,6 +263,7 @@ function Update-PromptAuxiliarIfNewer {
         Write-Host '  Feche esta janela (Enter). O app abrira atualizado em seguida.' -ForegroundColor Green
         return 'deferred'
     }
+    Update-PromptAuxiliarRefreshShortcuts -InstallRoot $InstallRoot
     Write-Host "  Atualizado em: $InstallRoot" -ForegroundColor Green
     return $true
 }
