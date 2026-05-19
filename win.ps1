@@ -274,6 +274,16 @@ function Get-PromptAuxScriptPs1Names {
     return @('limpeza_temporarios.ps1')
 }
 
+function Test-PromptAuxRepoFilePresent {
+    param([string]$Path)
+    if (-not (Test-Path -LiteralPath $Path)) { return $false }
+    try {
+        return (Get-Item -LiteralPath $Path).Length -ge 8
+    } catch {
+        return $false
+    }
+}
+
 function Sync-PromptAuxRepoFile {
     param(
         [string]$InstallRoot,
@@ -322,9 +332,12 @@ function Sync-PromptAuxRepoFile {
         Write-PromptAuxUtf8NoBom -Path $dest -Content $content
         return $true
     } catch {
-        $hint = 'sem internet ou arquivo ainda nao publicado na branch main'
+        if (Test-PromptAuxRepoFilePresent -Path $dest) {
+            return $true
+        }
+        $hint = 'sem internet ou arquivo ausente no GitHub'
         if ($_.Exception.Response -and $_.Exception.Response.StatusCode.value__ -eq 404) {
-            $hint = 'ainda nao publicado na branch main - faca push do repositorio'
+            $hint = 'ainda nao publicado na branch main (faca push) ou URL incorreta'
         }
         Write-Host "  Aviso: $RelativePath - $hint" -ForegroundColor DarkYellow
         return $false
@@ -815,10 +828,15 @@ Sync-PromptAuxEssentialScriptsFromGitHub `
     -Name $RepoName `
     -Branch $Branch `
     -SourceRoot $ScriptDir
+$uiBat = Join-Path $InstallRoot 'scripts\_ui.bat'
 if ($batSync.Fail -gt 0 -and $batSync.Ok -eq 0) {
-    Write-Host '  Aviso: nenhum script .bat foi sincronizado (verifique internet ou faca push no GitHub).' -ForegroundColor DarkYellow
+    if (Test-PromptAuxRepoFilePresent -Path $uiBat) {
+        Write-Host '  Scripts .bat: usando copia local (download do GitHub indisponivel nesta execucao).' -ForegroundColor DarkGray
+    } else {
+        Write-Host '  Aviso: nenhum script .bat disponivel. Verifique internet ou faca push no GitHub.' -ForegroundColor DarkYellow
+    }
 } elseif ($batSync.Fail -gt 0) {
-    Write-Host "  Aviso: $($batSync.Fail) script(s) .bat nao sincronizado(s); $($batSync.Ok) ok." -ForegroundColor DarkYellow
+    Write-Host "  Scripts: $($batSync.Ok) atualizado(s), $($batSync.Fail) mantido(s) da instalacao local." -ForegroundColor DarkGray
 }
 
 $env:PROMPTAUX_HOME = $InstallRoot
