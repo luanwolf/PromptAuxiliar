@@ -111,6 +111,29 @@
         <div class="panel-cats" id="panel-cats"></div>
         <div class="panel-list-wrap"><div id="panel-list" class="panel-list"></div></div>
       </section>
+
+      <section id="view-tweaks" class="tweaks-view hidden" hidden>
+        <div class="panel-toolbar tweaks-toolbar">
+          <div class="panel-toolbar-actions">
+            <button type="button" class="btn ghost sm" id="tweaks-select-all">Marcar todos</button>
+            <button type="button" class="btn ghost sm" id="tweaks-select-none">Desmarcar todos</button>
+            <button type="button" class="btn ghost sm" id="tweaks-detect-btn">Detectar estado</button>
+            <button type="button" class="btn primary" id="tweaks-apply-btn" disabled>Aplicar selecionados</button>
+          </div>
+        </div>
+        <div class="panel-meta tweaks-meta">
+          <span id="tweaks-selected-count">0 selecionados</span>
+          <span class="tweaks-legend">
+            <span class="tweak-badge tweak-badge-active">Ativo</span>
+            <span class="tweak-badge tweak-badge-inactive">Inativo</span>
+            <span class="tweak-badge tweak-badge-unknown">?</span>
+            <span class="tweak-icon-admin" title="Requer Administrador"></span>
+            <span class="tweak-icon-restart" title="Requer reinicialização"></span>
+          </span>
+        </div>
+        <div class="panel-cats" id="tweaks-cats"></div>
+        <div class="panel-list-wrap"><div id="tweaks-list" class="panel-list tweaks-list"></div></div>
+      </section>
     </main>
   </div>
 
@@ -137,6 +160,7 @@
 
   <script src="js/theme.js"></script>
   <script src="js/panels.js"></script>
+  <script src="js/tweaks.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

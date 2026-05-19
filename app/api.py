@@ -1,4 +1,4 @@
-"""Bridge Python ↔ WebView — painéis Winget e Debloat."""
+"""Bridge Python ↔ WebView — painéis Winget, Debloat e Tweaks."""
 
 from __future__ import annotations
 
@@ -13,6 +13,7 @@ from app.environment import preparar_ambiente
 from app.uninstall import paths_for_display, schedule_uninstall
 from app.updater import check_for_update, get_local_version, launch_win_ps1_update
 from app.panels import get_panel, run_panel, write_selected_ids
+from app.tweaks import apply_tweaks, detect_all, get_tweaks_catalog
 from app.ui_settings import get_scripts_layout, get_theme, set_scripts_layout, set_theme
 from app.winget_installed import prefetch_installed_scan
 from app.runner import ScriptNaoEncontradoError, executar_acao, usa_powershell_admin
@@ -207,6 +208,27 @@ class PromptAuxiliarApi:
         finally:
             with self._lock:
                 self._busy = False
+
+    def get_tweaks(self) -> dict[str, Any]:
+        """Retorna catálogo de tweaks sem detecção (resposta imediata)."""
+        try:
+            return get_tweaks_catalog()
+        except Exception as e:
+            return {"ok": False, "message": str(e)}
+
+    def detect_tweaks(self) -> dict[str, Any]:
+        """Executa PowerShell para detectar o estado atual de cada tweak."""
+        try:
+            return detect_all()
+        except Exception as e:
+            return {"ok": False, "message": str(e), "states": {}}
+
+    def apply_tweaks(self, ids: list[str]) -> dict[str, Any]:
+        """Aplica os tweaks selecionados via PS1 temporário em nova janela."""
+        try:
+            return apply_tweaks(ids)
+        except Exception as e:
+            return {"ok": False, "message": str(e)}
 
     def run_debloat(self, ids: list[str] | None = None) -> dict[str, Any]:
         with self._lock:

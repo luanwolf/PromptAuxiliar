@@ -1,0 +1,370 @@
+{
+  "categorias": {
+    "taskbar": "Barra de Tarefas",
+    "startmenu": "Menu Iniciar",
+    "explorer": "Explorador de Arquivos",
+    "privacidade": "Privacidade",
+    "performance": "Performance",
+    "interface": "Interface"
+  },
+  "tweaks": [
+    {
+      "id": "taskbar_left",
+      "label": "Ícones à esquerda",
+      "descricao": "Move os ícones da barra de tarefas para a esquerda, estilo clássico (Win 11).",
+      "categoria": "taskbar",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name TaskbarAl -EA 0).TaskbarAl -eq 0",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'TaskbarAl' -Value 0 -Force"
+      ],
+      "restart_explorer": true,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "taskbar_search_off",
+      "label": "Ocultar caixa de pesquisa",
+      "descricao": "Remove a caixa de pesquisa da barra de tarefas (mantém atalho de teclado Win+S).",
+      "categoria": "taskbar",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Search' -Name SearchboxTaskbarMode -EA 0).SearchboxTaskbarMode -eq 0",
+      "apply": [
+        "if (-not (Test-Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Search')) { New-Item 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Search' -Force | Out-Null }; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Search' -Name 'SearchboxTaskbarMode' -Value 0 -Force"
+      ],
+      "restart_explorer": true,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "taskbar_widgets_off",
+      "label": "Remover botão Widgets",
+      "descricao": "Oculta o botão de Widgets (notícias e clima) da barra de tarefas (Win 11).",
+      "categoria": "taskbar",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name TaskbarDa -EA 0).TaskbarDa -eq 0",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'TaskbarDa' -Value 0 -Force"
+      ],
+      "restart_explorer": true,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "taskbar_taskview_off",
+      "label": "Remover botão Task View",
+      "descricao": "Remove o botão de alternância entre áreas de trabalho virtuais da barra de tarefas.",
+      "categoria": "taskbar",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name ShowTaskViewButton -EA 0).ShowTaskViewButton -eq 0",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'ShowTaskViewButton' -Value 0 -Force"
+      ],
+      "restart_explorer": true,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "taskbar_chat_off",
+      "label": "Remover botão Chat (Teams)",
+      "descricao": "Oculta o botão de atalho do Microsoft Teams Chat da barra de tarefas (Win 11).",
+      "categoria": "taskbar",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name TaskbarMn -EA 0).TaskbarMn -eq 0",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'TaskbarMn' -Value 0 -Force"
+      ],
+      "restart_explorer": true,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "taskbar_seconds",
+      "label": "Mostrar segundos no relógio",
+      "descricao": "Exibe horas, minutos e segundos no relógio da barra de tarefas (Win 11 22H2+).",
+      "categoria": "taskbar",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name ShowSecondsInSystemClock -EA 0).ShowSecondsInSystemClock -eq 1",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'ShowSecondsInSystemClock' -Value 1 -Force"
+      ],
+      "restart_explorer": true,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "bing_search_off",
+      "label": "Desativar pesquisa Bing",
+      "descricao": "Remove resultados da internet (Bing) das pesquisas no Menu Iniciar.",
+      "categoria": "startmenu",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Search' -Name BingSearchEnabled -EA 0).BingSearchEnabled -eq 0",
+      "apply": [
+        "if (-not (Test-Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Search')) { New-Item 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Search' -Force | Out-Null }; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Search' -Name 'BingSearchEnabled' -Value 0 -Force; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Search' -Name 'CortanaConsent' -Value 0 -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "cortana_off",
+      "label": "Desativar Cortana",
+      "descricao": "Desativa o assistente virtual Cortana nas pesquisas do Menu Iniciar.",
+      "categoria": "startmenu",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Search' -Name CortanaConsent -EA 0).CortanaConsent -eq 0",
+      "apply": [
+        "if (-not (Test-Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Search')) { New-Item 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Search' -Force | Out-Null }; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Search' -Name 'CortanaConsent' -Value 0 -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "start_more_pins",
+      "label": "Mais pins no Menu Iniciar",
+      "descricao": "Aumenta a área de pins reduzindo a seção de recomendações no Menu Iniciar (Win 11).",
+      "categoria": "startmenu",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name Start_Layout -EA 0).Start_Layout -eq 1",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'Start_Layout' -Value 1 -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "show_file_ext",
+      "label": "Mostrar extensões de arquivo",
+      "descricao": "Exibe a extensão dos arquivos (.txt, .exe, .docx...) no Explorador de Arquivos.",
+      "categoria": "explorer",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name HideFileExt -EA 0).HideFileExt -eq 0",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'HideFileExt' -Value 0 -Force"
+      ],
+      "restart_explorer": true,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "show_hidden_files",
+      "label": "Mostrar arquivos ocultos",
+      "descricao": "Exibe arquivos e pastas marcados como ocultos no Explorador de Arquivos.",
+      "categoria": "explorer",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name Hidden -EA 0).Hidden -eq 1",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'Hidden' -Value 1 -Force"
+      ],
+      "restart_explorer": true,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "explorer_this_pc",
+      "label": "Abrir explorador em 'Este PC'",
+      "descricao": "O Explorador de Arquivos abre mostrando 'Este PC' em vez de 'Acesso Rápido'.",
+      "categoria": "explorer",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name LaunchTo -EA 0).LaunchTo -eq 1",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'LaunchTo' -Value 1 -Force"
+      ],
+      "restart_explorer": true,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "show_full_path",
+      "label": "Caminho completo na barra de título",
+      "descricao": "Exibe o caminho completo da pasta atual na barra de título do Explorador.",
+      "categoria": "explorer",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\CabinetState' -Name FullPath -EA 0).FullPath -eq 1",
+      "apply": [
+        "if (-not (Test-Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\CabinetState')) { New-Item 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\CabinetState' -Force | Out-Null }; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\CabinetState' -Name 'FullPath' -Value 1 -Force"
+      ],
+      "restart_explorer": true,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "disable_thumbnails",
+      "label": "Desativar miniaturas (usar ícones)",
+      "descricao": "Substitui miniaturas de imagens/vídeos por ícones. Útil em pastas com muitos arquivos.",
+      "categoria": "explorer",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name IconsOnly -EA 0).IconsOnly -eq 1",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'IconsOnly' -Value 1 -Force"
+      ],
+      "restart_explorer": true,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "ads_off",
+      "label": "Desativar anúncios personalizados",
+      "descricao": "Desativa o uso do ID de publicidade do Windows para personalizar anúncios em apps.",
+      "categoria": "privacidade",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo' -Name Enabled -EA 0).Enabled -eq 0",
+      "apply": [
+        "if (-not (Test-Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo')) { New-Item 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo' -Force | Out-Null }; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo' -Name 'Enabled' -Value 0 -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "tips_off",
+      "label": "Desativar dicas e sugestões da Microsoft",
+      "descricao": "Remove sugestões de apps, anúncios de serviços Microsoft e dicas no Menu Iniciar.",
+      "categoria": "privacidade",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager' -Name SystemPaneSuggestionsEnabled -EA 0).SystemPaneSuggestionsEnabled -eq 0",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager' -Name 'SystemPaneSuggestionsEnabled' -Value 0 -Force",
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager' -Name 'SoftLandingEnabled' -Value 0 -Force",
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager' -Name 'SubscribedContentEnabled' -Value 0 -Force",
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager' -Name 'SubscribedContent-338388Enabled' -Value 0 -Force",
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager' -Name 'SubscribedContent-338389Enabled' -Value 0 -Force",
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager' -Name 'SubscribedContent-353698Enabled' -Value 0 -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "activity_history_off",
+      "label": "Desativar Histórico de Atividades",
+      "descricao": "Impede o Windows de registrar apps e arquivos acessados recentemente. Requer admin.",
+      "categoria": "privacidade",
+      "detect": "(Get-ItemProperty 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System' -Name EnableActivityFeed -EA 0).EnableActivityFeed -eq 0",
+      "apply": [
+        "if (-not (Test-Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System')) { New-Item 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System' -Force | Out-Null }; Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System' -Name 'EnableActivityFeed' -Value 0 -Force; Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System' -Name 'PublishUserActivities' -Value 0 -Force; Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System' -Name 'UploadUserActivities' -Value 0 -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": true,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "feedback_off",
+      "label": "Desativar telemetria (diagnósticos)",
+      "descricao": "Reduz ao mínimo o envio de dados de diagnóstico e uso para a Microsoft. Requer admin.",
+      "categoria": "privacidade",
+      "detect": "(Get-ItemProperty 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection' -Name AllowTelemetry -EA 0).AllowTelemetry -eq 0",
+      "apply": [
+        "if (-not (Test-Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection')) { New-Item 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection' -Force | Out-Null }; Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection' -Name 'AllowTelemetry' -Value 0 -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": true,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "mouse_accel_off",
+      "label": "Desativar aceleração do mouse",
+      "descricao": "Remove a 'Precisão do Ponteiro' (aceleração). O movimento fica proporcional ao deslocamento físico.",
+      "categoria": "performance",
+      "detect": "(Get-ItemProperty 'HKCU:\\Control Panel\\Mouse' -Name MouseSpeed -EA 0).MouseSpeed -eq '0'",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Control Panel\\Mouse' -Name 'MouseSpeed' -Value '0' -Force; Set-ItemProperty -Path 'HKCU:\\Control Panel\\Mouse' -Name 'MouseThreshold1' -Value '0' -Force; Set-ItemProperty -Path 'HKCU:\\Control Panel\\Mouse' -Name 'MouseThreshold2' -Value '0' -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "visual_effects_min",
+      "label": "Minimizar efeitos visuais",
+      "descricao": "Ajusta o Windows para máxima performance desativando animações e efeitos desnecessários.",
+      "categoria": "performance",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\VisualEffects' -Name VisualFXSetting -EA 0).VisualFXSetting -eq 2",
+      "apply": [
+        "if (-not (Test-Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\VisualEffects')) { New-Item 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\VisualEffects' -Force | Out-Null }; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\VisualEffects' -Name 'VisualFXSetting' -Value 2 -Force",
+        "Set-ItemProperty -Path 'HKCU:\\Control Panel\\Desktop' -Name 'MenuShowDelay' -Value '0' -Force",
+        "if (-not (Test-Path 'HKCU:\\Control Panel\\Desktop\\WindowMetrics')) { New-Item 'HKCU:\\Control Panel\\Desktop\\WindowMetrics' -Force | Out-Null }; Set-ItemProperty -Path 'HKCU:\\Control Panel\\Desktop\\WindowMetrics' -Name 'MinAnimate' -Value '0' -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": false,
+      "requer_reiniciar": true
+    },
+    {
+      "id": "high_perf_plan",
+      "label": "Plano de energia: Alta Performance",
+      "descricao": "Ativa o plano de energia 'Alto Desempenho' para máxima velocidade de CPU. Requer admin.",
+      "categoria": "performance",
+      "detect": "(powercfg /getactivescheme 2>&1) -match '8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c|e9a42b02-d5df-448d-aa00-03f14749eb61'",
+      "apply": [
+        "powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c"
+      ],
+      "restart_explorer": false,
+      "requer_admin": true,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "sysmain_off",
+      "label": "Desativar SysMain (Superfetch)",
+      "descricao": "Para o serviço SysMain que pré-carrega apps na RAM. Recomendado para quem usa SSD. Requer admin.",
+      "categoria": "performance",
+      "detect": "(Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\SysMain' -Name Start -EA 0).Start -eq 4",
+      "apply": [
+        "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\SysMain' -Name 'Start' -Value 4 -Force; Stop-Service -Name 'SysMain' -Force -ErrorAction SilentlyContinue"
+      ],
+      "restart_explorer": false,
+      "requer_admin": true,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "hibernation_off",
+      "label": "Desativar Hibernação",
+      "descricao": "Remove o arquivo hiberfil.sys, liberando espaço equivalente ao tamanho da RAM. Requer admin.",
+      "categoria": "performance",
+      "detect": "(Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Power' -Name HibernateEnabled -EA 0).HibernateEnabled -eq 0",
+      "apply": [
+        "powercfg /hibernate off"
+      ],
+      "restart_explorer": false,
+      "requer_admin": true,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "dark_mode",
+      "label": "Modo Escuro do sistema",
+      "descricao": "Ativa o tema escuro para apps e para a própria interface do Windows.",
+      "categoria": "interface",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name AppsUseLightTheme -EA 0).AppsUseLightTheme -eq 0",
+      "apply": [
+        "if (-not (Test-Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize')) { New-Item 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Force | Out-Null }; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name 'AppsUseLightTheme' -Value 0 -Force; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name 'SystemUsesLightTheme' -Value 0 -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "show_this_pc_desktop",
+      "label": "Ícone 'Este PC' na área de trabalho",
+      "descricao": "Adiciona o ícone 'Este PC' (Meu Computador) diretamente na área de trabalho.",
+      "categoria": "interface",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\HideDesktopIcons\\NewStartPanel' -Name '{20D04FE0-3AEA-1069-A2D8-08002B30309D}' -EA 0).'{20D04FE0-3AEA-1069-A2D8-08002B30309D}' -eq 0",
+      "apply": [
+        "if (-not (Test-Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\HideDesktopIcons\\NewStartPanel')) { New-Item 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\HideDesktopIcons\\NewStartPanel' -Force | Out-Null }; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\HideDesktopIcons\\NewStartPanel' -Name '{20D04FE0-3AEA-1069-A2D8-08002B30309D}' -Value 0 -Force"
+      ],
+      "restart_explorer": true,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "numlock_on",
+      "label": "NumLock ligado ao iniciar",
+      "descricao": "Ativa o NumLock automaticamente ao ligar o computador e fazer login.",
+      "categoria": "interface",
+      "detect": "(Get-ItemProperty 'HKCU:\\Control Panel\\Keyboard' -Name InitialKeyboardIndicators -EA 0).InitialKeyboardIndicators -eq '2'",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Control Panel\\Keyboard' -Name 'InitialKeyboardIndicators' -Value '2' -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": false,
+      "requer_reiniciar": true
+    },
+    {
+      "id": "snap_assist_off",
+      "label": "Desativar Assistente de Encaixe (Snap)",
+      "descricao": "Remove o assistente visual que aparece ao arrastar janelas para cantos/bordas da tela.",
+      "categoria": "interface",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name SnapAssist -EA 0).SnapAssist -eq 0",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'SnapAssist' -Value 0 -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    }
+  ]
+}

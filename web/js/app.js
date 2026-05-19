@@ -155,45 +155,65 @@
 
   function renderNav() {
     ui.nav.innerHTML = "";
+    const curView = document.body.dataset.view;
+
     PAINELS.forEach((p) => {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "nav-item nav-painel";
       btn.dataset.panelKind = p.kind;
+      if (curView === p.kind) btn.classList.add("active");
       btn.textContent = p.label;
       btn.addEventListener("click", () => {
         if (window.Panels.isOpen() && document.body.dataset.view === p.kind) {
           window.Panels.close();
         } else {
+          if (window.Tweaks?.isOpen()) window.Tweaks.close();
           window.Panels.open(p.kind);
         }
       });
       ui.nav.appendChild(btn);
     });
+
+    const divTweaks = document.createElement("div");
+    divTweaks.className = "nav-divider";
+    ui.nav.appendChild(divTweaks);
+
+    const tweaksBtn = document.createElement("button");
+    tweaksBtn.type = "button";
+    tweaksBtn.className = `nav-item nav-tweaks${curView === "tweaks" ? " active" : ""}`;
+    tweaksBtn.textContent = "Tweaks Windows";
+    tweaksBtn.addEventListener("click", () => {
+      if (window.Tweaks?.isOpen()) {
+        window.Tweaks.close();
+        openScriptsView();
+      } else {
+        if (window.Panels?.isOpen()) window.Panels.close();
+        window.Tweaks?.open();
+        renderNav();
+      }
+    });
+    ui.nav.appendChild(tweaksBtn);
+
     const div = document.createElement("div");
     div.className = "nav-divider";
     ui.nav.appendChild(div);
+
     const scriptsBtn = document.createElement("button");
     scriptsBtn.type = "button";
-    scriptsBtn.className = `nav-item nav-scripts${state.view === "scripts" && !window.Panels?.isOpen() ? " active" : ""}`;
+    scriptsBtn.className = `nav-item nav-scripts${curView === "scripts" && !window.Panels?.isOpen() && !window.Tweaks?.isOpen() ? " active" : ""}`;
     scriptsBtn.innerHTML = `Scripts <span class="badge">${state.catalog.acoes.length}</span>`;
     scriptsBtn.addEventListener("click", () => openScriptsView());
     ui.nav.appendChild(scriptsBtn);
-
-    const divFuture = document.createElement("div");
-    divFuture.className = "nav-divider nav-divider-future";
-    ui.nav.appendChild(divFuture);
-
-    const futureSlot = document.createElement("div");
-    futureSlot.className = "nav-future-slot";
-    futureSlot.setAttribute("aria-hidden", "true");
-    ui.nav.appendChild(futureSlot);
   }
 
   function openScriptsView() {
     if (window.Panels?.isOpen()) window.Panels.close();
+    if (window.Tweaks?.isOpen()) window.Tweaks.close();
     state.view = "scripts";
     document.body.dataset.view = "scripts";
+    ui.viewHome.classList.remove("hidden");
+    ui.viewHome.hidden = false;
     if (ui.scriptsToolbar) ui.scriptsToolbar.classList.remove("hidden");
     renderNav();
     renderScripts();
@@ -381,10 +401,9 @@
     ui.viewHome.classList.remove("hidden");
     ui.viewHome.hidden = false;
     const p = document.getElementById("view-panel");
-    if (p) {
-      p.classList.add("hidden");
-      p.hidden = true;
-    }
+    if (p) { p.classList.add("hidden"); p.hidden = true; }
+    const t = document.getElementById("view-tweaks");
+    if (t) { t.classList.add("hidden"); t.hidden = true; }
     ui.search.placeholder = "Buscar scripts…";
     ui.search.value = "";
     state.busca = "";
@@ -394,9 +413,14 @@
 
   function bindEvents() {
     if (window.Panels) window.Panels.bind();
+    if (window.Tweaks) window.Tweaks.bind();
     ui.search.addEventListener("input", () => {
       if (window.Panels?.isOpen()) {
         window.Panels.setBusca(ui.search.value);
+        return;
+      }
+      if (window.Tweaks?.isOpen()) {
+        window.Tweaks.setBusca(ui.search.value);
         return;
       }
       state.busca = ui.search.value;

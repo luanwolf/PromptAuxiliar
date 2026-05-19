@@ -1,0 +1,216 @@
+"""Tweaks do Windows — detecção de estado e aplicação via PowerShell."""
+
+from __future__ import annotations
+
+import json
+import os
+import subprocess
+import sys
+import threading
+import uuid
+from pathlib import Path
+from typing import Any
+
+_PS_RUN = Path(os.environ.get("TEMP", ".")) / "PromptAuxiliar" / "run"
+_CATALOG_REL = Path(__file__).parent / "data" / "tweaks_catalog.json"
+
+
+def _catalog_path() -> Path:
+    if getattr(sys, "frozen", False):
+        return Path(sys._MEIPASS) / "app" / "data" / "tweaks_catalog.json"
+    return _CATALOG_REL
+
+
+def _load_catalog() -> dict[str, Any]:
+    with open(_catalog_path(), encoding="utf-8") as f:
+        return json.load(f)
+
+
+def get_tweaks_catalog() -> dict[str, Any]:
+    """Retorna o catálogo sem executar detecção (resposta imediata)."""
+    catalog = _load_catalog()
+    items = [
+        {
+            "id": tw["id"],
+            "label": tw["label"],
+            "descricao": tw.get("descricao", ""),
+            "categoria": tw.get("categoria", ""),
+            "aplicado": None,
+            "requer_admin": bool(tw.get("requer_admin", False)),
+            "requer_reiniciar": bool(tw.get("requer_reiniciar", False)),
+        }
+        for tw in catalog["tweaks"]
+    ]
+    return {
+        "ok": True,
+        "categorias": catalog["categorias"],
+        "tweaks": items,
+    }
+
+
+def _build_detect_script(tweaks: list[dict[str, Any]]) -> str:
+    lines = ["$ErrorActionPreference = 'SilentlyContinue'", "$r = @{}"]
+    for tw in tweaks:
+        tid = tw["id"]
+        detect = tw.get("detect", "")
+        if detect:
+            lines.append(
+                f"try {{ $r['{tid}'] = [bool]({detect}) }} catch {{ $r['{tid}'] = $false }}"
+            )
+        else:
+            lines.append(f"$r['{tid}'] = $null")
+    lines.append("$r | ConvertTo-Json -Compress")
+    return "\n".join(lines)
+
+
+def detect_all() -> dict[str, Any]:
+    """Executa PowerShell para detectar o estado atual de todos os tweaks."""
+    catalog = _load_catalog()
+    tweaks = catalog["tweaks"]
+
+    ps_script = _build_detect_script(tweaks)
+
+    _PS_RUN.mkdir(parents=True, exist_ok=True)
+    ps1 = _PS_RUN / f"detect_{uuid.uuid4().hex}.ps1"
+    try:
+        ps1.write_text(ps_script, encoding="utf-8-sig")
+        result = subprocess.run(
+            [
+                "powershell.exe",
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                str(ps1),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=25,
+        )
+        raw = result.stdout.strip()
+        if result.returncode == 0 and raw:
+            states: dict[str, bool | None] = json.loads(raw)
+            return {"ok": True, "states": states}
+        return {"ok": True, "states": {tw["id"]: None for tw in tweaks}}
+    except Exception as exc:
+        return {"ok": False, "message": str(exc), "states": {tw["id"]: None for tw in tweaks}}
+    finally:
+        try:
+            ps1.unlink(missing_ok=True)
+        except OSError:
+            pass
+
+
+def _build_apply_script(
+    selected: list[dict[str, Any]],
+    needs_admin: bool,
+    needs_restart: bool,
+) -> str:
+    lines: list[str] = []
+
+    if needs_admin:
+        lines += [
+            "if (-not ([Security.Principal.WindowsPrincipal]",
+            "    [Security.Principal.WindowsIdentity]::GetCurrent()",
+            ").IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {",
+            "    $args = \"-NoProfile -ExecutionPolicy Bypass -File `\"$PSCommandPath`\"\"",
+            "    Start-Process powershell.exe -Verb RunAs -ArgumentList $args",
+            "    exit",
+            "}",
+            "",
+        ]
+
+    lines += [
+        "$Host.UI.RawUI.WindowTitle = 'Prompt Auxiliar - Tweaks'",
+        "Write-Host ''",
+        "Write-Host '  ================================================' -ForegroundColor DarkGray",
+        "Write-Host '    Prompt Auxiliar - Tweaks Windows' -ForegroundColor Cyan",
+        "Write-Host '  ================================================' -ForegroundColor DarkGray",
+        "Write-Host ''",
+        "$erros = 0",
+        "$restart_explorer = $false",
+        "",
+    ]
+
+    for tw in selected:
+        safe_label = tw["label"].replace("'", "''")
+        lines.append(f"Write-Host '  -> {safe_label}' -ForegroundColor Gray")
+        for step in tw.get("apply", []):
+            safe_step = step.replace("\\", "\\")
+            lines.append(
+                f"try {{ {safe_step} }} catch {{ Write-Host \"     Erro: $_\" -ForegroundColor Red; $erros++ }}"
+            )
+        if tw.get("restart_explorer"):
+            lines.append("$restart_explorer = $true")
+        lines.append("")
+
+    lines += [
+        "if ($restart_explorer) {",
+        "    Write-Host '  Reiniciando Explorer para aplicar alteracoes...' -ForegroundColor DarkGray",
+        "    Stop-Process -Name explorer -Force -ErrorAction SilentlyContinue",
+        "    Start-Sleep -Milliseconds 800",
+        "    Start-Process explorer",
+        "    Write-Host '  Explorer reiniciado.' -ForegroundColor DarkGray",
+        "}",
+        "",
+        "Write-Host ''",
+        "if ($erros -gt 0) {",
+        "    Write-Host \"  Concluido com $erros erro(s).\" -ForegroundColor Yellow",
+        "} else {",
+        "    Write-Host '  Todos os ajustes aplicados com sucesso.' -ForegroundColor Green",
+        "}",
+    ]
+
+    if needs_restart:
+        lines += [
+            "",
+            "Write-Host ''",
+            "Write-Host '  ATENCAO: alguns ajustes requerem reinicializacao para ter efeito.' -ForegroundColor Yellow",
+        ]
+
+    lines += [
+        "",
+        "Write-Host ''",
+        "Read-Host '  Pressione Enter para fechar'",
+    ]
+
+    return "\n".join(lines)
+
+
+def apply_tweaks(ids: list[str]) -> dict[str, Any]:
+    """Cria um script PS1 temporário com os ajustes selecionados e o executa."""
+    catalog = _load_catalog()
+    by_id = {tw["id"]: tw for tw in catalog["tweaks"]}
+    selected = [by_id[i] for i in ids if i in by_id]
+
+    if not selected:
+        return {"ok": False, "message": "Nenhum ajuste selecionado."}
+
+    needs_admin = any(tw.get("requer_admin") for tw in selected)
+    needs_restart = any(tw.get("requer_reiniciar") for tw in selected)
+
+    ps_script = _build_apply_script(selected, needs_admin, needs_restart)
+
+    _PS_RUN.mkdir(parents=True, exist_ok=True)
+    ps1 = _PS_RUN / f"tweaks_{uuid.uuid4().hex}.ps1"
+    ps1.write_text(ps_script, encoding="utf-8-sig")
+
+    flags = getattr(subprocess, "CREATE_NEW_CONSOLE", 0)
+    subprocess.Popen(
+        f'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "{ps1}"',
+        creationflags=flags,
+    )
+
+    return {
+        "ok": True,
+        "message": f"{len(selected)} ajuste(s) em aplicação.",
+    }
+
+
+def detect_async(callback: Any) -> None:
+    """Executa detecção em thread separada e chama callback com o resultado."""
+    def _run() -> None:
+        result = detect_all()
+        callback(result)
+
+    threading.Thread(target=_run, daemon=True).start()
