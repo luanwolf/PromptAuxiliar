@@ -1,6 +1,6 @@
 """Constantes do Prompt Auxiliar."""
 
-APP_VERSION = "2.5.5"
+APP_VERSION = "2.5.6"
 PASTA_BASE = r"C:\PromptAuxiliar"
 PASTAS_NECESSARIAS = ("softwares", "registros")
 

@@ -38,21 +38,76 @@ function Write-PromptAuxBanner {
     Write-Host ''
 }
 
-function Get-PromptAuxPython {
-    foreach ($cmd in @('python', 'py')) {
-        $exe = Get-Command $cmd -ErrorAction SilentlyContinue
-        if (-not $exe) { continue }
-        if ($cmd -eq 'py') {
-            $v = & py -3 -c "import sys; print(sys.version_info >= (3,10))" 2>$null
-            if ($v -eq 'True') { return @{ Cmd = 'py'; Arg = @('-3') } }
-        } else {
-            $v = & python -c "import sys; print(sys.version_info >= (3,10))" 2>$null
-            if ($v -eq 'True') { return @{ Cmd = $exe.Source; Arg = @() } }
-        }
+function Update-PromptAuxPath {
+    $machine = [System.Environment]::GetEnvironmentVariable('Path', 'Machine')
+    $user = [System.Environment]::GetEnvironmentVariable('Path', 'User')
+    $env:Path = "$machine;$user"
+}
+
+function Test-PromptAuxPythonCmd {
+    param([string]$Cmd)
+
+    if ($Cmd -eq 'py') {
+        if (-not (Get-Command py -ErrorAction SilentlyContinue)) { return $null }
+        $v = & py -3 -c "import sys; print(sys.version_info >= (3,10))" 2>$null
+        if ($v -eq 'True') { return @{ Cmd = 'py'; Arg = @('-3') } }
+        return $null
     }
+
+    $exe = Get-Command $Cmd -ErrorAction SilentlyContinue
+    if (-not $exe) { return $null }
+    $v = & $exe.Source -c "import sys; print(sys.version_info >= (3,10))" 2>$null
+    if ($v -eq 'True') { return @{ Cmd = $exe.Source; Arg = @() } }
+    return $null
+}
+
+function Find-PromptAuxPython {
+    foreach ($cmd in @('python', 'py')) {
+        $info = Test-PromptAuxPythonCmd -Cmd $cmd
+        if ($info) { return $info }
+    }
+    return $null
+}
+
+function Install-PromptAuxPython {
+    Write-Host '  Python 3.10+ não encontrado.' -ForegroundColor Yellow
+
+    if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+        throw @"
+winget não está disponível neste PC.
+Instale Python 3.10+ em https://www.python.org/downloads/ (marque 'Add python.exe to PATH') e execute o comando novamente.
+"@
+    }
+
+    Write-Host '  Instalando Python 3.12 via winget (pode pedir confirmação)…' -ForegroundColor DarkGray
+    winget install --id Python.Python.3.12 -e `
+        --accept-package-agreements --accept-source-agreements `
+        --scope user
+    if ($LASTEXITCODE -ne 0) {
+        throw @"
+Falha ao instalar Python via winget.
+Instale manualmente em https://www.python.org/downloads/ (marque 'Add python.exe to PATH') e execute novamente.
+"@
+    }
+
+    Update-PromptAuxPath
+    Write-Host '  Python instalado. Verificando…' -ForegroundColor Green
+}
+
+function Get-PromptAuxPython {
+    $info = Find-PromptAuxPython
+    if ($info) { return $info }
+
+    Install-PromptAuxPython
+    Update-PromptAuxPath
+
+    $info = Find-PromptAuxPython
+    if ($info) { return $info }
+
     throw @"
-Python 3.10+ não encontrado.
-Instale em https://www.python.org/downloads/ (marque 'Add to PATH') e execute o comando novamente.
+Python 3.10+ ainda não foi detectado após a instalação.
+Feche e abra um novo PowerShell (PATH atualizado) ou instale manualmente:
+https://www.python.org/downloads/
 "@
 }
 

@@ -8,7 +8,7 @@
     <img alt="Winget" src="https://img.shields.io/badge/Winget-pacotes-2EA043?logo=windows&logoColor=white" />
     <img alt="PowerShell" src="https://img.shields.io/badge/PowerShell-5.1+-5391FE?logo=powershell&logoColor=white" />
     <img alt="Batch" src="https://img.shields.io/badge/Batch-scripts-4D4D4D?logo=windowsterminal&logoColor=white" />
-    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.5.5-0c0f14" />
+    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.5.6-0c0f14" />
   </p>
 
   <p>
@@ -35,14 +35,38 @@ O **Prompt Auxiliar** centraliza tarefas comuns de manutenção e personalizaç�
 
 ### 1) Instalação rápida (one-liner)
 
+Abra o **PowerShell** e execute:
 
-| Ação                 | Como fazer                                                                                          |
-| -------------------- | --------------------------------------------------------------------------------------------------- |
-| Instalar / atualizar | No PowerShell: `irm "https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/win.ps1" | iex` |
-| Pasta customizada    | Defina `$env:PROMPTAUX_HOME` antes do comando acima                                                 |
+```powershell
+irm "https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/win.ps1" | iex
+```
 
+**O que o instalador faz automaticamente**
 
-O instalador configura Python, dependências, atalhos e a pasta de dados.
+| Etapa | O que acontece |
+|-------|----------------|
+| 1. Download | Baixa o repositório para `%LOCALAPPDATA%\PromptAuxiliar` (ou usa a pasta atual se você já clonou o projeto) |
+| 2. Python | Procura **Python 3.10+** (`python` ou `py -3`). Se não existir, instala **Python 3.12** via `winget` |
+| 3. Dependências | Executa `pip install -r requirements.txt` |
+| 4. Pasta de dados | Prepara `C:\PromptAuxiliar` (softwares, registros, seleções) |
+| 5. Atalhos | Cria atalhos na Área de Trabalho e Menu Iniciar (com ícone do app) |
+| 6. Abrir app | Inicia a interface WebView2 |
+
+**Variáveis opcionais** (antes do comando `irm`):
+
+```powershell
+$env:PROMPTAUX_HOME = "D:\Ferramentas\PromptAuxiliar"
+$env:PROMPTAUX_UPDATE = "1"
+irm "https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/win.ps1" | iex
+```
+
+| Variável | Uso |
+|----------|-----|
+| `PROMPTAUX_HOME` | Pasta de instalação do app (padrão: `%LOCALAPPDATA%\PromptAuxiliar`) |
+| `PROMPTAUX_UPDATE` | `1` força baixar de novo o ZIP do GitHub |
+| `PROMPTAUX_BRANCH` | Branch do repositório (padrão: `main`) |
+
+> Se o Python for instalado agora, o PATH pode exigir um **PowerShell novo** na próxima execução. O script tenta atualizar o PATH na mesma sessão antes de continuar.
 
 ---
 
