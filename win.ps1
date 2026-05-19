@@ -805,6 +805,22 @@ if ($forceUpdate) {
     # Pequena pausa extra para liberar handles de arquivo apos processos encerrarem
     Start-Sleep -Milliseconds 1500
 }
+$mainPy = Join-Path $InstallRoot 'main.py'
+
+if (-not $forceUpdate -and (Test-Path -LiteralPath $mainPy)) {
+    # Lancamento direto: app ja instalado, sem checagem de atualizacoes.
+    # O usuario verifica updates manualmente pelo botao no app.
+    $env:PROMPTAUX_HOME = $InstallRoot
+    $python = Get-PromptAuxPython
+    Install-PromptAuxiliarPythonDeps -PythonInfo $python -ProjectRoot $InstallRoot
+    Write-PromptAuxiliarCmdLauncher -InstallRoot $InstallRoot
+    Repair-PromptAuxDesktopShortcuts -InstallRoot $InstallRoot
+    Write-Host '  Abrindo interface...' -ForegroundColor Gray
+    Start-PromptAuxiliarProcess -PythonInfo $python -ProjectRoot $InstallRoot -ExtraArgs @()
+    exit 0
+}
+
+# Instalacao inicial ou atualizacao forcada (-Update)
 $script:PromptAuxDeferredExit = $false
 Invoke-PromptAuxiliarInstallOrUpdate `
     -InstallRoot $InstallRoot `

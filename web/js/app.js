@@ -11,6 +11,7 @@
     busy: false,
     scriptsLayout: "grid",
     view: "scripts",
+    pendingUpdate: null,   // guarda info de update disponível
   };
 
   const boot = { el: $("#boot"), status: $("#boot-status"), bar: $("#boot-bar-fill") };
@@ -54,17 +55,14 @@
     const btn = document.querySelector('[data-action="check-update"]');
     if (!btn || !info) return;
     const pending = !!info.update_available;
+    state.pendingUpdate = pending ? info : null;
     btn.classList.toggle("btn-update-pending", pending);
-    btn.textContent = pending
-      ? `Atualizar para v${info.remote}`
-      : "Verificar atualização";
+    btn.textContent = pending ? "Atualização disponível" : "Verificar atualização";
     if (ui.version) {
       const local = info.local || info.installed_version || info.version;
       ui.version.textContent = pending && info.remote
         ? `v${local} → v${info.remote}`
-        : local
-          ? `v${local}`
-          : "v—";
+        : local ? `v${local}` : "v—";
     }
   }
 
@@ -376,14 +374,6 @@
     document.body.dataset.view = "scripts";
     renderNav();
     openScriptsView();
-    setUpdateAvailability({
-      update_available: initRes.update_available,
-      remote: initRes.remote_version,
-      local: initRes.local_version || initRes.version,
-    });
-    if (initRes.update_available && initRes.update_message) {
-      toast(initRes.update_message, "info");
-    }
     if (initRes.primeira_vez) {
       $("#welcome-path").textContent = initRes.pasta;
       ui.welcome.showModal();
@@ -439,37 +429,48 @@
           const r = await api().open_data_folder();
           toast(r.message, r.ok ? "success" : "error");
         } else if (kind === "check-update") {
-          const r = await api().check_for_updates();
-          if (!r.ok) {
-            toast(r.message, "error");
-            return;
-          }
-          const titulo = r.update_available
-            ? "Atualização disponível"
-            : "Verificar atualização";
-          let corpo = r.message;
-          if (r.remote) {
-            corpo = `Instalação: v${r.local}\nGitHub (main): v${r.remote}`;
-            if (r.running_version && r.running_version !== r.local) {
-              corpo += `\nEm execução: v${r.running_version}`;
-            }
-            corpo += `\n\n${r.message}`;
-          }
-          setUpdateAvailability(r);
-          if (r.update_available) {
+          // Se já detectou update disponível → confirmar e atualizar
+          if (state.pendingUpdate) {
+            const r = state.pendingUpdate;
+            const corpo =
+              `Versão instalada: v${r.local}\nNova versão: v${r.remote}\n\n` +
+              `O app será fechado e o PowerShell executará o instalador oficial.`;
             const atualizar = await showAppModal({
-              title: titulo,
-              body: `${corpo}\n\nO app será fechado e o PowerShell executará o instalador oficial (win.ps1).`,
+              title: "Atualização disponível",
+              body: corpo,
               variant: "update",
-              confirmLabel: "Atualizar",
+              confirmLabel: "Atualizar agora",
               cancelLabel: "Depois",
             });
             if (atualizar) {
               const ur = await api().launch_app_update();
               toast(ur.message, ur.ok ? "success" : "error");
             }
-          } else {
-            await showAppModal({ title: titulo, body: corpo, variant: "alert" });
+            return;
+          }
+          // Primeira vez: verifica update
+          el.disabled = true;
+          el.textContent = "Verificando…";
+          try {
+            const r = await api().check_for_updates();
+            if (!r.ok) {
+              toast(r.message || "Erro ao verificar atualização.", "error");
+              return;
+            }
+            setUpdateAvailability(r);
+            if (r.update_available) {
+              toast(`Nova versão disponível: v${r.remote}`, "info");
+            } else {
+              const corpo = r.remote
+                ? `Versão instalada: v${r.local}\nGitHub (main): v${r.remote}\n\nJá na versão mais recente.`
+                : "Já na versão mais recente.";
+              await showAppModal({ title: "Verificar atualização", body: corpo, variant: "alert" });
+            }
+          } catch (e) {
+            toast(String(e), "error");
+          } finally {
+            el.disabled = false;
+            if (!state.pendingUpdate) el.textContent = "Verificar atualização";
           }
         } else if (kind === "uninstall") {
           const preview = await api().get_uninstall_preview();

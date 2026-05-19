@@ -28,19 +28,19 @@ class PromptAuxiliarApi:
         try:
             primeira_vez = preparar_ambiente()
             prefetch_installed_scan()
-            update_info: dict[str, Any] = check_for_update()
+            local = get_local_version()
             return {
                 "ok": True,
-                "version": get_local_version(),
+                "version": local,
                 "pasta": PASTA_BASE,
                 "primeira_vez": primeira_vez,
                 "message": "Ambiente pronto.",
                 "theme": get_theme(),
                 "scripts_layout": get_scripts_layout(),
-                "update_available": update_info.get("update_available", False),
-                "update_message": update_info.get("message", ""),
-                "remote_version": update_info.get("remote"),
-                "local_version": update_info.get("local", get_local_version()),
+                "update_available": False,
+                "update_message": "",
+                "remote_version": None,
+                "local_version": local,
             }
         except Exception as e:
             return {"ok": False, "message": str(e)}
