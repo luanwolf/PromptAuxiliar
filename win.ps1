@@ -271,7 +271,21 @@ function Get-PromptAuxBatScriptNames {
 }
 
 function Get-PromptAuxScriptPs1Names {
-    return @('limpeza_temporarios.ps1')
+    return @(
+        '_ui.ps1',
+        'aplicar_ajustes.ps1',
+        'ativar_windows.ps1',
+        'atualizar_softwares.ps1',
+        'criar_atalhos.ps1',
+        'gerenciar_inicializacao.ps1',
+        'instalar_runtimes.ps1',
+        'instalar_software.ps1',
+        'limpeza_disco.ps1',
+        'limpeza_malware.ps1',
+        'limpeza_profunda.ps1',
+        'limpeza_temporarios.ps1',
+        'reparar_rede.ps1'
+    )
 }
 
 function Test-PromptAuxRepoFilePresent {
@@ -380,6 +394,7 @@ function Sync-PromptAuxUiBatFromGitHub {
         [string]$SourceRoot = ''
     )
     Sync-PromptAuxRepoFile -InstallRoot $InstallRoot -RelativePath 'scripts/_ui.bat' -Owner $Owner -Name $Name -Branch $Branch -SourceRoot $SourceRoot | Out-Null
+    Sync-PromptAuxRepoFile -InstallRoot $InstallRoot -RelativePath 'scripts/_ui.ps1' -Owner $Owner -Name $Name -Branch $Branch -SourceRoot $SourceRoot | Out-Null
 }
 
 function Copy-PromptAuxEssentialScriptsLocal {

@@ -1,31 +1,29 @@
-# Limpeza de temporarios - chamado por limpeza_temporarios.bat
-$ErrorActionPreference = 'SilentlyContinue'
+#Requires -Version 5.1
+. "$PSScriptRoot\_ui.ps1"
 
-Write-Host "   [1/4] Esvaziando Lixeira..."
-Clear-RecycleBin -Force -ErrorAction SilentlyContinue
-Write-Host "         Concluido."
+Show-PABanner "Limpeza de temporarios" "Remove temporarios do usuario e do sistema, esvazia a Lixeira e limpa caches de pastas Temp."
 
-Write-Host "   [2/4] Temp dos usuarios (AppData\Local\Temp)..."
-Get-ChildItem -Path 'C:\Users' -Directory -ErrorAction SilentlyContinue | ForEach-Object {
-    $tempPath = Join-Path $_.FullName 'AppData\Local\Temp'
-    if (Test-Path $tempPath) {
-        Write-Host "         Usuario: $($_.Name)"
-        Get-ChildItem -Path $tempPath -Force -ErrorAction SilentlyContinue |
-            Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-    }
+if (-not (Confirm-PAAction)) { exit 0 }
+
+$startTime = Get-Date
+$results   = [System.Collections.ArrayList]::new()
+
+Invoke-PAStep "Limpando TEMP do usuario ($env:TEMP)" $results {
+    Get-ChildItem $env:TEMP -Recurse -Force -EA 0 |
+        Remove-Item -Recurse -Force -EA 0
 }
-Write-Host "         Concluido."
 
-Write-Host "   [3/4] C:\Windows\Temp..."
-if (Test-Path 'C:\Windows\Temp') {
-    Get-ChildItem -Path 'C:\Windows\Temp' -Force -ErrorAction SilentlyContinue |
-        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+Invoke-PAStep "Limpando TEMP do sistema ($env:SystemRoot\Temp)" $results {
+    Get-ChildItem "$env:SystemRoot\Temp" -Recurse -Force -EA 0 |
+        Remove-Item -Recurse -Force -EA 0
 }
-Write-Host "         Concluido."
 
-Write-Host "   [4/4] TEMP da sessao ($env:TEMP)..."
-if (Test-Path $env:TEMP) {
-    Get-ChildItem -Path $env:TEMP -Force -ErrorAction SilentlyContinue |
-        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+Invoke-PAStep "Esvaziando Lixeira" $results {
+    Clear-RecycleBin -Force -EA 0
 }
-Write-Host "         Concluido."
+
+Invoke-PAStep "Limpando cache DNS" $results {
+    ipconfig /flushdns | Out-Null
+}
+
+Write-PASummary -Results $results -StartTime $startTime -Titulo "limpeza_temporarios"

@@ -99,20 +99,34 @@ Start-Process -FilePath 'powershell.exe' -Verb RunAs -ArgumentList @(
 
 
 def _abrir_console_script(script: str, titulo: str) -> None:
-    """Abre o .bat em nova janela CMD (independente do processo WebView)."""
+    """Abre o script em nova janela — .ps1 via PowerShell, .bat via CMD."""
     script_path = Path(script).resolve()
     if not script_path.is_file():
         raise ScriptNaoEncontradoError(f"Script não encontrado: {script_path}")
 
-    bat = str(script_path)
     flags = getattr(subprocess, "CREATE_NEW_CONSOLE", 0)
-    # Passar string (não lista) evita list2cmdline que converte " em \"
-    # cmd.exe não entende \" — usa "" como escape; a lista quebra o call.
-    subprocess.Popen(
-        f'cmd.exe /c "{bat}"',
-        cwd=str(script_path.parent),
-        creationflags=flags,
-    )
+    cwd   = str(script_path.parent)
+
+    if script_path.suffix.lower() == ".ps1":
+        subprocess.Popen(
+            [
+                "powershell.exe",
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                str(script_path),
+            ],
+            cwd=cwd,
+            creationflags=flags,
+        )
+    else:
+        # Passar string (não lista) evita list2cmdline que converte " em \"
+        subprocess.Popen(
+            f'cmd.exe /c "{script_path}"',
+            cwd=cwd,
+            creationflags=flags,
+        )
 
 
 def usa_powershell_admin(action_id: str) -> bool:

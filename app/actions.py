@@ -1,4 +1,4 @@
-"""Catálogo de ações — Web UI, CLI e scripts .bat."""
+"""Catálogo de ações — Web UI, CLI e scripts .ps1/.bat."""
 
 from __future__ import annotations
 
@@ -20,28 +20,28 @@ class Acao:
 
 
 _ACOES: tuple[Acao, ...] = (
-    Acao("atualizar-programas", "Atualizar programas", "atualizar_softwares.bat", "Instalação", "Atualiza programas via Winget.", "arrow-sync"),
-    Acao("instalar-software", "Instalar da pasta Software", "instalar_software.bat", "Instalação", "Instala .exe, .msi e .lnk da pasta softwares.", "folder-open"),
+    Acao("atualizar-programas", "Atualizar programas", "atualizar_softwares.ps1", "Instalação", "Atualiza programas via Winget.", "arrow-sync"),
+    Acao("instalar-software", "Instalar da pasta Software", "instalar_software.ps1", "Instalação", "Instala .exe, .msi e .lnk da pasta softwares.", "folder-open"),
     Acao(
         "instalar-vcredist-aio",
         "Visual C++ Runtimes (All-in-One)",
-        "instalar_runtimes.bat",
+        "instalar_runtimes.ps1",
         "Instalação",
         "Instala o pacote AIO de Visual C++ Redistributables (abbodi1406) via Winget.",
         "package",
     ),
-    Acao("limpeza-temporarios", "Limpeza de temporários", "limpeza_temporarios.bat", "Limpeza", "Remove temporários, lixeira e cache.", "broom"),
-    Acao("limpeza-disco", "Limpeza de armazenamento", "limpeza_disco.bat", "Limpeza", "Abre a Limpeza de Disco do Windows.", "storage"),
-    Acao("limpeza-malware", "Limpeza MRT (malware)", "limpeza_malware.bat", "Limpeza", "Executa a Ferramenta MRT.", "shield"),
-    Acao("limpeza-profunda", "Limpeza profunda do Windows", "limpeza_profunda.bat", "Limpeza", "TEMP, prefetch, DNS, cleanmgr, SFC e DISM.", "sparkle"),
-    Acao("aplicar-registro", "Aplicar ajustes de registro", "aplicar_ajustes.bat", "Otimização", "Aplica .reg da pasta registros.", "registry", "aviso"),
+    Acao("limpeza-temporarios", "Limpeza de temporários", "limpeza_temporarios.ps1", "Limpeza", "Remove temporários, lixeira e cache.", "broom"),
+    Acao("limpeza-disco", "Limpeza de armazenamento", "limpeza_disco.ps1", "Limpeza", "Abre a Limpeza de Disco do Windows.", "storage"),
+    Acao("limpeza-malware", "Limpeza MRT (malware)", "limpeza_malware.ps1", "Limpeza", "Executa a Ferramenta MRT.", "shield"),
+    Acao("limpeza-profunda", "Limpeza profunda do Windows", "limpeza_profunda.ps1", "Limpeza", "TEMP, prefetch, DNS, cleanmgr, SFC e DISM.", "sparkle"),
+    Acao("aplicar-registro", "Aplicar ajustes de registro", "aplicar_ajustes.ps1", "Otimização", "Aplica .reg da pasta registros.", "registry", "aviso"),
     Acao("utilitario-externo", "Utilitário Windows (externo)", "windows_utility.bat", "Otimização", "WinUtil Chris Titus (terceiros).", "plug", "perigo"),
     Acao("ativar-office-kms", "Ativar Office (KMS)", "ativar_office_kms.bat", "Sistema", "Ativação Office — use por sua conta e risco.", "key", "perigo"),
     Acao("ativar-windows-kms", "Ativar Windows (KMS)", "ativar_windows_kms.bat", "Sistema", "Ativação Windows — use por sua conta e risco.", "key", "perigo"),
-    Acao("ativar-windows-slmgr", "Ativar Windows (slmgr)", "ativar_windows.bat", "Sistema", "slmgr /ato.", "key", "perigo"),
-    Acao("criar-atalhos", "Criar atalhos (GodMode e BIOS)", "criar_atalhos.bat", "Sistema", "GodMode e atalho reinício BIOS.", "desktop"),
-    Acao("gerenciar-inicializacao", "Apps de inicialização", "gerenciar_inicializacao.bat", "Sistema", "Configurações de inicialização.", "rocket"),
-    Acao("reparar-rede", "Reparar conexão de rede", "reparar_rede.bat", "Sistema", "IP, DNS, Winsock e TCP/IP.", "wifi"),
+    Acao("ativar-windows-slmgr", "Ativar Windows (slmgr)", "ativar_windows.ps1", "Sistema", "slmgr /ato.", "key", "perigo"),
+    Acao("criar-atalhos", "Criar atalhos (GodMode e BIOS)", "criar_atalhos.ps1", "Sistema", "GodMode e atalho reinício BIOS.", "desktop"),
+    Acao("gerenciar-inicializacao", "Apps de inicialização", "gerenciar_inicializacao.ps1", "Sistema", "Configurações de inicialização.", "rocket"),
+    Acao("reparar-rede", "Reparar conexão de rede", "reparar_rede.ps1", "Sistema", "IP, DNS, Winsock e TCP/IP.", "wifi"),
 )
 
 _POR_ID = {a.id: a for a in _ACOES}
@@ -63,11 +63,15 @@ def obter_acao(identificador: str) -> Acao | None:
     chave = identificador.strip().lower()
     if chave in _POR_ID:
         return _POR_ID[chave]
-    if chave.endswith(".bat") and chave in _POR_SCRIPT:
+    # Busca direta pelo nome do script (qualquer extensão)
+    if chave in _POR_SCRIPT:
         return _POR_SCRIPT[chave]
-    if not chave.endswith(".bat"):
-        script = f"{chave.replace('-', '_')}.bat"
-        return _POR_SCRIPT.get(script)
+    # Tenta derivar o nome do script a partir do ID (ex: "reparar-rede" → "reparar_rede")
+    base = chave.replace("-", "_")
+    for ext in (".ps1", ".bat"):
+        resultado = _POR_SCRIPT.get(f"{base}{ext}")
+        if resultado:
+            return resultado
     return None
 
 
