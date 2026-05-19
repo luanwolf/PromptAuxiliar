@@ -1,4 +1,4 @@
-"""Executa scripts .bat com console elegante."""
+"""Executa scripts .ps1/.bat com console elegante."""
 
 from __future__ import annotations
 
@@ -98,6 +98,35 @@ Start-Process -FilePath 'powershell.exe' -Verb RunAs -ArgumentList @(
     )
 
 
+def _build_ps1_run_file(script_path: Path) -> Path:
+    """Constrói arquivo temporário PS1 com _ui.ps1 embutido (UTF-8-BOM).
+
+    Isso garante que as funções visuais estejam disponíveis independente
+    de onde _ui.ps1 esteja instalado e resolve problemas de encoding.
+    O arquivo temp é escrito com BOM para o PowerShell 5.1 ler corretamente.
+    """
+    _PS_RUN.mkdir(parents=True, exist_ok=True)
+    run_path = _PS_RUN / f"run_{uuid.uuid4().hex}.ps1"
+
+    ui_path = script_path.parent / "_ui.ps1"
+    try:
+        ui_src = ui_path.read_text(encoding="utf-8-sig") if ui_path.is_file() else ""
+        sc_src = script_path.read_text(encoding="utf-8-sig")
+    except OSError:
+        return script_path  # fallback: rodar original
+
+    # Remove a linha de dot-source de _ui.ps1 (já está embutido)
+    sc_lines = [
+        ln for ln in sc_src.splitlines()
+        if not ln.strip().startswith('. "$PSScriptRoot\\_ui.ps1"')
+        and not ln.strip().startswith(". '$PSScriptRoot\\_ui.ps1'")
+        and not ln.strip().startswith('. "$PSScriptRoot/_ui.ps1"')
+    ]
+    combined = (ui_src.strip() + "\n\n" + "\n".join(sc_lines)).strip() + "\n"
+    run_path.write_text(combined, encoding="utf-8-sig")
+    return run_path
+
+
 def _abrir_console_script(script: str, titulo: str) -> None:
     """Abre o script em nova janela — .ps1 via PowerShell, .bat via CMD."""
     script_path = Path(script).resolve()
@@ -105,9 +134,10 @@ def _abrir_console_script(script: str, titulo: str) -> None:
         raise ScriptNaoEncontradoError(f"Script não encontrado: {script_path}")
 
     flags = getattr(subprocess, "CREATE_NEW_CONSOLE", 0)
-    cwd   = str(script_path.parent)
 
     if script_path.suffix.lower() == ".ps1":
+        # Gera arquivo temp com _ui.ps1 embutido e encoding UTF-8-BOM
+        run_path = _build_ps1_run_file(script_path)
         subprocess.Popen(
             [
                 "powershell.exe",
@@ -115,16 +145,16 @@ def _abrir_console_script(script: str, titulo: str) -> None:
                 "-ExecutionPolicy",
                 "Bypass",
                 "-File",
-                str(script_path),
+                str(run_path),
             ],
-            cwd=cwd,
+            cwd=str(script_path.parent),
             creationflags=flags,
         )
     else:
         # Passar string (não lista) evita list2cmdline que converte " em \"
         subprocess.Popen(
             f'cmd.exe /c "{script_path}"',
-            cwd=cwd,
+            cwd=str(script_path.parent),
             creationflags=flags,
         )
 
