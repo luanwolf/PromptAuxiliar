@@ -1,4 +1,4 @@
-﻿﻿# Atualiza do GitHub (se houver versao nova) e abre o Prompt Auxiliar.
+# Atualiza do GitHub quando houver versao nova e abre o Prompt Auxiliar.
 #Requires -Version 5.1
 
 $ErrorActionPreference = 'Stop'

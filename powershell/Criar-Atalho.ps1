@@ -37,7 +37,7 @@ foreach ($lnkPath in $targets) {
     $s.Arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$launcher`""
     $s.WorkingDirectory = $ProjectRoot
     $s.WindowStyle = 1
-    $s.Description = 'Prompt Auxiliar — Winget e Debloat'
+    $s.Description = 'Prompt Auxiliar - Winget e Debloat'
     if (Test-Path $ico) { $s.IconLocation = "$ico,0" }
     $s.Save()
     Write-Host "Atalho: $lnkPath" -ForegroundColor Green

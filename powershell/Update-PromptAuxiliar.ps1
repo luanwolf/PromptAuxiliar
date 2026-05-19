@@ -1,4 +1,4 @@
-﻿﻿# Verifica versao no GitHub e atualiza a pasta de instalacao (ZIP da branch).
+# Verifica versao no GitHub e atualiza a pasta de instalacao (ZIP da branch).
 #Requires -Version 5.1
 # Encoding: UTF-8 with BOM (compativel com Windows PowerShell 5.1)
 

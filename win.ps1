@@ -1,4 +1,4 @@
-﻿﻿# Prompt Auxiliar — instalador estilo one-liner (Chris Titus / WinUtil)
+# Prompt Auxiliar - instalador one-liner
 # Uso: irm "https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/win.ps1" | iex
 #Requires -Version 5.1
 
@@ -115,7 +115,7 @@ function Invoke-WingetInstallPython {
         '--accept-package-agreements', '--accept-source-agreements',
         '--scope', $Scope
     )
-    Write-Host "  winget install $PackageId (escopo: $Scope)…" -ForegroundColor DarkGray
+    Write-Host "  winget install $PackageId (escopo: $Scope)..." -ForegroundColor DarkGray
     & winget @args
     return (Test-WingetInstallOk -ExitCode $LASTEXITCODE)
 }
@@ -143,11 +143,11 @@ function Install-PromptAuxPythonViaOfficial {
     $url = "https://www.python.org/ftp/python/$ver/python-$ver-amd64.exe"
     $installer = Join-Path $env:TEMP "python-$ver-amd64.exe"
 
-    Write-Host "  Baixando instalador oficial Python $ver…" -ForegroundColor DarkGray
+    Write-Host "  Baixando instalador oficial Python $ver..." -ForegroundColor DarkGray
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Invoke-WebRequest -Uri $url -OutFile $installer -UseBasicParsing
 
-    Write-Host '  Instalando Python (modo silencioso, adiciona ao PATH)…' -ForegroundColor DarkGray
+    Write-Host '  Instalando Python (modo silencioso, adiciona ao PATH)...' -ForegroundColor DarkGray
     $proc = Start-Process -FilePath $installer -ArgumentList @(
         '/quiet',
         'InstallAllUsers=0',
@@ -168,20 +168,20 @@ function Install-PromptAuxPython {
 
     $wingetOk = $false
     if (Get-Command winget -ErrorAction SilentlyContinue) {
-        Write-Host '  Tentando instalar via winget…' -ForegroundColor DarkGray
+        Write-Host '  Tentando instalar via winget...' -ForegroundColor DarkGray
         $wingetOk = Install-PromptAuxPythonViaWinget
     } else {
         Write-Host '  winget não disponível neste PC.' -ForegroundColor DarkYellow
     }
 
     if (-not $wingetOk) {
-        Write-Host '  winget não concluiu — usando instalador python.org…' -ForegroundColor DarkYellow
+        Write-Host '  winget não concluiu - usando instalador python.org...' -ForegroundColor DarkYellow
         Install-PromptAuxPythonViaOfficial | Out-Null
     }
 
     Start-Sleep -Seconds 3
     Update-PromptAuxPath
-    Write-Host '  Verificando Python instalado…' -ForegroundColor Green
+    Write-Host '  Verificando Python instalado...' -ForegroundColor Green
 }
 
 function Get-PromptAuxPython {
@@ -214,6 +214,13 @@ function Test-PromptAuxPs1Syntax {
     return (-not $parseErrors -or $parseErrors.Count -eq 0)
 }
 
+function Write-PromptAuxUtf8NoBom {
+    param([string]$Path, [string]$Content)
+    $utf8 = New-Object System.Text.UTF8Encoding $false
+    $text = $Content.TrimStart([char]0xFEFF)
+    [System.IO.File]::WriteAllText($Path, $text, $utf8)
+}
+
 function Sync-PromptAuxUpdateModuleFromGitHub {
     param(
         [string]$InstallRoot,
@@ -228,7 +235,8 @@ function Sync-PromptAuxUpdateModuleFromGitHub {
     $dest = Join-Path $psDir 'Update-PromptAuxiliar.ps1'
     $url = "https://raw.githubusercontent.com/$Owner/$Name/$Branch/powershell/Update-PromptAuxiliar.ps1"
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    Invoke-WebRequest -Uri $url -OutFile $dest -UseBasicParsing
+    $content = (Invoke-WebRequest -Uri $url -UseBasicParsing).Content
+    Write-PromptAuxUtf8NoBom -Path $dest -Content $content
 }
 
 function Install-PromptAuxiliarSourceZip {
@@ -321,7 +329,7 @@ function Invoke-PromptAuxiliarInstallOrUpdate {
 function Install-PromptAuxiliarPythonDeps {
     param($PythonInfo, [string]$ProjectRoot)
 
-    Write-Host "  Instalando dependências Python…" -ForegroundColor DarkGray
+    Write-Host "  Instalando dependências Python..." -ForegroundColor DarkGray
     $req = Join-Path $ProjectRoot 'requirements.txt'
     if (-not (Test-Path $req)) { throw "requirements.txt não encontrado em $ProjectRoot" }
 

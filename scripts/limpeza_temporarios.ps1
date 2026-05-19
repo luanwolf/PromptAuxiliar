@@ -1,4 +1,4 @@
-﻿# Limpeza de temporarios — chamado por limpeza_temporarios.bat
+# Limpeza de temporarios - chamado por limpeza_temporarios.bat
 $ErrorActionPreference = 'SilentlyContinue'
 
 Write-Host "   [1/4] Esvaziando Lixeira..."

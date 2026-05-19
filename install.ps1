@@ -1,4 +1,4 @@
-# Alias do instalador — use win.ps1 no one-liner
+# Alias do instalador - use win.ps1 no one-liner
 # irm "https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/win.ps1" | iex
 #Requires -Version 5.1
 
