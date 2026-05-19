@@ -136,21 +136,28 @@ def _fetch_remote_version_via_api(
 
 
 def fetch_remote_version(timeout: float = 20.0) -> str | None:
+    """Consulta GitHub (API + raw); se divergirem, usa a versão mais recente."""
     owner, repo, branch = _repo_settings()
+    api_v: str | None = None
+    raw_v: str | None = None
+
+    try:
+        api_v = _fetch_remote_version_via_api(owner, repo, branch, timeout)
+    except OSError:
+        pass
+
     url = f"{_remote_config_url()}?_={int(time.time())}"
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "PromptAuxiliar"})
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             text = resp.read().decode("utf-8", errors="replace")
-        version = _parse_version(text)
-        if version:
-            return version
+        raw_v = _parse_version(text)
     except OSError:
         pass
-    try:
-        return _fetch_remote_version_via_api(owner, repo, branch, timeout)
-    except OSError:
-        return None
+
+    if api_v and raw_v:
+        return api_v if compare_versions(api_v, raw_v) >= 0 else raw_v
+    return api_v or raw_v
 
 
 def install_root() -> Path | None:
@@ -183,9 +190,12 @@ def should_skip_auto_update() -> bool:
 
 
 def launch_win_ps1_update() -> None:
-    """Abre PowerShell com win.ps1 remoto (mesmo fluxo do instalador irm)."""
+    """Abre PowerShell com win.ps1 remoto (força atualização mesmo se versões coincidirem)."""
     url = GITHUB_RAW_WIN.replace("'", "''")
-    comando = f'irm "{url}" | iex'
+    comando = (
+        f"$env:PROMPTAUX_UPDATE='1'; "
+        f"irm \"{url}\" | iex"
+    )
     flags = getattr(subprocess, "CREATE_NEW_CONSOLE", 0)
     subprocess.Popen(
         [

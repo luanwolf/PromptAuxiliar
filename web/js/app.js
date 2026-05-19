@@ -50,6 +50,24 @@
     ui.app.hidden = false;
   }
 
+  function setUpdateAvailability(info) {
+    const btn = document.querySelector('[data-action="check-update"]');
+    if (!btn || !info) return;
+    const pending = !!info.update_available;
+    btn.classList.toggle("btn-update-pending", pending);
+    btn.textContent = pending
+      ? `Atualizar para v${info.remote}`
+      : "Verificar atualização";
+    if (ui.version) {
+      const local = info.local || info.installed_version || info.version;
+      ui.version.textContent = pending && info.remote
+        ? `v${local} → v${info.remote}`
+        : local
+          ? `v${local}`
+          : "v—";
+    }
+  }
+
   function toast(message, type = "info") {
     const el = document.createElement("div");
     el.className = `toast ${type}`;
@@ -333,6 +351,11 @@
     document.body.dataset.view = "scripts";
     renderNav();
     openScriptsView();
+    setUpdateAvailability({
+      update_available: initRes.update_available,
+      remote: initRes.remote_version,
+      local: initRes.local_version || initRes.version,
+    });
     if (initRes.update_available && initRes.update_message) {
       toast(initRes.update_message, "info");
     }
@@ -403,6 +426,7 @@
             }
             corpo += `\n\n${r.message}`;
           }
+          setUpdateAvailability(r);
           if (r.update_available) {
             const atualizar = await showAppModal({
               title: titulo,
