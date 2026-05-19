@@ -13,139 +13,873 @@
     "Jogos"
   ],
   "itens": [
-    {"id": "Google.Chrome", "nome": "Google Chrome", "categoria": "Navegadores", "descricao": "Navegador web Google."},
-    {"id": "Mozilla.Firefox", "nome": "Mozilla Firefox", "categoria": "Navegadores", "descricao": "Navegador Firefox."},
-    {"id": "Brave.Brave", "nome": "Brave", "categoria": "Navegadores", "descricao": "Navegador com bloqueio de anúncios."},
-    {"id": "Opera.OperaGX", "nome": "Opera GX", "categoria": "Navegadores", "descricao": "Navegador focado em jogos."},
-    {"id": "Vivaldi.Vivaldi", "nome": "Vivaldi", "categoria": "Navegadores", "descricao": "Navegador personalizável."},
-    {"id": "Microsoft.Edge", "nome": "Microsoft Edge", "categoria": "Navegadores", "descricao": "Navegador Chromium da Microsoft."},
-    {"id": "LibreWolf.LibreWolf", "nome": "LibreWolf", "categoria": "Navegadores", "descricao": "Firefox focado em privacidade, sem telemetria."},
-
-    {"id": "Microsoft.PowerToys", "nome": "PowerToys", "categoria": "Produtividade", "descricao": "Ferramentas extras oficiais da Microsoft."},
-    {"id": "Notepad++.Notepad++", "nome": "Notepad++", "categoria": "Produtividade", "descricao": "Editor de texto avançado."},
-    {"id": "Adobe.Acrobat.Reader.64-bit", "nome": "Adobe Acrobat Reader", "categoria": "Produtividade", "descricao": "Leitor de PDF da Adobe."},
-    {"id": "Foxit.FoxitReader", "nome": "Foxit PDF Reader", "categoria": "Produtividade", "descricao": "Leitor de PDF rápido e leve."},
-    {"id": "PDFgear.PDFgear", "nome": "PDFgear", "categoria": "Produtividade", "descricao": "Editor e leitor de PDF gratuito."},
-    {"id": "SumatraPDF.SumatraPDF", "nome": "Sumatra PDF", "categoria": "Produtividade", "descricao": "Leitor de PDF minimalista."},
-    {"id": "TheDocumentFoundation.LibreOffice", "nome": "LibreOffice", "categoria": "Produtividade", "descricao": "Suíte office gratuita."},
-    {"id": "Notion.Notion", "nome": "Notion", "categoria": "Produtividade", "descricao": "Notas e organização."},
-    {"id": "Obsidian.Obsidian", "nome": "Obsidian", "categoria": "Produtividade", "descricao": "Notas em Markdown."},
-    {"id": "Microsoft.OneDrive", "nome": "OneDrive", "categoria": "Produtividade", "descricao": "Armazenamento em nuvem Microsoft."},
-    {"id": "Espanso.Espanso", "nome": "Espanso", "categoria": "Produtividade", "descricao": "Atalhos de texto e expansão de snippets."},
-    {"id": "AppFlowy.AppFlowy", "nome": "AppFlowy", "categoria": "Produtividade", "descricao": "Workspace open-source estilo Notion."},
-
-    {"id": "Microsoft.VisualStudioCode", "nome": "Visual Studio Code", "categoria": "Desenvolvimento", "descricao": "Editor de código da Microsoft."},
-    {"id": "VSCodium.VSCodium", "nome": "VSCodium", "categoria": "Desenvolvimento", "descricao": "VS Code sem telemetria da Microsoft."},
-    {"id": "Git.Git", "nome": "Git", "categoria": "Desenvolvimento", "descricao": "Controle de versão."},
-    {"id": "GitHub.GitHubDesktop", "nome": "GitHub Desktop", "categoria": "Desenvolvimento", "descricao": "Cliente Git com interface gráfica."},
-    {"id": "Python.Python.3.12", "nome": "Python 3.12", "categoria": "Desenvolvimento", "descricao": "Linguagem Python."},
-    {"id": "OpenJS.NodeJS.LTS", "nome": "Node.js LTS", "categoria": "Desenvolvimento", "descricao": "Runtime JavaScript."},
-    {"id": "Docker.DockerDesktop", "nome": "Docker Desktop", "categoria": "Desenvolvimento", "descricao": "Containers Docker."},
-    {"id": "Postman.Postman", "nome": "Postman", "categoria": "Desenvolvimento", "descricao": "Cliente API REST."},
-    {"id": "Microsoft.WindowsTerminal", "nome": "Windows Terminal", "categoria": "Desenvolvimento", "descricao": "Terminal moderno do Windows."},
-    {"id": "Microsoft.OpenJDK.21", "nome": "OpenJDK 21", "categoria": "Desenvolvimento", "descricao": "Java OpenJDK da Microsoft."},
-    {"id": "Rustlang.Rust.MSVC", "nome": "Rust (MSVC)", "categoria": "Desenvolvimento", "descricao": "Linguagem Rust."},
-    {"id": "GoLang.Go", "nome": "Go", "categoria": "Desenvolvimento", "descricao": "Linguagem Go."},
-    {"id": "JetBrains.Toolbox", "nome": "JetBrains Toolbox", "categoria": "Desenvolvimento", "descricao": "Gerenciador de IDEs JetBrains."},
-    {"id": "DBeaver.DBeaver.Community", "nome": "DBeaver", "categoria": "Desenvolvimento", "descricao": "Cliente universal de banco de dados."},
-    {"id": "AutoHotkey.AutoHotkey", "nome": "AutoHotkey v2", "categoria": "Desenvolvimento", "descricao": "Automação de teclado e scripts no Windows."},
-    {"id": "Neovim.Neovim", "nome": "Neovim", "categoria": "Desenvolvimento", "descricao": "Editor modal moderno."},
-    {"id": "Apache.NetBeans", "nome": "Apache NetBeans", "categoria": "Desenvolvimento", "descricao": "IDE para Java, PHP, HTML5 e outras linguagens."},
-
-    {"id": "Anysphere.Cursor", "nome": "Cursor", "categoria": "Inteligência artificial", "descricao": "Editor de código com IA integrada (baseado no VS Code)."},
-    {"id": "Anthropic.Claude", "nome": "Claude", "categoria": "Inteligência artificial", "descricao": "Assistente de IA da Anthropic para desktop."},
-    {"id": "j178.ChatGPT", "nome": "ChatGPT", "categoria": "Inteligência artificial", "descricao": "Cliente desktop para ChatGPT (não oficial)."},
-    {"id": "GitHub.Copilot", "nome": "GitHub Copilot CLI", "categoria": "Inteligência artificial", "descricao": "Assistente de código no terminal via linha de comando."},
-    {"id": "ElementLabs.LMStudio", "nome": "LM Studio", "categoria": "Inteligência artificial", "descricao": "Baixa e executa modelos de linguagem localmente no PC."},
-    {"id": "Ollama.Ollama", "nome": "Ollama", "categoria": "Inteligência artificial", "descricao": "Executa LLMs locais; ideal para uso via terminal ou integrações."},
-
-    {"id": "VideoLAN.VLC", "nome": "VLC", "categoria": "Mídia e criatividade", "descricao": "Reprodutor multimídia."},
-    {"id": "Spotify.Spotify", "nome": "Spotify", "categoria": "Mídia e criatividade", "descricao": "Streaming de música."},
-    {"id": "OBSProject.OBSStudio", "nome": "OBS Studio", "categoria": "Mídia e criatividade", "descricao": "Gravação e transmissão."},
-    {"id": "GIMP.GIMP.3", "nome": "GIMP", "categoria": "Mídia e criatividade", "descricao": "Editor de imagens."},
-    {"id": "Audacity.Audacity", "nome": "Audacity", "categoria": "Mídia e criatividade", "descricao": "Editor de áudio."},
-    {"id": "KDE.Krita", "nome": "Krita", "categoria": "Mídia e criatividade", "descricao": "Pintura digital."},
-    {"id": "Daum.PotPlayer", "nome": "PotPlayer", "categoria": "Mídia e criatividade", "descricao": "Reprodutor de vídeo popular."},
-    {"id": "HandBrake.HandBrake", "nome": "HandBrake", "categoria": "Mídia e criatividade", "descricao": "Conversor de vídeo."},
-    {"id": "ImageGlass.ImageGlass", "nome": "ImageGlass", "categoria": "Mídia e criatividade", "descricao": "Visualizador de imagens leve e rápido."},
-    {"id": "ytmdesktop.ytmdesktop", "nome": "YouTube Music Desktop", "categoria": "Mídia e criatividade", "descricao": "Cliente desktop para YouTube Music."},
-    {"id": "dotPDN.PaintDotNet", "nome": "Paint.NET", "categoria": "Mídia e criatividade", "descricao": "Editor de imagens gratuito com camadas e plugins."},
-    {"id": "clsid2.mpc-hc", "nome": "MPC-HC", "categoria": "Mídia e criatividade", "descricao": "Media Player Classic Home Cinema — reprodutor de vídeo leve."},
-    {"id": "CodecGuide.K-LiteCodecPack.Standard", "nome": "K-Lite Codec Pack Standard", "categoria": "Mídia e criatividade", "descricao": "Pacote de codecs para reproduzir formatos de vídeo e áudio no Windows."},
-
-    {"id": "7zip.7zip", "nome": "7-Zip", "categoria": "Utilitários", "descricao": "Compactador de arquivos."},
-    {"id": "M2Team.NanaZip", "nome": "NanaZip", "categoria": "Utilitários", "descricao": "Compactador moderno (fork do 7-Zip)."},
-    {"id": "RARLab.WinRAR", "nome": "WinRAR", "categoria": "Utilitários", "descricao": "Compactador RAR/ZIP."},
-    {"id": "ShareX.ShareX", "nome": "ShareX", "categoria": "Utilitários", "descricao": "Capturas de tela avançadas."},
-    {"id": "Flameshot.Flameshot", "nome": "Flameshot", "categoria": "Utilitários", "descricao": "Captura de tela com anotações."},
-    {"id": "Skillbrains.Lightshot", "nome": "Lightshot", "categoria": "Utilitários", "descricao": "Captura e compartilhamento rápido de tela."},
-    {"id": "FilesCommunity.Files", "nome": "Files", "categoria": "Utilitários", "descricao": "Gerenciador de arquivos moderno."},
-    {"id": "voidtools.Everything", "nome": "Everything", "categoria": "Utilitários", "descricao": "Busca instantânea de arquivos."},
-    {"id": "AntibodySoftware.WizTree", "nome": "WizTree", "categoria": "Utilitários", "descricao": "Análise visual do uso de disco."},
-    {"id": "CodeSector.TeraCopy", "nome": "TeraCopy", "categoria": "Utilitários", "descricao": "Cópia e movimentação de arquivos acelerada."},
-    {"id": "Bitwarden.Bitwarden", "nome": "Bitwarden", "categoria": "Utilitários", "descricao": "Gerenciador de senhas."},
-    {"id": "AgileBits.1Password", "nome": "1Password", "categoria": "Utilitários", "descricao": "Gerenciador de senhas premium."},
-    {"id": "Proton.ProtonAuthenticator", "nome": "Proton Authenticator", "categoria": "Utilitários", "descricao": "Autenticação em dois fatores (2FA)."},
-    {"id": "Malwarebytes.Malwarebytes", "nome": "Malwarebytes", "categoria": "Utilitários", "descricao": "Proteção antimalware."},
-    {"id": "PuTTY.PuTTY", "nome": "PuTTY", "categoria": "Utilitários", "descricao": "Cliente SSH/Telnet."},
-    {"id": "WinSCP.WinSCP", "nome": "WinSCP", "categoria": "Utilitários", "descricao": "Cliente SFTP/SCP."},
-    {"id": "TeamViewer.TeamViewer", "nome": "TeamViewer", "categoria": "Utilitários", "descricao": "Acesso remoto."},
-    {"id": "AnyDesk.AnyDesk", "nome": "AnyDesk", "categoria": "Utilitários", "descricao": "Acesso remoto leve."},
-    {"id": "RustDesk.RustDesk", "nome": "RustDesk", "categoria": "Utilitários", "descricao": "Acesso remoto open-source."},
-    {"id": "qBittorrent.qBittorrent", "nome": "qBittorrent", "categoria": "Utilitários", "descricao": "Cliente BitTorrent."},
-    {"id": "Proton.ProtonVPN", "nome": "Proton VPN", "categoria": "Utilitários", "descricao": "VPN com plano gratuito."},
-    {"id": "Tailscale.Tailscale", "nome": "Tailscale", "categoria": "Utilitários", "descricao": "VPN mesh para rede privada."},
-    {"id": "LocalSend.LocalSend", "nome": "LocalSend", "categoria": "Utilitários", "descricao": "Envio de arquivos na rede local."},
-    {"id": "CPUID.CPU-Z", "nome": "CPU-Z", "categoria": "Utilitários", "descricao": "Informações de CPU e hardware."},
-    {"id": "REALiX.HWiNFO", "nome": "HWiNFO", "categoria": "Utilitários", "descricao": "Monitoramento de hardware."},
-    {"id": "RevoUninstaller.RevoUninstaller", "nome": "Revo Uninstaller", "categoria": "Utilitários", "descricao": "Desinstalação profunda de programas."},
-    {"id": "Klocman.BulkCrapUninstaller", "nome": "Bulk Crap Uninstaller", "categoria": "Utilitários", "descricao": "Desinstalador em lote para apps residuais."},
-    {"id": "Rufus.Rufus", "nome": "Rufus", "categoria": "Utilitários", "descricao": "Criar pendrives bootáveis."},
-    {"id": "BleachBit.BleachBit", "nome": "BleachBit", "categoria": "Utilitários", "descricao": "Limpeza de cache e arquivos temporários."},
-    {"id": "QuickLook.QuickLook", "nome": "QuickLook", "categoria": "Utilitários", "descricao": "Pré-visualização de arquivos com barra de espaço."},
-    {"id": "OPAutoClicker.OPAutoClicker", "nome": "OP Auto Clicker", "categoria": "Utilitários", "descricao": "Autoclicker com intervalo e atalhos configuráveis."},
-
-    {"id": "Rainmeter.Rainmeter", "nome": "Rainmeter", "categoria": "Personalização", "descricao": "Widgets e skins na área de trabalho."},
-    {"id": "AmN.yasb", "nome": "YASB", "categoria": "Personalização", "descricao": "Barra de status customizável (Yet Another Status Bar)."},
-    {"id": "RamenSoftware.Windhawk", "nome": "Windhawk", "categoria": "Personalização", "descricao": "Mods e tweaks para o shell do Windows."},
-    {"id": "ArminOsaj.AutoDarkMode", "nome": "Auto Dark Mode", "categoria": "Personalização", "descricao": "Alterna tema claro/escuro automaticamente."},
-    {"id": "OpenRGB.OpenRGB", "nome": "OpenRGB", "categoria": "Personalização", "descricao": "Controle de iluminação RGB unificado."},
-
-    {"id": "Sandboxie.Plus", "nome": "Sandboxie Plus", "categoria": "Sistema e hardware", "descricao": "Executa programas em sandbox isolada."},
-    {"id": "BitSum.ProcessLasso", "nome": "Process Lasso", "categoria": "Sistema e hardware", "descricao": "Prioridade e afinidade de CPU para processos."},
-    {"id": "TechPowerUp.GPU-Z", "nome": "GPU-Z", "categoria": "Sistema e hardware", "descricao": "Informações da placa de vídeo, BIOS, drivers e sensores."},
-    {"id": "Guru3D.Afterburner", "nome": "MSI Afterburner", "categoria": "Sistema e hardware", "descricao": "Overclock e monitoramento de GPU."},
-    {"id": "Wagnardsoft.DisplayDriverUninstaller", "nome": "DDU (Display Driver Uninstaller)", "categoria": "Sistema e hardware", "descricao": "Remove drivers de vídeo NVIDIA/AMD/Intel."},
-    {"id": "CrystalDewWorld.CrystalDiskInfo", "nome": "CrystalDiskInfo", "categoria": "Sistema e hardware", "descricao": "Saúde e temperatura de discos (S.M.A.R.T.)."},
-    {"id": "CrystalDewWorld.CrystalDiskMark", "nome": "CrystalDiskMark", "categoria": "Sistema e hardware", "descricao": "Benchmark de leitura/gravação de discos."},
-    {"id": "Rem0o.FanControl", "nome": "FanControl", "categoria": "Sistema e hardware", "descricao": "Controle de ventoinhas da placa-mãe/GPU."},
-    {"id": "Piriform.Speccy", "nome": "Speccy", "categoria": "Sistema e hardware", "descricao": "Resumo detalhado do hardware do PC."},
-
-    {"id": "abbodi1406.vcredist", "nome": "Visual C++ Redistributable (All-in-One)", "categoria": "Runtimes e componentes", "descricao": "Pacote AIO dos runtimes VC++ (2005–2022) via winget."},
-    {"id": "Microsoft.DotNet.DesktopRuntime.8", "nome": ".NET Desktop Runtime 8", "categoria": "Runtimes e componentes", "descricao": "Runtime .NET para apps desktop."},
-    {"id": "Microsoft.DotNet.DesktopRuntime.6", "nome": ".NET Desktop Runtime 6", "categoria": "Runtimes e componentes", "descricao": "Runtime .NET LTS para apps legados."},
-    {"id": "Microsoft.DirectX", "nome": "DirectX End-User Runtime", "categoria": "Runtimes e componentes", "descricao": "Componentes DirectX para jogos antigos."},
-    {"id": "Oracle.JavaRuntimeEnvironment", "nome": "Java Runtime (JRE)", "categoria": "Runtimes e componentes", "descricao": "Runtime Java para apps que ainda dependem de JRE."},
-
-    {"id": "Discord.Discord", "nome": "Discord", "categoria": "Comunicação", "descricao": "Chat e comunidades."},
-    {"id": "Zoom.Zoom", "nome": "Zoom", "categoria": "Comunicação", "descricao": "Videoconferência."},
-    {"id": "Telegram.TelegramDesktop", "nome": "Telegram Desktop", "categoria": "Comunicação", "descricao": "Cliente Telegram."},
-    {"id": "WhatsApp.WhatsApp", "nome": "WhatsApp", "categoria": "Comunicação", "descricao": "WhatsApp para desktop."},
-    {"id": "SlackTechnologies.Slack", "nome": "Slack", "categoria": "Comunicação", "descricao": "Comunicação para equipes."},
-    {"id": "Microsoft.Teams", "nome": "Microsoft Teams", "categoria": "Comunicação", "descricao": "Chat e reuniões Microsoft."},
-    {"id": "Signal.Signal", "nome": "Signal", "categoria": "Comunicação", "descricao": "Mensagens com foco em privacidade."},
-    {"id": "Skype.Skype", "nome": "Skype", "categoria": "Comunicação", "descricao": "Chamadas e mensagens Skype."},
-
-    {"id": "Valve.Steam", "nome": "Steam", "categoria": "Jogos", "descricao": "Loja e launcher de jogos."},
-    {"id": "EpicGames.EpicGamesLauncher", "nome": "Epic Games Launcher", "categoria": "Jogos", "descricao": "Loja Epic Games."},
-    {"id": "Ubisoft.Connect", "nome": "Ubisoft Connect", "categoria": "Jogos", "descricao": "Launcher Ubisoft."},
-    {"id": "ElectronicArts.EADesktop", "nome": "EA App", "categoria": "Jogos", "descricao": "Launcher Electronic Arts."},
-    {"id": "GOG.Galaxy", "nome": "GOG Galaxy", "categoria": "Jogos", "descricao": "Loja GOG."},
-    {"id": "ItchIo.Itch", "nome": "itch.io", "categoria": "Jogos", "descricao": "Loja e launcher de jogos indie."},
-    {"id": "HydraLauncher.Hydra", "nome": "Hydra Launcher", "categoria": "Jogos", "descricao": "Launcher de jogos com biblioteca unificada."},
-    {"id": "PrismLauncher.PrismLauncher", "nome": "Prism Launcher", "categoria": "Jogos", "descricao": "Launcher de Minecraft (fork do MultiMC)."},
-    {"id": "Parsec.Parsec", "nome": "Parsec", "categoria": "Jogos", "descricao": "Game streaming de baixa latência."},
-    {"id": "Playnite.Playnite", "nome": "Playnite", "categoria": "Jogos", "descricao": "Biblioteca unificada de jogos."},
-    {"id": "HeroicGamesLauncher.HeroicGamesLauncher", "nome": "Heroic Games Launcher", "categoria": "Jogos", "descricao": "Launcher open-source para Epic/GOG/Amazon."}
+    {
+      "id": "Google.Chrome",
+      "nome": "Google Chrome",
+      "categoria": "Navegadores",
+      "descricao": "Navegador web Google.",
+      "descricao_detalhada": "Navegador da Google baseado em Chromium. Sincroniza favoritos e senhas com conta Google, suporta extensões da Chrome Web Store e é um dos navegadores mais usados no mundo."
+    },
+    {
+      "id": "Mozilla.Firefox",
+      "nome": "Mozilla Firefox",
+      "categoria": "Navegadores",
+      "descricao": "Navegador Firefox.",
+      "descricao_detalhada": "Mozilla Firefox: Navegador Firefox. Navegador para acessar sites, favoritos, extensões e downloads na web. ID Winget: Mozilla.Firefox. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Brave.Brave",
+      "nome": "Brave",
+      "categoria": "Navegadores",
+      "descricao": "Navegador com bloqueio de anúncios.",
+      "descricao_detalhada": "Brave: Navegador com bloqueio de anúncios. Navegador para acessar sites, favoritos, extensões e downloads na web. ID Winget: Brave.Brave. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Opera.OperaGX",
+      "nome": "Opera GX",
+      "categoria": "Navegadores",
+      "descricao": "Navegador focado em jogos.",
+      "descricao_detalhada": "Opera GX: Navegador focado em jogos. Navegador para acessar sites, favoritos, extensões e downloads na web. ID Winget: Opera.OperaGX. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Vivaldi.Vivaldi",
+      "nome": "Vivaldi",
+      "categoria": "Navegadores",
+      "descricao": "Navegador personalizável.",
+      "descricao_detalhada": "Vivaldi: Navegador personalizável. Navegador para acessar sites, favoritos, extensões e downloads na web. ID Winget: Vivaldi.Vivaldi. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Microsoft.Edge",
+      "nome": "Microsoft Edge",
+      "categoria": "Navegadores",
+      "descricao": "Navegador Chromium da Microsoft.",
+      "descricao_detalhada": "Microsoft Edge: Navegador Chromium da Microsoft. Navegador para acessar sites, favoritos, extensões e downloads na web. ID Winget: Microsoft.Edge. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "LibreWolf.LibreWolf",
+      "nome": "LibreWolf",
+      "categoria": "Navegadores",
+      "descricao": "Firefox focado em privacidade, sem telemetria.",
+      "descricao_detalhada": "LibreWolf: Firefox focado em privacidade, sem telemetria. Navegador para acessar sites, favoritos, extensões e downloads na web. ID Winget: LibreWolf.LibreWolf. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Microsoft.PowerToys",
+      "nome": "PowerToys",
+      "categoria": "Produtividade",
+      "descricao": "Ferramentas extras oficiais da Microsoft.",
+      "descricao_detalhada": "Conjunto oficial de utilitários da Microsoft para power users: FancyZones, renomeação em lote, pré-visualização de arquivos, atalhos de teclado extras e mais. Open-source e atualizado com frequência."
+    },
+    {
+      "id": "Notepad++.Notepad++",
+      "nome": "Notepad++",
+      "categoria": "Produtividade",
+      "descricao": "Editor de texto avançado.",
+      "descricao_detalhada": "Notepad++: Editor de texto avançado. Ferramenta de produtividade para trabalho, estudo ou organização no Windows. ID Winget: Notepad++.Notepad++. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Adobe.Acrobat.Reader.64-bit",
+      "nome": "Adobe Acrobat Reader",
+      "categoria": "Produtividade",
+      "descricao": "Leitor de PDF da Adobe.",
+      "descricao_detalhada": "Leitor oficial da Adobe para PDF. Abre, imprime, assina e comenta documentos; amplamente usado em empresas. Versão Reader é gratuita; recursos avançados de edição exigem o Acrobat Pro."
+    },
+    {
+      "id": "Foxit.FoxitReader",
+      "nome": "Foxit PDF Reader",
+      "categoria": "Produtividade",
+      "descricao": "Leitor de PDF rápido e leve.",
+      "descricao_detalhada": "É uma popular família de softwares e ferramentas para criar, visualizar, editar e gerenciar arquivos PDF. O Foxit PDF Reader é a versão gratuita: leve, rápida e adequada para leitura diária de documentos sem abrir o pacote completo pago."
+    },
+    {
+      "id": "PDFgear.PDFgear",
+      "nome": "PDFgear",
+      "categoria": "Produtividade",
+      "descricao": "Editor e leitor de PDF gratuito.",
+      "descricao_detalhada": "PDFgear: Editor e leitor de PDF gratuito. Ferramenta de produtividade para trabalho, estudo ou organização no Windows. ID Winget: PDFgear.PDFgear. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "SumatraPDF.SumatraPDF",
+      "nome": "Sumatra PDF",
+      "categoria": "Produtividade",
+      "descricao": "Leitor de PDF minimalista.",
+      "descricao_detalhada": "Sumatra PDF: Leitor de PDF minimalista. Ferramenta de produtividade para trabalho, estudo ou organização no Windows. ID Winget: SumatraPDF.SumatraPDF. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "TheDocumentFoundation.LibreOffice",
+      "nome": "LibreOffice",
+      "categoria": "Produtividade",
+      "descricao": "Suíte office gratuita.",
+      "descricao_detalhada": "Suíte office gratuita e open-source com Writer, Calc, Impress e Draw. Compatível com formatos Microsoft Office (.docx, .xlsx) e alternativa completa ao pacote Office pago para uso doméstico e profissional."
+    },
+    {
+      "id": "Notion.Notion",
+      "nome": "Notion",
+      "categoria": "Produtividade",
+      "descricao": "Notas e organização.",
+      "descricao_detalhada": "Notion: Notas e organização. Ferramenta de produtividade para trabalho, estudo ou organização no Windows. ID Winget: Notion.Notion. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Obsidian.Obsidian",
+      "nome": "Obsidian",
+      "categoria": "Produtividade",
+      "descricao": "Notas em Markdown.",
+      "descricao_detalhada": "Obsidian: Notas em Markdown. Ferramenta de produtividade para trabalho, estudo ou organização no Windows. ID Winget: Obsidian.Obsidian. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Microsoft.OneDrive",
+      "nome": "OneDrive",
+      "categoria": "Produtividade",
+      "descricao": "Armazenamento em nuvem Microsoft.",
+      "descricao_detalhada": "Sincroniza pastas e arquivos com a nuvem Microsoft. Integrado ao Windows e ao Office; remover no debloat não apaga arquivos na nuvem, mas desativa sync automático local."
+    },
+    {
+      "id": "Espanso.Espanso",
+      "nome": "Espanso",
+      "categoria": "Produtividade",
+      "descricao": "Atalhos de texto e expansão de snippets.",
+      "descricao_detalhada": "Espanso: Atalhos de texto e expansão de snippets. Ferramenta de produtividade para trabalho, estudo ou organização no Windows. ID Winget: Espanso.Espanso. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "AppFlowy.AppFlowy",
+      "nome": "AppFlowy",
+      "categoria": "Produtividade",
+      "descricao": "Workspace open-source estilo Notion.",
+      "descricao_detalhada": "AppFlowy: Workspace open-source estilo Notion. Ferramenta de produtividade para trabalho, estudo ou organização no Windows. ID Winget: AppFlowy.AppFlowy. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Microsoft.VisualStudioCode",
+      "nome": "Visual Studio Code",
+      "categoria": "Desenvolvimento",
+      "descricao": "Editor de código da Microsoft.",
+      "descricao_detalhada": "Visual Studio Code: Editor de código da Microsoft. Software para programação, versionamento, testes ou infraestrutura de desenvolvimento. ID Winget: Microsoft.VisualStudioCode. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "VSCodium.VSCodium",
+      "nome": "VSCodium",
+      "categoria": "Desenvolvimento",
+      "descricao": "VS Code sem telemetria da Microsoft.",
+      "descricao_detalhada": "VSCodium: VS Code sem telemetria da Microsoft. Software para programação, versionamento, testes ou infraestrutura de desenvolvimento. ID Winget: VSCodium.VSCodium. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Git.Git",
+      "nome": "Git",
+      "categoria": "Desenvolvimento",
+      "descricao": "Controle de versão.",
+      "descricao_detalhada": "Git: Controle de versão. Software para programação, versionamento, testes ou infraestrutura de desenvolvimento. ID Winget: Git.Git. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "GitHub.GitHubDesktop",
+      "nome": "GitHub Desktop",
+      "categoria": "Desenvolvimento",
+      "descricao": "Cliente Git com interface gráfica.",
+      "descricao_detalhada": "GitHub Desktop: Cliente Git com interface gráfica. Software para programação, versionamento, testes ou infraestrutura de desenvolvimento. ID Winget: GitHub.GitHubDesktop. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Python.Python.3.12",
+      "nome": "Python 3.12",
+      "categoria": "Desenvolvimento",
+      "descricao": "Linguagem Python.",
+      "descricao_detalhada": "Python 3.12: Linguagem Python. Software para programação, versionamento, testes ou infraestrutura de desenvolvimento. ID Winget: Python.Python.3.12. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "OpenJS.NodeJS.LTS",
+      "nome": "Node.js LTS",
+      "categoria": "Desenvolvimento",
+      "descricao": "Runtime JavaScript.",
+      "descricao_detalhada": "Node.js LTS: Runtime JavaScript. Software para programação, versionamento, testes ou infraestrutura de desenvolvimento. ID Winget: OpenJS.NodeJS.LTS. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Docker.DockerDesktop",
+      "nome": "Docker Desktop",
+      "categoria": "Desenvolvimento",
+      "descricao": "Containers Docker.",
+      "descricao_detalhada": "Docker Desktop: Containers Docker. Software para programação, versionamento, testes ou infraestrutura de desenvolvimento. ID Winget: Docker.DockerDesktop. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Postman.Postman",
+      "nome": "Postman",
+      "categoria": "Desenvolvimento",
+      "descricao": "Cliente API REST.",
+      "descricao_detalhada": "Postman: Cliente API REST. Software para programação, versionamento, testes ou infraestrutura de desenvolvimento. ID Winget: Postman.Postman. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Microsoft.WindowsTerminal",
+      "nome": "Windows Terminal",
+      "categoria": "Desenvolvimento",
+      "descricao": "Terminal moderno do Windows.",
+      "descricao_detalhada": "Windows Terminal: Terminal moderno do Windows. Software para programação, versionamento, testes ou infraestrutura de desenvolvimento. ID Winget: Microsoft.WindowsTerminal. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Microsoft.OpenJDK.21",
+      "nome": "OpenJDK 21",
+      "categoria": "Desenvolvimento",
+      "descricao": "Java OpenJDK da Microsoft.",
+      "descricao_detalhada": "OpenJDK 21: Java OpenJDK da Microsoft. Software para programação, versionamento, testes ou infraestrutura de desenvolvimento. ID Winget: Microsoft.OpenJDK.21. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Rustlang.Rust.MSVC",
+      "nome": "Rust (MSVC)",
+      "categoria": "Desenvolvimento",
+      "descricao": "Linguagem Rust.",
+      "descricao_detalhada": "Rust (MSVC): Linguagem Rust. Software para programação, versionamento, testes ou infraestrutura de desenvolvimento. ID Winget: Rustlang.Rust.MSVC. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "GoLang.Go",
+      "nome": "Go",
+      "categoria": "Desenvolvimento",
+      "descricao": "Linguagem Go.",
+      "descricao_detalhada": "Go: Linguagem Go. Software para programação, versionamento, testes ou infraestrutura de desenvolvimento. ID Winget: GoLang.Go. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "JetBrains.Toolbox",
+      "nome": "JetBrains Toolbox",
+      "categoria": "Desenvolvimento",
+      "descricao": "Gerenciador de IDEs JetBrains.",
+      "descricao_detalhada": "JetBrains Toolbox: Gerenciador de IDEs JetBrains. Software para programação, versionamento, testes ou infraestrutura de desenvolvimento. ID Winget: JetBrains.Toolbox. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "DBeaver.DBeaver.Community",
+      "nome": "DBeaver",
+      "categoria": "Desenvolvimento",
+      "descricao": "Cliente universal de banco de dados.",
+      "descricao_detalhada": "DBeaver: Cliente universal de banco de dados. Software para programação, versionamento, testes ou infraestrutura de desenvolvimento. ID Winget: DBeaver.DBeaver.Community. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "AutoHotkey.AutoHotkey",
+      "nome": "AutoHotkey v2",
+      "categoria": "Desenvolvimento",
+      "descricao": "Automação de teclado e scripts no Windows.",
+      "descricao_detalhada": "AutoHotkey v2: Automação de teclado e scripts no Windows. Software para programação, versionamento, testes ou infraestrutura de desenvolvimento. ID Winget: AutoHotkey.AutoHotkey. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Neovim.Neovim",
+      "nome": "Neovim",
+      "categoria": "Desenvolvimento",
+      "descricao": "Editor modal moderno.",
+      "descricao_detalhada": "Neovim: Editor modal moderno. Software para programação, versionamento, testes ou infraestrutura de desenvolvimento. ID Winget: Neovim.Neovim. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Apache.NetBeans",
+      "nome": "Apache NetBeans",
+      "categoria": "Desenvolvimento",
+      "descricao": "IDE para Java, PHP, HTML5 e outras linguagens.",
+      "descricao_detalhada": "Apache NetBeans: IDE para Java, PHP, HTML5 e outras linguagens. Software para programação, versionamento, testes ou infraestrutura de desenvolvimento. ID Winget: Apache.NetBeans. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Anysphere.Cursor",
+      "nome": "Cursor",
+      "categoria": "Inteligência artificial",
+      "descricao": "Editor de código com IA integrada (baseado no VS Code).",
+      "descricao_detalhada": "Editor de código com IA integrada, baseado no VS Code. Oferece autocomplete inteligente, chat com o código e refatoração assistida — popular para desenvolvimento com modelos de linguagem."
+    },
+    {
+      "id": "Anthropic.Claude",
+      "nome": "Claude",
+      "categoria": "Inteligência artificial",
+      "descricao": "Assistente de IA da Anthropic para desktop.",
+      "descricao_detalhada": "Claude: Assistente de IA da Anthropic para desktop. Ferramenta de IA: assistentes, modelos locais ou integração com LLMs. ID Winget: Anthropic.Claude. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "j178.ChatGPT",
+      "nome": "ChatGPT",
+      "categoria": "Inteligência artificial",
+      "descricao": "Cliente desktop para ChatGPT (não oficial).",
+      "descricao_detalhada": "ChatGPT: Cliente desktop para ChatGPT (não oficial). Ferramenta de IA: assistentes, modelos locais ou integração com LLMs. ID Winget: j178.ChatGPT. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "GitHub.Copilot",
+      "nome": "GitHub Copilot CLI",
+      "categoria": "Inteligência artificial",
+      "descricao": "Assistente de código no terminal via linha de comando.",
+      "descricao_detalhada": "GitHub Copilot CLI: Assistente de código no terminal via linha de comando. Ferramenta de IA: assistentes, modelos locais ou integração com LLMs. ID Winget: GitHub.Copilot. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "ElementLabs.LMStudio",
+      "nome": "LM Studio",
+      "categoria": "Inteligência artificial",
+      "descricao": "Baixa e executa modelos de linguagem localmente no PC.",
+      "descricao_detalhada": "LM Studio: Baixa e executa modelos de linguagem localmente no PC. Ferramenta de IA: assistentes, modelos locais ou integração com LLMs. ID Winget: ElementLabs.LMStudio. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Ollama.Ollama",
+      "nome": "Ollama",
+      "categoria": "Inteligência artificial",
+      "descricao": "Executa LLMs locais; ideal para uso via terminal ou integrações.",
+      "descricao_detalhada": "Executa modelos de linguagem (LLMs) localmente no seu PC, sem depender só da nuvem. Baixa modelos via terminal e integra com outras ferramentas de IA offline."
+    },
+    {
+      "id": "VideoLAN.VLC",
+      "nome": "VLC",
+      "categoria": "Mídia e criatividade",
+      "descricao": "Reprodutor multimídia.",
+      "descricao_detalhada": "VLC: Reprodutor multimídia. Software para áudio, vídeo, imagem ou entretenimento multimídia. ID Winget: VideoLAN.VLC. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Spotify.Spotify",
+      "nome": "Spotify",
+      "categoria": "Mídia e criatividade",
+      "descricao": "Streaming de música.",
+      "descricao_detalhada": "Spotify: Streaming de música. Software para áudio, vídeo, imagem ou entretenimento multimídia. ID Winget: Spotify.Spotify. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "OBSProject.OBSStudio",
+      "nome": "OBS Studio",
+      "categoria": "Mídia e criatividade",
+      "descricao": "Gravação e transmissão.",
+      "descricao_detalhada": "OBS Studio: Gravação e transmissão. Software para áudio, vídeo, imagem ou entretenimento multimídia. ID Winget: OBSProject.OBSStudio. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "GIMP.GIMP.3",
+      "nome": "GIMP",
+      "categoria": "Mídia e criatividade",
+      "descricao": "Editor de imagens.",
+      "descricao_detalhada": "GIMP: Editor de imagens. Software para áudio, vídeo, imagem ou entretenimento multimídia. ID Winget: GIMP.GIMP.3. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Audacity.Audacity",
+      "nome": "Audacity",
+      "categoria": "Mídia e criatividade",
+      "descricao": "Editor de áudio.",
+      "descricao_detalhada": "Audacity: Editor de áudio. Software para áudio, vídeo, imagem ou entretenimento multimídia. ID Winget: Audacity.Audacity. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "KDE.Krita",
+      "nome": "Krita",
+      "categoria": "Mídia e criatividade",
+      "descricao": "Pintura digital.",
+      "descricao_detalhada": "Krita: Pintura digital. Software para áudio, vídeo, imagem ou entretenimento multimídia. ID Winget: KDE.Krita. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Daum.PotPlayer",
+      "nome": "PotPlayer",
+      "categoria": "Mídia e criatividade",
+      "descricao": "Reprodutor de vídeo popular.",
+      "descricao_detalhada": "PotPlayer: Reprodutor de vídeo popular. Software para áudio, vídeo, imagem ou entretenimento multimídia. ID Winget: Daum.PotPlayer. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "HandBrake.HandBrake",
+      "nome": "HandBrake",
+      "categoria": "Mídia e criatividade",
+      "descricao": "Conversor de vídeo.",
+      "descricao_detalhada": "HandBrake: Conversor de vídeo. Software para áudio, vídeo, imagem ou entretenimento multimídia. ID Winget: HandBrake.HandBrake. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "ImageGlass.ImageGlass",
+      "nome": "ImageGlass",
+      "categoria": "Mídia e criatividade",
+      "descricao": "Visualizador de imagens leve e rápido.",
+      "descricao_detalhada": "ImageGlass: Visualizador de imagens leve e rápido. Software para áudio, vídeo, imagem ou entretenimento multimídia. ID Winget: ImageGlass.ImageGlass. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "ytmdesktop.ytmdesktop",
+      "nome": "YouTube Music Desktop",
+      "categoria": "Mídia e criatividade",
+      "descricao": "Cliente desktop para YouTube Music.",
+      "descricao_detalhada": "YouTube Music Desktop: Cliente desktop para YouTube Music. Software para áudio, vídeo, imagem ou entretenimento multimídia. ID Winget: ytmdesktop.ytmdesktop. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "dotPDN.PaintDotNet",
+      "nome": "Paint.NET",
+      "categoria": "Mídia e criatividade",
+      "descricao": "Editor de imagens gratuito com camadas e plugins.",
+      "descricao_detalhada": "Paint.NET: Editor de imagens gratuito com camadas e plugins. Software para áudio, vídeo, imagem ou entretenimento multimídia. ID Winget: dotPDN.PaintDotNet. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "clsid2.mpc-hc",
+      "nome": "MPC-HC",
+      "categoria": "Mídia e criatividade",
+      "descricao": "Media Player Classic Home Cinema — reprodutor de vídeo leve.",
+      "descricao_detalhada": "MPC-HC: Media Player Classic Home Cinema — reprodutor de vídeo leve. Software para áudio, vídeo, imagem ou entretenimento multimídia. ID Winget: clsid2.mpc-hc. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "CodecGuide.K-LiteCodecPack.Standard",
+      "nome": "K-Lite Codec Pack Standard",
+      "categoria": "Mídia e criatividade",
+      "descricao": "Pacote de codecs para reproduzir formatos de vídeo e áudio no Windows.",
+      "descricao_detalhada": "Pacote de codecs e filtros DirectShow para o Windows. A edição Standard cobre os formatos mais comuns de vídeo e áudio; útil com players como MPC-HC e Windows Media Player."
+    },
+    {
+      "id": "7zip.7zip",
+      "nome": "7-Zip",
+      "categoria": "Utilitários",
+      "descricao": "Compactador de arquivos.",
+      "descricao_detalhada": "Compactador open-source muito usado no Windows. Abre ZIP, 7z, RAR e dezenas de formatos; alta taxa de compressão e integração ao menu de contexto do Explorer."
+    },
+    {
+      "id": "M2Team.NanaZip",
+      "nome": "NanaZip",
+      "categoria": "Utilitários",
+      "descricao": "Compactador moderno (fork do 7-Zip).",
+      "descricao_detalhada": "NanaZip: Compactador moderno (fork do 7-Zip). Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: M2Team.NanaZip. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "RARLab.WinRAR",
+      "nome": "WinRAR",
+      "categoria": "Utilitários",
+      "descricao": "Compactador RAR/ZIP.",
+      "descricao_detalhada": "WinRAR: Compactador RAR/ZIP. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: RARLab.WinRAR. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "ShareX.ShareX",
+      "nome": "ShareX",
+      "categoria": "Utilitários",
+      "descricao": "Capturas de tela avançadas.",
+      "descricao_detalhada": "ShareX: Capturas de tela avançadas. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: ShareX.ShareX. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Flameshot.Flameshot",
+      "nome": "Flameshot",
+      "categoria": "Utilitários",
+      "descricao": "Captura de tela com anotações.",
+      "descricao_detalhada": "Flameshot: Captura de tela com anotações. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: Flameshot.Flameshot. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Skillbrains.Lightshot",
+      "nome": "Lightshot",
+      "categoria": "Utilitários",
+      "descricao": "Captura e compartilhamento rápido de tela.",
+      "descricao_detalhada": "Lightshot: Captura e compartilhamento rápido de tela. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: Skillbrains.Lightshot. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "FilesCommunity.Files",
+      "nome": "Files",
+      "categoria": "Utilitários",
+      "descricao": "Gerenciador de arquivos moderno.",
+      "descricao_detalhada": "Files: Gerenciador de arquivos moderno. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: FilesCommunity.Files. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "voidtools.Everything",
+      "nome": "Everything",
+      "categoria": "Utilitários",
+      "descricao": "Busca instantânea de arquivos.",
+      "descricao_detalhada": "Everything: Busca instantânea de arquivos. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: voidtools.Everything. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "AntibodySoftware.WizTree",
+      "nome": "WizTree",
+      "categoria": "Utilitários",
+      "descricao": "Análise visual do uso de disco.",
+      "descricao_detalhada": "WizTree: Análise visual do uso de disco. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: AntibodySoftware.WizTree. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "CodeSector.TeraCopy",
+      "nome": "TeraCopy",
+      "categoria": "Utilitários",
+      "descricao": "Cópia e movimentação de arquivos acelerada.",
+      "descricao_detalhada": "TeraCopy: Cópia e movimentação de arquivos acelerada. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: CodeSector.TeraCopy. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Bitwarden.Bitwarden",
+      "nome": "Bitwarden",
+      "categoria": "Utilitários",
+      "descricao": "Gerenciador de senhas.",
+      "descricao_detalhada": "Bitwarden: Gerenciador de senhas. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: Bitwarden.Bitwarden. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "AgileBits.1Password",
+      "nome": "1Password",
+      "categoria": "Utilitários",
+      "descricao": "Gerenciador de senhas premium.",
+      "descricao_detalhada": "1Password: Gerenciador de senhas premium. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: AgileBits.1Password. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Proton.ProtonAuthenticator",
+      "nome": "Proton Authenticator",
+      "categoria": "Utilitários",
+      "descricao": "Autenticação em dois fatores (2FA).",
+      "descricao_detalhada": "Proton Authenticator: Autenticação em dois fatores (2FA). Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: Proton.ProtonAuthenticator. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Malwarebytes.Malwarebytes",
+      "nome": "Malwarebytes",
+      "categoria": "Utilitários",
+      "descricao": "Proteção antimalware.",
+      "descricao_detalhada": "Malwarebytes: Proteção antimalware. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: Malwarebytes.Malwarebytes. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "PuTTY.PuTTY",
+      "nome": "PuTTY",
+      "categoria": "Utilitários",
+      "descricao": "Cliente SSH/Telnet.",
+      "descricao_detalhada": "PuTTY: Cliente SSH/Telnet. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: PuTTY.PuTTY. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "WinSCP.WinSCP",
+      "nome": "WinSCP",
+      "categoria": "Utilitários",
+      "descricao": "Cliente SFTP/SCP.",
+      "descricao_detalhada": "WinSCP: Cliente SFTP/SCP. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: WinSCP.WinSCP. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "TeamViewer.TeamViewer",
+      "nome": "TeamViewer",
+      "categoria": "Utilitários",
+      "descricao": "Acesso remoto.",
+      "descricao_detalhada": "TeamViewer: Acesso remoto. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: TeamViewer.TeamViewer. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "AnyDesk.AnyDesk",
+      "nome": "AnyDesk",
+      "categoria": "Utilitários",
+      "descricao": "Acesso remoto leve.",
+      "descricao_detalhada": "AnyDesk: Acesso remoto leve. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: AnyDesk.AnyDesk. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "RustDesk.RustDesk",
+      "nome": "RustDesk",
+      "categoria": "Utilitários",
+      "descricao": "Acesso remoto open-source.",
+      "descricao_detalhada": "RustDesk: Acesso remoto open-source. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: RustDesk.RustDesk. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "qBittorrent.qBittorrent",
+      "nome": "qBittorrent",
+      "categoria": "Utilitários",
+      "descricao": "Cliente BitTorrent.",
+      "descricao_detalhada": "qBittorrent: Cliente BitTorrent. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: qBittorrent.qBittorrent. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Proton.ProtonVPN",
+      "nome": "Proton VPN",
+      "categoria": "Utilitários",
+      "descricao": "VPN com plano gratuito.",
+      "descricao_detalhada": "Proton VPN: VPN com plano gratuito. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: Proton.ProtonVPN. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Tailscale.Tailscale",
+      "nome": "Tailscale",
+      "categoria": "Utilitários",
+      "descricao": "VPN mesh para rede privada.",
+      "descricao_detalhada": "Tailscale: VPN mesh para rede privada. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: Tailscale.Tailscale. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "LocalSend.LocalSend",
+      "nome": "LocalSend",
+      "categoria": "Utilitários",
+      "descricao": "Envio de arquivos na rede local.",
+      "descricao_detalhada": "LocalSend: Envio de arquivos na rede local. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: LocalSend.LocalSend. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "CPUID.CPU-Z",
+      "nome": "CPU-Z",
+      "categoria": "Utilitários",
+      "descricao": "Informações de CPU e hardware.",
+      "descricao_detalhada": "CPU-Z: Informações de CPU e hardware. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: CPUID.CPU-Z. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "REALiX.HWiNFO",
+      "nome": "HWiNFO",
+      "categoria": "Utilitários",
+      "descricao": "Monitoramento de hardware.",
+      "descricao_detalhada": "HWiNFO: Monitoramento de hardware. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: REALiX.HWiNFO. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "RevoUninstaller.RevoUninstaller",
+      "nome": "Revo Uninstaller",
+      "categoria": "Utilitários",
+      "descricao": "Desinstalação profunda de programas.",
+      "descricao_detalhada": "Revo Uninstaller: Desinstalação profunda de programas. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: RevoUninstaller.RevoUninstaller. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Klocman.BulkCrapUninstaller",
+      "nome": "Bulk Crap Uninstaller",
+      "categoria": "Utilitários",
+      "descricao": "Desinstalador em lote para apps residuais.",
+      "descricao_detalhada": "Bulk Crap Uninstaller: Desinstalador em lote para apps residuais. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: Klocman.BulkCrapUninstaller. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Rufus.Rufus",
+      "nome": "Rufus",
+      "categoria": "Utilitários",
+      "descricao": "Criar pendrives bootáveis.",
+      "descricao_detalhada": "Rufus: Criar pendrives bootáveis. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: Rufus.Rufus. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "BleachBit.BleachBit",
+      "nome": "BleachBit",
+      "categoria": "Utilitários",
+      "descricao": "Limpeza de cache e arquivos temporários.",
+      "descricao_detalhada": "BleachBit: Limpeza de cache e arquivos temporários. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: BleachBit.BleachBit. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "QuickLook.QuickLook",
+      "nome": "QuickLook",
+      "categoria": "Utilitários",
+      "descricao": "Pré-visualização de arquivos com barra de espaço.",
+      "descricao_detalhada": "QuickLook: Pré-visualização de arquivos com barra de espaço. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: QuickLook.QuickLook. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "OPAutoClicker.OPAutoClicker",
+      "nome": "OP Auto Clicker",
+      "categoria": "Utilitários",
+      "descricao": "Autoclicker com intervalo e atalhos configuráveis.",
+      "descricao_detalhada": "OP Auto Clicker: Autoclicker com intervalo e atalhos configuráveis. Utilitário do sistema: manutenção, segurança, rede ou produtividade no PC. ID Winget: OPAutoClicker.OPAutoClicker. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Rainmeter.Rainmeter",
+      "nome": "Rainmeter",
+      "categoria": "Personalização",
+      "descricao": "Widgets e skins na área de trabalho.",
+      "descricao_detalhada": "Rainmeter: Widgets e skins na área de trabalho. Personaliza aparência, tema ou comportamento do Windows. ID Winget: Rainmeter.Rainmeter. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "AmN.yasb",
+      "nome": "YASB",
+      "categoria": "Personalização",
+      "descricao": "Barra de status customizável (Yet Another Status Bar).",
+      "descricao_detalhada": "YASB: Barra de status customizável (Yet Another Status Bar). Personaliza aparência, tema ou comportamento do Windows. ID Winget: AmN.yasb. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "RamenSoftware.Windhawk",
+      "nome": "Windhawk",
+      "categoria": "Personalização",
+      "descricao": "Mods e tweaks para o shell do Windows.",
+      "descricao_detalhada": "Windhawk: Mods e tweaks para o shell do Windows. Personaliza aparência, tema ou comportamento do Windows. ID Winget: RamenSoftware.Windhawk. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "ArminOsaj.AutoDarkMode",
+      "nome": "Auto Dark Mode",
+      "categoria": "Personalização",
+      "descricao": "Alterna tema claro/escuro automaticamente.",
+      "descricao_detalhada": "Auto Dark Mode: Alterna tema claro/escuro automaticamente. Personaliza aparência, tema ou comportamento do Windows. ID Winget: ArminOsaj.AutoDarkMode. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "OpenRGB.OpenRGB",
+      "nome": "OpenRGB",
+      "categoria": "Personalização",
+      "descricao": "Controle de iluminação RGB unificado.",
+      "descricao_detalhada": "OpenRGB: Controle de iluminação RGB unificado. Personaliza aparência, tema ou comportamento do Windows. ID Winget: OpenRGB.OpenRGB. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Sandboxie.Plus",
+      "nome": "Sandboxie Plus",
+      "categoria": "Sistema e hardware",
+      "descricao": "Executa programas em sandbox isolada.",
+      "descricao_detalhada": "Sandboxie Plus: Executa programas em sandbox isolada. Monitora ou ajusta hardware, drivers, desempenho ou estabilidade do sistema. ID Winget: Sandboxie.Plus. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "BitSum.ProcessLasso",
+      "nome": "Process Lasso",
+      "categoria": "Sistema e hardware",
+      "descricao": "Prioridade e afinidade de CPU para processos.",
+      "descricao_detalhada": "Process Lasso: Prioridade e afinidade de CPU para processos. Monitora ou ajusta hardware, drivers, desempenho ou estabilidade do sistema. ID Winget: BitSum.ProcessLasso. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "TechPowerUp.GPU-Z",
+      "nome": "GPU-Z",
+      "categoria": "Sistema e hardware",
+      "descricao": "Informações da placa de vídeo, BIOS, drivers e sensores.",
+      "descricao_detalhada": "Utilitário gratuito para inspecionar placa de vídeo: modelo, BIOS, driver, clocks e sensores em tempo real. Referência entre entusiastas e técnicos de hardware."
+    },
+    {
+      "id": "Guru3D.Afterburner",
+      "nome": "MSI Afterburner",
+      "categoria": "Sistema e hardware",
+      "descricao": "Overclock e monitoramento de GPU.",
+      "descricao_detalhada": "MSI Afterburner: Overclock e monitoramento de GPU. Monitora ou ajusta hardware, drivers, desempenho ou estabilidade do sistema. ID Winget: Guru3D.Afterburner. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Wagnardsoft.DisplayDriverUninstaller",
+      "nome": "DDU (Display Driver Uninstaller)",
+      "categoria": "Sistema e hardware",
+      "descricao": "Remove drivers de vídeo NVIDIA/AMD/Intel.",
+      "descricao_detalhada": "DDU (Display Driver Uninstaller): Remove drivers de vídeo NVIDIA/AMD/Intel. Monitora ou ajusta hardware, drivers, desempenho ou estabilidade do sistema. ID Winget: Wagnardsoft.DisplayDriverUninstaller. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "CrystalDewWorld.CrystalDiskInfo",
+      "nome": "CrystalDiskInfo",
+      "categoria": "Sistema e hardware",
+      "descricao": "Saúde e temperatura de discos (S.M.A.R.T.).",
+      "descricao_detalhada": "CrystalDiskInfo: Saúde e temperatura de discos (S.M.A.R.T.). Monitora ou ajusta hardware, drivers, desempenho ou estabilidade do sistema. ID Winget: CrystalDewWorld.CrystalDiskInfo. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "CrystalDewWorld.CrystalDiskMark",
+      "nome": "CrystalDiskMark",
+      "categoria": "Sistema e hardware",
+      "descricao": "Benchmark de leitura/gravação de discos.",
+      "descricao_detalhada": "CrystalDiskMark: Benchmark de leitura/gravação de discos. Monitora ou ajusta hardware, drivers, desempenho ou estabilidade do sistema. ID Winget: CrystalDewWorld.CrystalDiskMark. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Rem0o.FanControl",
+      "nome": "FanControl",
+      "categoria": "Sistema e hardware",
+      "descricao": "Controle de ventoinhas da placa-mãe/GPU.",
+      "descricao_detalhada": "FanControl: Controle de ventoinhas da placa-mãe/GPU. Monitora ou ajusta hardware, drivers, desempenho ou estabilidade do sistema. ID Winget: Rem0o.FanControl. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Piriform.Speccy",
+      "nome": "Speccy",
+      "categoria": "Sistema e hardware",
+      "descricao": "Resumo detalhado do hardware do PC.",
+      "descricao_detalhada": "Speccy: Resumo detalhado do hardware do PC. Monitora ou ajusta hardware, drivers, desempenho ou estabilidade do sistema. ID Winget: Piriform.Speccy. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "abbodi1406.vcredist",
+      "nome": "Visual C++ Redistributable (All-in-One)",
+      "categoria": "Runtimes e componentes",
+      "descricao": "Pacote AIO dos runtimes VC++ (2005–2022) via winget.",
+      "descricao_detalhada": "Visual C++ Redistributable (All-in-One): Pacote AIO dos runtimes VC++ (2005–2022) via winget. Runtime ou biblioteca exigida por outros programas e jogos no Windows. ID Winget: abbodi1406.vcredist. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Microsoft.DotNet.DesktopRuntime.8",
+      "nome": ".NET Desktop Runtime 8",
+      "categoria": "Runtimes e componentes",
+      "descricao": "Runtime .NET para apps desktop.",
+      "descricao_detalhada": ".NET Desktop Runtime 8: Runtime .NET para apps desktop. Runtime ou biblioteca exigida por outros programas e jogos no Windows. ID Winget: Microsoft.DotNet.DesktopRuntime.8. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Microsoft.DotNet.DesktopRuntime.6",
+      "nome": ".NET Desktop Runtime 6",
+      "categoria": "Runtimes e componentes",
+      "descricao": "Runtime .NET LTS para apps legados.",
+      "descricao_detalhada": ".NET Desktop Runtime 6: Runtime .NET LTS para apps legados. Runtime ou biblioteca exigida por outros programas e jogos no Windows. ID Winget: Microsoft.DotNet.DesktopRuntime.6. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Microsoft.DirectX",
+      "nome": "DirectX End-User Runtime",
+      "categoria": "Runtimes e componentes",
+      "descricao": "Componentes DirectX para jogos antigos.",
+      "descricao_detalhada": "DirectX End-User Runtime: Componentes DirectX para jogos antigos. Runtime ou biblioteca exigida por outros programas e jogos no Windows. ID Winget: Microsoft.DirectX. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Oracle.JavaRuntimeEnvironment",
+      "nome": "Java Runtime (JRE)",
+      "categoria": "Runtimes e componentes",
+      "descricao": "Runtime Java para apps que ainda dependem de JRE.",
+      "descricao_detalhada": "Java Runtime (JRE): Runtime Java para apps que ainda dependem de JRE. Runtime ou biblioteca exigida por outros programas e jogos no Windows. ID Winget: Oracle.JavaRuntimeEnvironment. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Discord.Discord",
+      "nome": "Discord",
+      "categoria": "Comunicação",
+      "descricao": "Chat e comunidades.",
+      "descricao_detalhada": "Discord: Chat e comunidades. Comunicação por chat, voz ou videoconferência. ID Winget: Discord.Discord. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Zoom.Zoom",
+      "nome": "Zoom",
+      "categoria": "Comunicação",
+      "descricao": "Videoconferência.",
+      "descricao_detalhada": "Zoom: Videoconferência. Comunicação por chat, voz ou videoconferência. ID Winget: Zoom.Zoom. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Telegram.TelegramDesktop",
+      "nome": "Telegram Desktop",
+      "categoria": "Comunicação",
+      "descricao": "Cliente Telegram.",
+      "descricao_detalhada": "Telegram Desktop: Cliente Telegram. Comunicação por chat, voz ou videoconferência. ID Winget: Telegram.TelegramDesktop. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "WhatsApp.WhatsApp",
+      "nome": "WhatsApp",
+      "categoria": "Comunicação",
+      "descricao": "WhatsApp para desktop.",
+      "descricao_detalhada": "WhatsApp: WhatsApp para desktop. Comunicação por chat, voz ou videoconferência. ID Winget: WhatsApp.WhatsApp. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "SlackTechnologies.Slack",
+      "nome": "Slack",
+      "categoria": "Comunicação",
+      "descricao": "Comunicação para equipes.",
+      "descricao_detalhada": "Slack: Comunicação para equipes. Comunicação por chat, voz ou videoconferência. ID Winget: SlackTechnologies.Slack. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Microsoft.Teams",
+      "nome": "Microsoft Teams",
+      "categoria": "Comunicação",
+      "descricao": "Chat e reuniões Microsoft.",
+      "descricao_detalhada": "Microsoft Teams: Chat e reuniões Microsoft. Comunicação por chat, voz ou videoconferência. ID Winget: Microsoft.Teams. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Signal.Signal",
+      "nome": "Signal",
+      "categoria": "Comunicação",
+      "descricao": "Mensagens com foco em privacidade.",
+      "descricao_detalhada": "Signal: Mensagens com foco em privacidade. Comunicação por chat, voz ou videoconferência. ID Winget: Signal.Signal. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Skype.Skype",
+      "nome": "Skype",
+      "categoria": "Comunicação",
+      "descricao": "Chamadas e mensagens Skype.",
+      "descricao_detalhada": "Skype: Chamadas e mensagens Skype. Comunicação por chat, voz ou videoconferência. ID Winget: Skype.Skype. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Valve.Steam",
+      "nome": "Steam",
+      "categoria": "Jogos",
+      "descricao": "Loja e launcher de jogos.",
+      "descricao_detalhada": "Maior loja de jogos para PC: compra, download, atualizações automáticas, nuvem de saves e comunidade. Quase indispensável para quem joga no computador."
+    },
+    {
+      "id": "EpicGames.EpicGamesLauncher",
+      "nome": "Epic Games Launcher",
+      "categoria": "Jogos",
+      "descricao": "Loja Epic Games.",
+      "descricao_detalhada": "Epic Games Launcher: Loja Epic Games. Launcher, loja ou ferramenta relacionada a jogos no PC. ID Winget: EpicGames.EpicGamesLauncher. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Ubisoft.Connect",
+      "nome": "Ubisoft Connect",
+      "categoria": "Jogos",
+      "descricao": "Launcher Ubisoft.",
+      "descricao_detalhada": "Ubisoft Connect: Launcher Ubisoft. Launcher, loja ou ferramenta relacionada a jogos no PC. ID Winget: Ubisoft.Connect. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "ElectronicArts.EADesktop",
+      "nome": "EA App",
+      "categoria": "Jogos",
+      "descricao": "Launcher Electronic Arts.",
+      "descricao_detalhada": "EA App: Launcher Electronic Arts. Launcher, loja ou ferramenta relacionada a jogos no PC. ID Winget: ElectronicArts.EADesktop. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "GOG.Galaxy",
+      "nome": "GOG Galaxy",
+      "categoria": "Jogos",
+      "descricao": "Loja GOG.",
+      "descricao_detalhada": "GOG Galaxy: Loja GOG. Launcher, loja ou ferramenta relacionada a jogos no PC. ID Winget: GOG.Galaxy. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "ItchIo.Itch",
+      "nome": "itch.io",
+      "categoria": "Jogos",
+      "descricao": "Loja e launcher de jogos indie.",
+      "descricao_detalhada": "itch.io: Loja e launcher de jogos indie. Launcher, loja ou ferramenta relacionada a jogos no PC. ID Winget: ItchIo.Itch. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "HydraLauncher.Hydra",
+      "nome": "Hydra Launcher",
+      "categoria": "Jogos",
+      "descricao": "Launcher de jogos com biblioteca unificada.",
+      "descricao_detalhada": "Hydra Launcher: Launcher de jogos com biblioteca unificada. Launcher, loja ou ferramenta relacionada a jogos no PC. ID Winget: HydraLauncher.Hydra. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "PrismLauncher.PrismLauncher",
+      "nome": "Prism Launcher",
+      "categoria": "Jogos",
+      "descricao": "Launcher de Minecraft (fork do MultiMC).",
+      "descricao_detalhada": "Prism Launcher: Launcher de Minecraft (fork do MultiMC). Launcher, loja ou ferramenta relacionada a jogos no PC. ID Winget: PrismLauncher.PrismLauncher. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Parsec.Parsec",
+      "nome": "Parsec",
+      "categoria": "Jogos",
+      "descricao": "Game streaming de baixa latência.",
+      "descricao_detalhada": "Parsec: Game streaming de baixa latência. Launcher, loja ou ferramenta relacionada a jogos no PC. ID Winget: Parsec.Parsec. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "Playnite.Playnite",
+      "nome": "Playnite",
+      "categoria": "Jogos",
+      "descricao": "Biblioteca unificada de jogos.",
+      "descricao_detalhada": "Playnite: Biblioteca unificada de jogos. Launcher, loja ou ferramenta relacionada a jogos no PC. ID Winget: Playnite.Playnite. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    },
+    {
+      "id": "HeroicGamesLauncher.HeroicGamesLauncher",
+      "nome": "Heroic Games Launcher",
+      "categoria": "Jogos",
+      "descricao": "Launcher open-source para Epic/GOG/Amazon.",
+      "descricao_detalhada": "Heroic Games Launcher: Launcher open-source para Epic/GOG/Amazon. Launcher, loja ou ferramenta relacionada a jogos no PC. ID Winget: HeroicGamesLauncher.HeroicGamesLauncher. Instalação silenciosa com aceite de termos pelo Prompt Auxiliar."
+    }
   ]
 }

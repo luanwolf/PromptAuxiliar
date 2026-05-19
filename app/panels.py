@@ -110,6 +110,8 @@ def get_panel(kind: PanelKind) -> dict[str, Any]:
                 "nome": item["nome"],
                 "categoria": item["categoria"],
                 "descricao": item.get("descricao", ""),
+                "descricao_detalhada": item.get("descricao_detalhada")
+                or item.get("descricao", ""),
                 "selecionado": sel,
                 "instalado": is_installed(pid),
             }

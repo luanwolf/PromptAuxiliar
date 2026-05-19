@@ -118,8 +118,7 @@
     list.forEach((item) => {
       const row = document.createElement("label");
       row.className = "panel-row";
-      const tip = item.descricao || item.nome;
-      row.setAttribute("title", tip);
+      const tip = item.descricao_detalhada || item.descricao || item.nome;
       const checked = state.selecionados.has(item.id);
       const instaladoTag = item.instalado
         ? '<span class="tag tag-installed">Instalado</span>'
@@ -135,6 +134,7 @@
           ${instaladoTag}
           <span class="panel-row-cat">${escapeHtml(item.categoria)}</span>
         </span>
+        <span class="panel-row-tooltip" role="tooltip">${escapeHtml(tip)}</span>
       `;
       const input = row.querySelector("input");
       input.addEventListener("change", () => {
