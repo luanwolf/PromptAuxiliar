@@ -6,7 +6,7 @@ import os
 import sys
 
 from app.api import PromptAuxiliarApi
-from app.config import APP_VERSION
+from app.updater import get_local_version
 from app.win_icon import aplicar_icone_por_titulo
 
 
@@ -34,7 +34,7 @@ def iniciar_webview() -> None:
         raise SystemExit(f"Interface web não encontrada: {index}")
 
     api = PromptAuxiliarApi()
-    titulo = f"Prompt Auxiliar v{APP_VERSION}"
+    titulo = f"Prompt Auxiliar v{get_local_version()}"
 
     webview.create_window(
         titulo,

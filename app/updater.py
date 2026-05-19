@@ -45,17 +45,17 @@ def compare_versions(local: str, remote: str) -> int:
 
 
 def get_local_version() -> str:
-    """Versão em disco (instalação), não só o módulo já importado."""
-    root = install_root()
-    if root:
-        cfg = root / "app" / "config.py"
-        try:
-            if cfg.is_file():
-                v = _parse_version(cfg.read_text(encoding="utf-8"))
-                if v:
-                    return v
-        except OSError:
-            pass
+    """Versão do config.py que o processo Python carregou (instalação em execução)."""
+    try:
+        from app import config as cfg_mod
+
+        cfg_path = Path(cfg_mod.__file__)
+        if cfg_path.is_file():
+            v = _parse_version(cfg_path.read_text(encoding="utf-8"))
+            if v:
+                return v
+    except (OSError, ImportError):
+        pass
     return APP_VERSION
 
 

@@ -11,7 +11,7 @@ from app.actions import catalogo_para_json, obter_acao
 from app.config import APP_VERSION, CREDITOS_URL, PASTA_BASE
 from app.environment import preparar_ambiente
 from app.uninstall import paths_for_display, schedule_uninstall
-from app.updater import check_for_update, should_skip_auto_update
+from app.updater import check_for_update, get_local_version, should_skip_auto_update
 from app.panels import get_panel, run_panel, write_selected_ids
 from app.ui_settings import get_scripts_layout, get_theme, set_scripts_layout, set_theme
 from app.winget_installed import prefetch_installed_scan
@@ -32,7 +32,7 @@ class PromptAuxiliarApi:
                 update_info = check_for_update()
             return {
                 "ok": True,
-                "version": APP_VERSION,
+                "version": get_local_version(),
                 "pasta": PASTA_BASE,
                 "primeira_vez": primeira_vez,
                 "message": "Ambiente pronto.",
@@ -41,6 +41,7 @@ class PromptAuxiliarApi:
                 "update_available": update_info.get("update_available", False),
                 "update_message": update_info.get("message", ""),
                 "remote_version": update_info.get("remote"),
+                "local_version": update_info.get("local", get_local_version()),
             }
         except Exception as e:
             return {"ok": False, "message": str(e)}
@@ -54,7 +55,7 @@ class PromptAuxiliarApi:
     def get_catalog(self) -> dict[str, Any]:
         data = catalogo_para_json()
         data["meta"] = {
-            "version": APP_VERSION,
+            "version": get_local_version(),
             "pasta": PASTA_BASE,
             "creditos": CREDITOS_URL,
         }
