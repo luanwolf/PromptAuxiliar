@@ -28,11 +28,12 @@ set "EXIT_CODE=0"
 
 def admin_ps_corpo(comando_ps: str, titulo_janela: str) -> str:
     """Gera .bat que eleva PowerShell e executa irm | iex (uso manual)."""
+    cmd = comando_ps.replace("|", "^|")
     return rf"""
 set "PA_PS=%TEMP%\pa_{titulo_janela}.ps1"
 (
   echo $Host.UI.RawUI.WindowTitle = '{titulo_janela} ^| Prompt Auxiliar'
-  echo {comando_ps}
+  echo {cmd}
 )>"!PA_PS!"
 echo   Abrindo PowerShell como administrador...
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Process powershell.exe -Verb RunAs -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-NoExit','-File','!PA_PS!'"

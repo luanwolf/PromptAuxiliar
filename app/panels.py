@@ -111,6 +111,9 @@ def get_panel(kind: PanelKind) -> dict[str, Any]:
             }
         )
 
+    itens.sort(key=lambda i: i["nome"].casefold())
+    categorias = sorted(catalog["categorias"], key=str.casefold)
+
     instalados = sum(1 for i in itens if i["instalado"])
     return {
         "kind": kind,
@@ -120,7 +123,7 @@ def get_panel(kind: PanelKind) -> dict[str, Any]:
             if kind == "winget"
             else "Remova bloatware (Win10/11) — marque só o que existir no seu PC"
         ),
-        "categorias": catalog["categorias"],
+        "categorias": categorias,
         "itens": itens,
         "total_selecionados": sum(1 for i in itens if i["selecionado"]),
         "total_instalados": instalados,

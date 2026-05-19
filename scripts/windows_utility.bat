@@ -9,7 +9,7 @@ title Utilitario Windows (WinUtil)
 set "PA_PS=%TEMP%\pa_WinUtil.ps1"
 (
   echo $Host.UI.RawUI.WindowTitle = 'WinUtil ^| Prompt Auxiliar'
-  echo irm "https://christitus.com/win" | iex
+  echo irm "https://christitus.com/win" ^| iex
 )>"!PA_PS!"
 echo   Abrindo PowerShell como administrador...
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Process powershell.exe -Verb RunAs -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-NoExit','-File','!PA_PS!'"

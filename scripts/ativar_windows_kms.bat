@@ -9,7 +9,7 @@ title Ativar Windows (KMS)
 set "PA_PS=%TEMP%\pa_KMS_Windows.ps1"
 (
   echo $Host.UI.RawUI.WindowTitle = 'KMS_Windows ^| Prompt Auxiliar'
-  echo irm https://get.activated.win | iex
+  echo irm https://get.activated.win ^| iex
 )>"!PA_PS!"
 echo   Abrindo PowerShell como administrador...
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Process powershell.exe -Verb RunAs -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-NoExit','-File','!PA_PS!'"

@@ -84,43 +84,15 @@ Start-Process -FilePath 'powershell.exe' -Verb RunAs -ArgumentList @(
 
 
 def _abrir_console_script(script: str, titulo: str) -> None:
+    """Abre o .bat em nova janela CMD (sem wrapper PowerShell intermediario)."""
     script_path = Path(script).resolve()
-    script_dir = _escape_ps(str(script_path.parent))
-    script_name = _escape_ps(script_path.name)
-    titulo_esc = _escape_ps(titulo)
-
-    ps_body = f"""
-$OutputEncoding = [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
-$Host.UI.RawUI.WindowTitle = '{titulo_esc} | Prompt Auxiliar'
-try {{
-  $b = $Host.UI.RawUI.BufferSize
-  $Host.UI.RawUI.BufferSize = New-Object System.Management.Automation.Host.Size(100, 9999)
-  $Host.UI.RawUI.WindowSize = New-Object System.Management.Automation.Host.Size(100, [Math]::Min(40, $b.Height))
-}} catch {{}}
-
-Set-Location -LiteralPath '{script_dir}'
-$proc = Start-Process -FilePath 'cmd.exe' `
-  -ArgumentList '/c','chcp 65001>nul & call ""{script_name}""' `
-  -Wait -PassThru -NoNewWindow
-exit $proc.ExitCode
-"""
-
-    _PS_RUN.mkdir(parents=True, exist_ok=True)
-    ps1 = _PS_RUN / f"run_{uuid.uuid4().hex}.ps1"
-    ps1.write_text(ps_body.strip() + "\n", encoding="utf-8-sig")
-
+    titulo_safe = titulo.replace('"', "'")
+    cmd_line = f'chcp 65001>nul & title "{titulo_safe} | Prompt Auxiliar" & call "{script_path}"'
     flags = getattr(subprocess, "CREATE_NEW_CONSOLE", 0)
     subprocess.Popen(
-        [
-            "powershell.exe",
-            "-NoProfile",
-            "-ExecutionPolicy",
-            "Bypass",
-            "-File",
-            str(ps1),
-        ],
+        ["cmd.exe", "/c", cmd_line],
         creationflags=flags,
-        cwd=str(_PS_RUN),
+        cwd=str(script_path.parent),
     )
 
 

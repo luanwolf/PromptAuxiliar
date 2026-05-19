@@ -1,5 +1,6 @@
 @echo off
-rem Biblioteca de interface — nao executar diretamente.
+setlocal DisableExtensions DisableDelayedExpansion
+rem Biblioteca de interface - nao executar diretamente.
 if /i "%~1"==":banner" goto :banner
 if /i "%~1"==":confirmar" goto :confirmar
 if /i "%~1"==":confirmar_perigo" goto :confirmar_perigo
@@ -20,16 +21,23 @@ echo.
 exit /b 0
 
 :confirmar
-choice /C SN /N /M "  Deseja continuar? (S/N): "
-if errorlevel 2 exit /b 1
-exit /b 0
+call :_pergunta_sn
+exit /b %ERRORLEVEL%
 
 :confirmar_perigo
-echo   [!] Operacao sensivel - use por sua conta e risco.
+echo   ATENCAO: operacao sensivel - use por sua conta e risco.
 echo.
-choice /C SN /N /M "  Deseja continuar? (S/N): "
-if errorlevel 2 exit /b 1
-exit /b 0
+call :_pergunta_sn
+exit /b %ERRORLEVEL%
+
+:_pergunta_sn
+echo   Pressione S para continuar ou N para cancelar:
+set "PA_SN="
+set /p "PA_SN=  Opcao: "
+if /i "%PA_SN%"=="N" exit /b 1
+if /i "%PA_SN%"=="S" exit /b 0
+echo   Opcao invalida. Use S ou N.
+exit /b 1
 
 :sair
 set "_ec=%~1"

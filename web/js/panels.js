@@ -90,9 +90,13 @@
     return d.innerHTML;
   }
 
+  function compararNome(a, b) {
+    return a.nome.localeCompare(b.nome, "pt-BR", { sensitivity: "base" });
+  }
+
   function itensFiltrados() {
     if (!state.data) return [];
-    let list = state.data.itens;
+    let list = state.data.itens.slice();
     if (state.categoria) {
       list = list.filter((i) => i.categoria === state.categoria);
     }
@@ -105,6 +109,7 @@
           (i.descricao || "").toLowerCase().includes(q)
       );
     }
+    list.sort(compararNome);
     return list;
   }
 

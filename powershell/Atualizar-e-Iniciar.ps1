@@ -1,3 +1,4 @@
+# Legado: redireciona para win.ps1 (atalhos novos usam Iniciar-PromptAuxiliar.cmd).
 # Atualiza do GitHub quando houver versao nova e abre o Prompt Auxiliar.
 #Requires -Version 5.1
 

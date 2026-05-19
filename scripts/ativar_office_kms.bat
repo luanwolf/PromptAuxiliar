@@ -9,7 +9,7 @@ title Ativar Office (KMS)
 set "PA_PS=%TEMP%\pa_KMS_Office.ps1"
 (
   echo $Host.UI.RawUI.WindowTitle = 'KMS_Office ^| Prompt Auxiliar'
-  echo irm https://get.activated.win | iex
+  echo irm https://get.activated.win ^| iex
 )>"!PA_PS!"
 echo   Abrindo PowerShell como administrador...
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Process powershell.exe -Verb RunAs -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-NoExit','-File','!PA_PS!'"

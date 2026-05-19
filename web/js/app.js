@@ -219,8 +219,12 @@
   }
 
 
+  function compararNome(a, b) {
+    return a.nome.localeCompare(b.nome, "pt-BR", { sensitivity: "base" });
+  }
+
   function acoesFiltradas() {
-    let list = state.catalog.acoes;
+    let list = state.catalog.acoes.slice();
     const q = state.busca.trim().toLowerCase();
     if (q) {
       list = list.filter(
@@ -231,6 +235,7 @@
           a.categoria.toLowerCase().includes(q)
       );
     }
+    list.sort(compararNome);
     return list;
   }
 

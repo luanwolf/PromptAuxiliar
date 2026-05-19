@@ -96,6 +96,11 @@ def acao_para_dict(acao: Acao) -> dict[str, Any]:
     }
 
 
+def _chave_nome(item: dict[str, Any] | Acao) -> str:
+    nome = item.nome if isinstance(item, Acao) else str(item.get("nome", ""))
+    return nome.casefold()
+
+
 def catalogo_para_json() -> dict[str, Any]:
     categorias = []
     for nome in iterar_categorias():
@@ -109,4 +114,5 @@ def catalogo_para_json() -> dict[str, Any]:
                 "total": len(obter_acoes_por_categoria(nome)),
             }
         )
-    return {"categorias": categorias, "acoes": [acao_para_dict(a) for a in _ACOES]}
+    acoes = sorted([acao_para_dict(a) for a in _ACOES], key=_chave_nome)
+    return {"categorias": categorias, "acoes": acoes}

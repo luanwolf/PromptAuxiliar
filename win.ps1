@@ -226,22 +226,22 @@ function Sync-PromptAuxUpdateModuleFromGitHub {
         [string]$InstallRoot,
         [string]$Owner,
         [string]$Name,
-        [string]$Branch
+        [string]$Branch,
+        [string]$SourceRoot = ''
     )
-    $psDir = Join-Path $InstallRoot 'powershell'
-    if (-not (Test-Path -LiteralPath $psDir)) {
-        New-Item -ItemType Directory -Path $psDir -Force | Out-Null
-    }
-    $dest = Join-Path $psDir 'Update-PromptAuxiliar.ps1'
-    $url = "https://raw.githubusercontent.com/$Owner/$Name/$Branch/powershell/Update-PromptAuxiliar.ps1"
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    $content = (Invoke-WebRequest -Uri $url -UseBasicParsing).Content
-    Write-PromptAuxUtf8NoBom -Path $dest -Content $content
+    Sync-PromptAuxEssentialScriptsFromGitHub `
+        -InstallRoot $InstallRoot `
+        -Owner $Owner `
+        -Name $Name `
+        -Branch $Branch `
+        -SourceRoot $SourceRoot `
+        -Only @('Update-PromptAuxiliar.ps1')
 }
 
 function Get-PromptAuxEssentialScriptNames {
+    # Atualizar-e-Iniciar.ps1 foi substituido por win.ps1 / Iniciar-PromptAuxiliar.cmd
     return @(
-        'Atualizar-e-Iniciar.ps1',
+        'Update-PromptAuxiliar.ps1',
         'Criar-Atalho.ps1',
         'Concluir-Troca-Instalacao.ps1',
         'Reparar-Atalho.ps1'
@@ -277,7 +277,7 @@ function Copy-PromptAuxEssentialScriptsLocal {
     return $copied
 }
 
-function Sync-PromptAuxEssentialScriptsFromGitHub {
+function Sync-PromptAuxUiBatFromGitHub {
     param(
         [string]$InstallRoot,
         [string]$Owner,
@@ -285,7 +285,42 @@ function Sync-PromptAuxEssentialScriptsFromGitHub {
         [string]$Branch,
         [string]$SourceRoot = ''
     )
-    $names = Get-PromptAuxEssentialScriptNames
+    $scriptsDir = Join-Path $InstallRoot 'scripts'
+    if (-not (Test-Path -LiteralPath $scriptsDir)) {
+        New-Item -ItemType Directory -Path $scriptsDir -Force | Out-Null
+    }
+    $dest = Join-Path $scriptsDir '_ui.bat'
+    if ($SourceRoot) {
+        $src = Join-Path $SourceRoot 'scripts\_ui.bat'
+        if (Test-Path -LiteralPath $src) {
+            Copy-Item -LiteralPath $src -Destination $dest -Force
+            return
+        }
+    }
+    try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $cacheBust = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+        $url = "https://raw.githubusercontent.com/$Owner/$Name/$Branch/scripts/_ui.bat?_=$cacheBust"
+        $headers = @{ 'User-Agent' = 'PromptAuxiliar-Installer' }
+        $content = (Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 25 -Headers $headers).Content
+        if ($content -and $content.Trim().Length -gt 20) {
+            Write-PromptAuxUtf8NoBom -Path $dest -Content $content
+        }
+    } catch {
+        Write-Host '  Aviso: scripts/_ui.bat nao sincronizado do GitHub.' -ForegroundColor DarkYellow
+    }
+}
+
+function Sync-PromptAuxEssentialScriptsFromGitHub {
+    param(
+        [string]$InstallRoot,
+        [string]$Owner,
+        [string]$Name,
+        [string]$Branch,
+        [string]$SourceRoot = '',
+        [string[]]$Only = @()
+    )
+    $names = if ($Only -and $Only.Count -gt 0) { $Only } else { Get-PromptAuxEssentialScriptNames }
     $psDir = Join-Path $InstallRoot 'powershell'
     if (-not (Test-Path -LiteralPath $psDir)) {
         New-Item -ItemType Directory -Path $psDir -Force | Out-Null
@@ -295,9 +330,19 @@ function Sync-PromptAuxEssentialScriptsFromGitHub {
     }
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     $headers = @{ 'User-Agent' = 'PromptAuxiliar-Installer' }
+    $cacheBust = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
     foreach ($name in $names) {
         $dest = Join-Path $psDir $name
-        if (Test-Path -LiteralPath $dest) { continue }
+        $needsDownload = -not (Test-Path -LiteralPath $dest)
+        if (-not $needsDownload) {
+            try {
+                $needsDownload = (Get-Item -LiteralPath $dest).Length -lt 80
+            } catch {
+                $needsDownload = $true
+            }
+        }
+        if (-not $needsDownload) { continue }
+
         $copied = $false
         if ($SourceRoot) {
             $src = Join-Path $SourceRoot "powershell\$name"
@@ -307,9 +352,13 @@ function Sync-PromptAuxEssentialScriptsFromGitHub {
             }
         }
         if ($copied) { continue }
+
         try {
-            $url = "https://raw.githubusercontent.com/$Owner/$Name/$Branch/powershell/$name"
+            $url = "https://raw.githubusercontent.com/$Owner/$Name/$Branch/powershell/${name}?_=$cacheBust"
             $content = (Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 25 -Headers $headers).Content
+            if (-not $content -or $content.Trim().Length -lt 20) {
+                throw 'Resposta vazia do GitHub'
+            }
             Write-PromptAuxUtf8NoBom -Path $dest -Content $content
         } catch {
             $hint = 'arquivo ausente no GitHub (branch main) ou sem internet'
@@ -597,7 +646,7 @@ function Invoke-PromptAuxiliarInstallOrUpdate {
     $missingInstall = -not (Test-Path -LiteralPath $mainPy)
 
     try {
-        Sync-PromptAuxUpdateModuleFromGitHub -InstallRoot $InstallRoot -Owner $Owner -Name $Name -Branch $Branch
+        Sync-PromptAuxUpdateModuleFromGitHub -InstallRoot $InstallRoot -Owner $Owner -Name $Name -Branch $Branch -SourceRoot $ScriptDir
     } catch {
         Write-Host '  Aviso: nao foi possivel baixar Update-PromptAuxiliar.ps1 do GitHub.' -ForegroundColor DarkYellow
     }
@@ -704,6 +753,12 @@ if ($script:PromptAuxDeferredExit) {
 }
 
 try {
+    Sync-PromptAuxUiBatFromGitHub `
+        -InstallRoot $InstallRoot `
+        -Owner $RepoOwner `
+        -Name $RepoName `
+        -Branch $Branch `
+        -SourceRoot $ScriptDir
     Sync-PromptAuxEssentialScriptsFromGitHub `
         -InstallRoot $InstallRoot `
         -Owner $RepoOwner `
