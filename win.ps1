@@ -239,12 +239,76 @@ function Sync-PromptAuxUpdateModuleFromGitHub {
     Write-PromptAuxUtf8NoBom -Path $dest -Content $content
 }
 
+function Test-PromptAuxPathInUse {
+    param([string]$Path)
+    if (-not (Test-Path -LiteralPath $Path)) { return $false }
+    $pattern = ($Path.TrimEnd('\') + '*')
+    $procs = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |
+        Where-Object { $_.ExecutablePath -and ($_.ExecutablePath -like $pattern) }
+    return [bool]$procs
+}
+
+function Test-PromptAuxRunningFromPath {
+    param([string]$InstallRoot, [string]$ScriptDir)
+    if (-not $ScriptDir) { return $false }
+    try {
+        return (Resolve-Path $InstallRoot).Path -eq (Resolve-Path $ScriptDir).Path
+    } catch {
+        return $false
+    }
+}
+
+function Invoke-PromptAuxDeferredFolderSwap {
+    param(
+        [string]$StagingPath,
+        [string]$Destination
+    )
+    $destEsc = $Destination.Replace("'", "''")
+    $stageEsc = $StagingPath.Replace("'", "''")
+    $launcher = Join-Path $Destination 'powershell\Atualizar-e-Iniciar.ps1'
+    $launcherEsc = $launcher.Replace("'", "''")
+    $ps1 = Join-Path ([System.IO.Path]::GetTempPath()) 'promptauxiliar-update-swap.ps1'
+    $content = @"
+# Prompt Auxiliar - troca de pasta apos atualizacao
+`$ErrorActionPreference = 'SilentlyContinue'
+`$dest = '$destEsc'
+`$staging = '$stageEsc'
+`$launcher = '$launcherEsc'
+Start-Sleep -Seconds 2
+for (`$w = 0; `$w -lt 90; `$w++) {
+    `$pattern = (`$dest.TrimEnd('\') + '*')
+    `$procs = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |
+        Where-Object { `$_.ExecutablePath -and (`$_.ExecutablePath -like `$pattern) }
+    if (-not `$procs) { break }
+    Start-Sleep -Seconds 1
+}
+if (Test-Path -LiteralPath `$dest) {
+    Remove-Item -LiteralPath `$dest -Recurse -Force -ErrorAction SilentlyContinue
+}
+if (Test-Path -LiteralPath `$dest) {
+    cmd /c "rd /s /q `"`$dest`""
+}
+New-Item -ItemType Directory -Path (Split-Path `$dest -Parent) -Force | Out-Null
+Move-Item -LiteralPath `$staging -Destination `$dest -Force
+if (Test-Path -LiteralPath `$launcher) {
+    Start-Process -FilePath 'powershell.exe' -ArgumentList @(
+        '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', `$launcher
+    ) -WindowStyle Normal
+}
+"@
+    Write-PromptAuxUtf8NoBom -Path $ps1 -Content $content
+    Start-Process -FilePath 'powershell.exe' -ArgumentList @(
+        '-NoProfile', '-ExecutionPolicy', 'Bypass', '-WindowStyle', 'Hidden', '-File', $ps1
+    ) -WindowStyle Hidden | Out-Null
+}
+
 function Install-PromptAuxiliarSourceZip {
     param(
         [string]$Destination,
         [string]$Owner,
         [string]$Name,
-        [string]$Branch
+        [string]$Branch,
+        [string]$ScriptDir = ''
     )
 
     $zipUrl = "https://github.com/$Owner/$Name/archive/refs/heads/$Branch.zip"
@@ -261,20 +325,45 @@ function Install-PromptAuxiliarSourceZip {
     $extracted = Get-ChildItem -Path $tempExtract -Directory | Select-Object -First 1
     if (-not $extracted) { throw 'Pacote ZIP invalido ou vazio.' }
 
-    if (Test-Path $Destination) {
+    $stagingRoot = Join-Path ([System.IO.Path]::GetTempPath()) "PromptAuxiliar-staging-$([Guid]::NewGuid().ToString('n'))"
+    New-Item -ItemType Directory -Path $stagingRoot -Force | Out-Null
+    $staging = Join-Path $stagingRoot 'PromptAuxiliar'
+    Move-Item -Path $extracted.FullName -Destination $staging -Force
+
+    $destExists = Test-Path -LiteralPath $Destination
+    $needsDeferred = $false
+    if ($destExists) {
+        if (Test-PromptAuxRunningFromPath -InstallRoot $Destination -ScriptDir $ScriptDir) {
+            $needsDeferred = $true
+        } elseif (Test-PromptAuxPathInUse -Path $Destination) {
+            $needsDeferred = $true
+        }
+    }
+
+    if ($needsDeferred) {
+        Write-Host '  Pasta em uso - atualizacao sera concluida ao fechar esta janela...' -ForegroundColor Cyan
+        Invoke-PromptAuxDeferredFolderSwap -StagingPath $staging -Destination $Destination
+        Remove-Item $tempZip -Force -ErrorAction SilentlyContinue
+        Remove-Item $tempExtract -Force -ErrorAction SilentlyContinue
+        return @{ Deferred = $true }
+    }
+
+    if ($destExists) {
         Write-Host '  Substituindo arquivos da instalacao...' -ForegroundColor DarkGray
         Remove-Item $Destination -Recurse -Force
     }
     New-Item -ItemType Directory -Path (Split-Path $Destination -Parent) -Force | Out-Null
-    Move-Item -Path $extracted.FullName -Destination $Destination
+    Move-Item -Path $staging -Destination $Destination -Force
 
     Remove-Item $tempZip -Force -ErrorAction SilentlyContinue
     Remove-Item $tempExtract -Force -ErrorAction SilentlyContinue
+    Remove-Item $stagingRoot -Force -ErrorAction SilentlyContinue
+    return @{ Deferred = $false }
 }
 
 function Install-PromptAuxiliarSource {
-    param([string]$Destination, [string]$Owner, [string]$Name, [string]$Ref)
-    Install-PromptAuxiliarSourceZip -Destination $Destination -Owner $Owner -Name $Name -Branch $Ref
+    param([string]$Destination, [string]$Owner, [string]$Name, [string]$Ref, [string]$ScriptDir = '')
+    Install-PromptAuxiliarSourceZip -Destination $Destination -Owner $Owner -Name $Name -Branch $Ref -ScriptDir $ScriptDir | Out-Null
 }
 
 function Invoke-PromptAuxiliarInstallOrUpdate {
@@ -287,6 +376,7 @@ function Invoke-PromptAuxiliarInstallOrUpdate {
         [switch]$Force
     )
 
+    $script:PromptAuxDeferredExit = $false
     $updateModule = Join-Path $InstallRoot 'powershell\Update-PromptAuxiliar.ps1'
     $mainPy = Join-Path $InstallRoot 'main.py'
     $missingInstall = -not (Test-Path -LiteralPath $mainPy)
@@ -301,7 +391,8 @@ function Invoke-PromptAuxiliarInstallOrUpdate {
 
     if (-not $moduleOk) {
         Write-Host '  Script de atualizacao local invalido - reinstalando via ZIP...' -ForegroundColor Cyan
-        Install-PromptAuxiliarSourceZip -Destination $InstallRoot -Owner $Owner -Name $Name -Branch $Branch
+        $zipResult = Install-PromptAuxiliarSourceZip -Destination $InstallRoot -Owner $Owner -Name $Name -Branch $Branch -ScriptDir $ScriptDir
+        if ($zipResult.Deferred) { $script:PromptAuxDeferredExit = $true; return }
         $moduleOk = Test-PromptAuxPs1Syntax -Path $updateModule
     }
 
@@ -309,11 +400,11 @@ function Invoke-PromptAuxiliarInstallOrUpdate {
         . $updateModule
         if ($missingInstall -or $Force) {
             Write-Host '  Instalando Prompt Auxiliar...' -ForegroundColor Gray
-            Update-PromptAuxiliarIfNewer -InstallRoot $InstallRoot -ScriptDir $ScriptDir -Force | Out-Null
         } else {
             Write-Host "  Usando instalacao em: $InstallRoot" -ForegroundColor DarkGray
-            Update-PromptAuxiliarIfNewer -InstallRoot $InstallRoot -ScriptDir $ScriptDir -Force:$Force | Out-Null
         }
+        $updateResult = Update-PromptAuxiliarIfNewer -InstallRoot $InstallRoot -ScriptDir $ScriptDir -Force:$Force
+        if ($updateResult -eq 'deferred') { $script:PromptAuxDeferredExit = $true }
         return
     }
 
@@ -322,7 +413,11 @@ function Invoke-PromptAuxiliarInstallOrUpdate {
     } else {
         Write-Host "  Usando instalacao em: $InstallRoot" -ForegroundColor DarkGray
     }
-    Install-PromptAuxiliarSourceZip -Destination $InstallRoot -Owner $Owner -Name $Name -Branch $Branch
+    $zipResult = Install-PromptAuxiliarSourceZip -Destination $InstallRoot -Owner $Owner -Name $Name -Branch $Branch -ScriptDir $ScriptDir
+    if ($zipResult.Deferred) {
+        $script:PromptAuxDeferredExit = $true
+        return
+    }
     Write-Host "  Instalado em: $InstallRoot" -ForegroundColor Green
 }
 
@@ -371,6 +466,7 @@ trap {
 Write-PromptAuxBanner
 
 $forceUpdate = $Update -or ($env:PROMPTAUX_UPDATE -eq '1')
+$script:PromptAuxDeferredExit = $false
 Invoke-PromptAuxiliarInstallOrUpdate `
     -InstallRoot $InstallRoot `
     -ScriptDir $ScriptDir `
@@ -378,6 +474,13 @@ Invoke-PromptAuxiliarInstallOrUpdate `
     -Name $RepoName `
     -Branch $Branch `
     -Force:$forceUpdate
+
+if ($script:PromptAuxDeferredExit) {
+    Write-Host ''
+    Write-Host '  Feche esta janela (Enter). O app abrira atualizado em seguida.' -ForegroundColor Green
+    Read-Host | Out-Null
+    exit 0
+}
 
 $env:PROMPTAUX_HOME = $InstallRoot
 $python = Get-PromptAuxPython
