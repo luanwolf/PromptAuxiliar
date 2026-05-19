@@ -29,17 +29,36 @@ def _raiz_projeto() -> Path:
     return Path(__file__).resolve().parent.parent
 
 
-def resolver_script(nome_arquivo: str) -> str:
+def _install_script_candidates(nome_arquivo: str) -> list[Path]:
     candidatos: list[Path] = []
+    vistos: set[str] = set()
+
+    def add(base: Path | None) -> None:
+        if base is None:
+            return
+        p = (base / "scripts" / nome_arquivo).resolve()
+        key = str(p).lower()
+        if key not in vistos:
+            vistos.add(key)
+            candidatos.append(p)
+
+    home = os.environ.get("PROMPTAUX_HOME", "").strip()
+    if home:
+        add(Path(home))
+    localappdata = os.environ.get("LOCALAPPDATA", "").strip()
+    if localappdata:
+        add(Path(localappdata) / "PromptAuxiliar")
+    add(_raiz_projeto())
     if getattr(sys, "frozen", False):
-        candidatos.append(Path(sys._MEIPASS) / "scripts" / nome_arquivo)
-    candidatos.append(_raiz_projeto() / "scripts" / nome_arquivo)
-    custom = Path(PASTA_BASE) / "scripts" / nome_arquivo
-    if custom not in candidatos:
-        candidatos.append(custom)
-    for caminho in candidatos:
+        add(Path(sys._MEIPASS))
+    add(Path(PASTA_BASE))
+    return candidatos
+
+
+def resolver_script(nome_arquivo: str) -> str:
+    for caminho in _install_script_candidates(nome_arquivo):
         if caminho.is_file():
-            return str(caminho.resolve())
+            return str(caminho)
     raise ScriptNaoEncontradoError(f"Script '{nome_arquivo}' não encontrado.")
 
 
@@ -83,16 +102,45 @@ Start-Process -FilePath 'powershell.exe' -Verb RunAs -ArgumentList @(
     )
 
 
+def _sanitize_cmd_text(texto: str) -> str:
+    """Remove caracteres que quebram cmd.exe (&, |, etc.)."""
+    for ch in "&|^<>%":
+        texto = texto.replace(ch, " ")
+    return " ".join(texto.split())
+
+
 def _abrir_console_script(script: str, titulo: str) -> None:
-    """Abre o .bat em nova janela CMD (sem wrapper PowerShell intermediario)."""
+    """Abre o .bat em nova janela CMD (independente do processo WebView)."""
     script_path = Path(script).resolve()
-    titulo_safe = titulo.replace('"', "'")
-    cmd_line = f'chcp 65001>nul & title "{titulo_safe} | Prompt Auxiliar" & call "{script_path}"'
+    if not script_path.is_file():
+        raise ScriptNaoEncontradoError(f"Script não encontrado: {script_path}")
+
+    script_dir = _escape_ps(str(script_path.parent))
+    titulo_esc = _escape_ps(_sanitize_cmd_text(titulo))
+
+    ps_body = f"""
+$Host.UI.RawUI.WindowTitle = '{titulo_esc} - Prompt Auxiliar'
+Start-Process -FilePath 'cmd.exe' -WorkingDirectory '{script_dir}' -ArgumentList @(
+  '/c', 'chcp 65001>nul & call ""{script_path.name}""'
+) -WindowStyle Normal
+"""
+
+    _PS_RUN.mkdir(parents=True, exist_ok=True)
+    ps1 = _PS_RUN / f"run_{uuid.uuid4().hex}.ps1"
+    ps1.write_text(ps_body.strip() + "\n", encoding="utf-8-sig")
+
     flags = getattr(subprocess, "CREATE_NEW_CONSOLE", 0)
     subprocess.Popen(
-        ["cmd.exe", "/c", cmd_line],
+        [
+            "powershell.exe",
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            str(ps1),
+        ],
         creationflags=flags,
-        cwd=str(script_path.parent),
+        cwd=str(_PS_RUN),
     )
 
 
