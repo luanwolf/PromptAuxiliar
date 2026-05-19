@@ -1,7 +1,8 @@
 # Cria atalhos versionados (Area de Trabalho e Menu Iniciar) apontando para win.ps1
 #Requires -Version 5.1
 param(
-    [string]$ProjectRoot = $env:PROMPTAUX_HOME
+    [string]$ProjectRoot = $env:PROMPTAUX_HOME,
+    [string]$VersionLabel = ''
 )
 
 $ErrorActionPreference = 'Stop'
@@ -20,7 +21,7 @@ function Get-PromptAuxInstalledVersion {
     return '0.0.0'
 }
 
-$version = Get-PromptAuxInstalledVersion -Root $ProjectRoot
+$version = if ($VersionLabel) { $VersionLabel.Trim() } else { Get-PromptAuxInstalledVersion -Root $ProjectRoot }
 $ico = Join-Path $ProjectRoot 'imagens\logo.ico'
 $launcherPs1 = Join-Path $ProjectRoot 'win.ps1'
 $launcherCmd = Join-Path $ProjectRoot 'Iniciar-PromptAuxiliar.cmd'

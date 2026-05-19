@@ -156,32 +156,75 @@ function Test-PromptAuxShouldDeferFolderSwap {
     return $false
 }
 
+function Get-PromptAuxVersionFromConfigFile {
+    param([string]$ConfigPath)
+    if (-not (Test-Path -LiteralPath $ConfigPath)) { return $null }
+    $text = Get-Content -LiteralPath $ConfigPath -Raw -ErrorAction SilentlyContinue
+    if ($text -match 'APP_VERSION\s*=\s*"([^"]+)"') { return $Matches[1].Trim() }
+    return $null
+}
+
+function New-PromptAuxShortcutsFromStaging {
+    param(
+        [string]$StagingPath,
+        [string]$Destination
+    )
+    $version = Get-PromptAuxVersionFromConfigFile -ConfigPath (Join-Path $StagingPath 'app\config.py')
+    if (-not $version) { return }
+
+    $criar = Join-Path $StagingPath 'powershell\Criar-Atalho.ps1'
+    if (-not (Test-Path -LiteralPath $criar)) {
+        $criar = Join-Path $Destination 'powershell\Criar-Atalho.ps1'
+    }
+    if (-not (Test-Path -LiteralPath $criar)) { return }
+
+    Write-Host "  Criando atalho v$version (pode fechar esta janela em seguida)..." -ForegroundColor Cyan
+    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $criar -ProjectRoot $Destination -VersionLabel $version
+}
+
 function Invoke-PromptAuxDeferredFolderSwap {
     param(
         [string]$StagingPath,
         [string]$Destination
     )
+    New-PromptAuxShortcutsFromStaging -StagingPath $StagingPath -Destination $Destination
+
+    $parentPid = $PID
     $destEsc = $Destination.Replace("'", "''")
     $stageEsc = $StagingPath.Replace("'", "''")
     $ps1 = Join-Path ([System.IO.Path]::GetTempPath()) 'promptauxiliar-update-swap.ps1'
     $content = @"
 # Prompt Auxiliar - troca de pasta apos atualizacao
+`$Host.UI.RawUI.WindowTitle = 'Prompt Auxiliar - concluindo atualizacao'
 `$ErrorActionPreference = 'SilentlyContinue'
 `$dest = '$destEsc'
 `$staging = '$stageEsc'
-Start-Sleep -Seconds 2
-for (`$w = 0; `$w -lt 120; `$w++) {
+`$parentPid = $parentPid
+`$myPid = `$PID
+
+Write-Host ''
+Write-Host '  Aguardando fechar a janela do instalador...' -ForegroundColor Cyan
+`$deadline = (Get-Date).AddMinutes(15)
+while ((Get-Process -Id `$parentPid -ErrorAction SilentlyContinue) -and ((Get-Date) -lt `$deadline)) {
+    Start-Sleep -Milliseconds 400
+}
+
+Start-Sleep -Seconds 1
+for (`$w = 0; `$w -lt 60; `$w++) {
     `$root = `$dest.TrimEnd('\')
     `$pattern = (`$root + '*')
     `$busy = `$false
     `$procs = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue
     foreach (`$p in `$procs) {
+        if (`$p.ProcessId -eq `$myPid) { continue }
         if (`$p.ExecutablePath -and (`$p.ExecutablePath -like `$pattern)) { `$busy = `$true; break }
         if (`$p.CommandLine -and (`$p.CommandLine -like "*`$root*")) { `$busy = `$true; break }
     }
     if (-not `$busy) { break }
     Start-Sleep -Seconds 1
 }
+
+Write-Host '  Substituindo arquivos da instalacao...' -ForegroundColor DarkGray
 if (Test-Path -LiteralPath `$dest) {
     Remove-Item -LiteralPath `$dest -Recurse -Force -ErrorAction SilentlyContinue
 }
@@ -190,8 +233,10 @@ if (Test-Path -LiteralPath `$dest) {
 }
 New-Item -ItemType Directory -Path (Split-Path `$dest -Parent) -Force | Out-Null
 Move-Item -LiteralPath `$staging -Destination `$dest -Force
+
 `$concluir = Join-Path `$dest 'powershell\Concluir-Troca-Instalacao.ps1'
 if (Test-Path -LiteralPath `$concluir) {
+    Write-Host '  Abrindo Prompt Auxiliar atualizado...' -ForegroundColor Green
     Start-Process -FilePath 'powershell.exe' -ArgumentList @(
         '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', `$concluir, '-Destination', `$dest
     ) -WindowStyle Normal
@@ -207,11 +252,14 @@ if (Test-Path -LiteralPath `$concluir) {
         ) -WindowStyle Normal
     }
 }
+Write-Host ''
+Write-Host '  Atualizacao concluida.' -ForegroundColor Green
+Start-Sleep -Seconds 4
 "@
     Write-PromptAuxUtf8NoBom -Path $ps1 -Content $content
     Start-Process -FilePath 'powershell.exe' -ArgumentList @(
-        '-NoProfile', '-ExecutionPolicy', 'Bypass', '-WindowStyle', 'Hidden', '-File', $ps1
-    ) -WindowStyle Hidden | Out-Null
+        '-NoProfile', '-ExecutionPolicy', 'Bypass', '-WindowStyle', 'Normal', '-File', $ps1
+    ) -WindowStyle Normal | Out-Null
 }
 
 function Install-PromptAuxiliarSourceZip {
@@ -244,7 +292,8 @@ function Install-PromptAuxiliarSourceZip {
 
     $destExists = Test-Path -LiteralPath $Destination
     if ($destExists -and (Test-PromptAuxShouldDeferFolderSwap -Destination $Destination -ScriptDir $ScriptDir)) {
-        Write-Host '  Pasta em uso - feche esta janela do PowerShell para concluir a atualizacao...' -ForegroundColor Cyan
+        Write-Host '  Atualizacao adiada: feche ESTA janela (Enter) para concluir a copia dos arquivos.' -ForegroundColor Cyan
+        Write-Host '  O atalho da nova versao ja foi criado na Area de Trabalho.' -ForegroundColor DarkGray
         Invoke-PromptAuxDeferredFolderSwap -StagingPath $staging -Destination $Destination
         Remove-Item $tempZip -Force -ErrorAction SilentlyContinue
         Remove-Item $tempExtract -Force -ErrorAction SilentlyContinue
@@ -322,7 +371,7 @@ function Update-PromptAuxiliarIfNewer {
 
     $zipResult = Install-PromptAuxiliarSourceZip -Destination $InstallRoot -Owner $repo.Owner -Name $repo.Name -Branch $repo.Branch -ScriptDir $ScriptDir
     if ($zipResult.Deferred) {
-        Write-Host '  Feche esta janela (Enter). O app abrira atualizado em seguida.' -ForegroundColor Green
+        Write-Host '  Pressione Enter e feche esta janela. Outra janela concluira a atualizacao.' -ForegroundColor Green
         return 'deferred'
     }
     Update-PromptAuxiliarRefreshShortcuts -InstallRoot $InstallRoot
