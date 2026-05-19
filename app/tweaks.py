@@ -113,8 +113,8 @@ def _build_apply_script(
             "if (-not ([Security.Principal.WindowsPrincipal]",
             "    [Security.Principal.WindowsIdentity]::GetCurrent()",
             ").IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {",
-            "    $args = \"-NoProfile -ExecutionPolicy Bypass -File `\"$PSCommandPath`\"\"",
-            "    Start-Process powershell.exe -Verb RunAs -ArgumentList $args",
+            "    $argList = \"-NoProfile -ExecutionPolicy Bypass -File `\"$PSCommandPath`\"\"",
+            "    Start-Process powershell.exe -Verb RunAs -ArgumentList $argList",
             "    exit",
             "}",
             "",
@@ -122,50 +122,103 @@ def _build_apply_script(
 
     lines += [
         "$Host.UI.RawUI.WindowTitle = 'Prompt Auxiliar - Tweaks'",
-        "Write-Host ''",
-        "Write-Host '  ================================================' -ForegroundColor DarkGray",
-        "Write-Host '    Prompt Auxiliar - Tweaks Windows' -ForegroundColor Cyan",
-        "Write-Host '  ================================================' -ForegroundColor DarkGray",
-        "Write-Host ''",
-        "$erros = 0",
+        "$startTime = Get-Date",
+        "$results   = [System.Collections.ArrayList]::new()",
         "$restart_explorer = $false",
+        "",
+        "Write-Host ''",
+        "Write-Host '  ================================================' -ForegroundColor DarkCyan",
+        "Write-Host '    PROMPT AUXILIAR  |  Tweaks Windows' -ForegroundColor Cyan",
+        f"Write-Host '    {len(selected)} ajuste(s) selecionado(s)' -ForegroundColor DarkGray",
+        "Write-Host '  ================================================' -ForegroundColor DarkCyan",
+        "Write-Host ''",
         "",
     ]
 
     for tw in selected:
         safe_label = tw["label"].replace("'", "''")
-        lines.append(f"Write-Host '  -> {safe_label}' -ForegroundColor Gray")
+        lines.append(f"# ---- {safe_label}")
+        lines.append(f"Write-Host '  -> {safe_label}...' -ForegroundColor Gray")
+        lines.append("$_twOk = $true; $_twMsg = ''")
         for step in tw.get("apply", []):
-            safe_step = step.replace("\\", "\\")
             lines.append(
-                f"try {{ {safe_step} }} catch {{ Write-Host \"     Erro: $_\" -ForegroundColor Red; $erros++ }}"
+                f"if ($_twOk) {{ try {{ {step} }}"
+                f" catch {{ $_twOk = $false; $_twMsg = $_.Exception.Message;"
+                f" Write-Host \"     ERRO: $_twMsg\" -ForegroundColor Red }} }}"
             )
         if tw.get("restart_explorer"):
             lines.append("$restart_explorer = $true")
-        lines.append("")
+        lines += [
+            f"[void]$results.Add(@{{ Label='{safe_label}'; Ok=$_twOk; Msg=$_twMsg }})",
+            "if ($_twOk) { Write-Host '     OK' -ForegroundColor DarkGreen }",
+            "",
+        ]
 
     lines += [
+        "# ---- Explorer restart",
         "if ($restart_explorer) {",
-        "    Write-Host '  Reiniciando Explorer para aplicar alteracoes...' -ForegroundColor DarkGray",
+        "    Write-Host ''",
+        "    Write-Host '  Reiniciando Explorer...' -ForegroundColor DarkGray",
         "    Stop-Process -Name explorer -Force -ErrorAction SilentlyContinue",
         "    Start-Sleep -Milliseconds 800",
         "    Start-Process explorer",
         "    Write-Host '  Explorer reiniciado.' -ForegroundColor DarkGray",
         "}",
         "",
+        "# ---- Log consolidado",
+        "$elapsed  = [math]::Round(((Get-Date) - $startTime).TotalSeconds, 1)",
+        "$okCount  = ($results | Where-Object { $_.Ok }).Count",
+        "$errCount = ($results | Where-Object { -not $_.Ok }).Count",
+        "",
         "Write-Host ''",
-        "if ($erros -gt 0) {",
-        "    Write-Host \"  Concluido com $erros erro(s).\" -ForegroundColor Yellow",
-        "} else {",
-        "    Write-Host '  Todos os ajustes aplicados com sucesso.' -ForegroundColor Green",
+        "Write-Host '  ================================================' -ForegroundColor DarkCyan",
+        "Write-Host '   RESUMO DOS AJUSTES APLICADOS' -ForegroundColor Cyan",
+        "Write-Host '  ================================================' -ForegroundColor DarkCyan",
+        "foreach ($r in $results) {",
+        "    if ($r.Ok) {",
+        "        Write-Host \"   [OK]   $($r.Label)\" -ForegroundColor Green",
+        "    } else {",
+        "        Write-Host \"   [ERRO] $($r.Label)\" -ForegroundColor Red",
+        "        if ($r.Msg) { Write-Host \"         $($r.Msg)\" -ForegroundColor DarkRed }",
+        "    }",
         "}",
+        "Write-Host '  ------------------------------------------------' -ForegroundColor DarkCyan",
+        "if ($errCount -gt 0) {",
+        "    Write-Host \"   Resultado: $okCount OK  |  $errCount erro(s)  |  Tempo: ${elapsed}s\" -ForegroundColor Yellow",
+        "} else {",
+        "    Write-Host \"   Resultado: $okCount ajuste(s) aplicado(s) com sucesso  |  Tempo: ${elapsed}s\" -ForegroundColor Green",
+        "}",
+        "Write-Host '  ================================================' -ForegroundColor DarkCyan",
+        "",
+        "# ---- Salvar log em arquivo",
+        "$logDir = Join-Path $env:TEMP 'PromptAuxiliar\\logs'",
+        "if (-not (Test-Path $logDir)) { New-Item $logDir -ItemType Directory -Force | Out-Null }",
+        "$logFile = Join-Path $logDir \"tweaks-$(Get-Date -Format 'yyyyMMdd-HHmmss').log\"",
+        "$logLines = @(",
+        "    'Prompt Auxiliar - Log de Tweaks'",
+        "    \"Data   : $(Get-Date -Format 'dd/MM/yyyy HH:mm:ss')\"",
+        "    \"Duracao: ${elapsed}s\"",
+        "    \"Usuario: $env:USERNAME\"",
+        "    ''",
+        "    '---- Ajustes ----'",
+        ")",
+        "foreach ($r in $results) {",
+        "    $st = if ($r.Ok) { '[OK]  ' } else { '[ERRO]' }",
+        "    $logLines += \"$st  $($r.Label)\"",
+        "    if (-not $r.Ok -and $r.Msg) { $logLines += \"       Detalhe: $($r.Msg)\" }",
+        "}",
+        "$logLines += ''",
+        "$logLines += \"Total: $okCount OK  |  $errCount erro(s)\"",
+        "$logLines | Out-File -FilePath $logFile -Encoding UTF8 -ErrorAction SilentlyContinue",
+        "Write-Host ''",
+        "Write-Host \"  Log salvo em: $logFile\" -ForegroundColor DarkGray",
     ]
 
     if needs_restart:
         lines += [
             "",
             "Write-Host ''",
-            "Write-Host '  ATENCAO: alguns ajustes requerem reinicializacao para ter efeito.' -ForegroundColor Yellow",
+            "Write-Host '  ATENCAO: reinicie o computador para que todos os ajustes tenham efeito.' -ForegroundColor Yellow",
         ]
 
     lines += [

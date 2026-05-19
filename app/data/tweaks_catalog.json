@@ -9,13 +9,39 @@
   },
   "tweaks": [
     {
+      "id": "taskbar_center",
+      "label": "Centralizar ícones da barra de tarefas",
+      "descricao": "Centraliza os ícones da barra de tarefas (padrão Windows 11). Para mover à esquerda use 'Ícones à esquerda'.",
+      "categoria": "taskbar",
+      "detect": "((Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name TaskbarAl -EA 0).TaskbarAl -ne 0)",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'TaskbarAl' -Value 1 -Force"
+      ],
+      "restart_explorer": true,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
       "id": "taskbar_left",
-      "label": "Ícones à esquerda",
-      "descricao": "Move os ícones da barra de tarefas para a esquerda, estilo clássico (Win 11).",
+      "label": "Ícones à esquerda (estilo clássico)",
+      "descricao": "Move os ícones da barra de tarefas para a esquerda, estilo clássico (Win 10 / Win 11 classic).",
       "categoria": "taskbar",
       "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name TaskbarAl -EA 0).TaskbarAl -eq 0",
       "apply": [
         "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'TaskbarAl' -Value 0 -Force"
+      ],
+      "restart_explorer": true,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "taskbar_combine_never",
+      "label": "Nunca combinar botões da barra de tarefas",
+      "descricao": "Mostra cada janela como um botão separado na barra de tarefas, sem agrupamento por aplicativo.",
+      "categoria": "taskbar",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name TaskbarGlomLevel -EA 0).TaskbarGlomLevel -eq 2",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'TaskbarGlomLevel' -Value 2 -Force; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'MMTaskbarGlomLevel' -Value 2 -Force"
       ],
       "restart_explorer": true,
       "requer_admin": false,
@@ -114,12 +140,38 @@
     },
     {
       "id": "start_more_pins",
-      "label": "Mais pins no Menu Iniciar",
+      "label": "Mais pins, menos recomendações",
       "descricao": "Aumenta a área de pins reduzindo a seção de recomendações no Menu Iniciar (Win 11).",
       "categoria": "startmenu",
       "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name Start_Layout -EA 0).Start_Layout -eq 1",
       "apply": [
         "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'Start_Layout' -Value 1 -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "start_recent_apps_off",
+      "label": "Ocultar apps recentes no Menu Iniciar",
+      "descricao": "Remove a lista de aplicativos adicionados e usados recentemente do Menu Iniciar.",
+      "categoria": "startmenu",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name Start_TrackProgs -EA 0).Start_TrackProgs -eq 0",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'Start_TrackProgs' -Value 0 -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "start_recent_docs_off",
+      "label": "Ocultar arquivos recentes no Menu Iniciar",
+      "descricao": "Remove itens abertos recentemente do Menu Iniciar, Barra de Tarefas e Jump Lists.",
+      "categoria": "startmenu",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name Start_TrackDocs -EA 0).Start_TrackDocs -eq 0",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'Start_TrackDocs' -Value 0 -Force"
       ],
       "restart_explorer": false,
       "requer_admin": false,
@@ -146,6 +198,19 @@
       "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name Hidden -EA 0).Hidden -eq 1",
       "apply": [
         "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'Hidden' -Value 1 -Force"
+      ],
+      "restart_explorer": true,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "compact_view",
+      "label": "Vista compacta no Explorador",
+      "descricao": "Reduz o espaçamento entre itens no Explorador de Arquivos, similar ao estilo Windows 10.",
+      "categoria": "explorer",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name UseCompactMode -EA 0).UseCompactMode -eq 1",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name 'UseCompactMode' -Value 1 -Force"
       ],
       "restart_explorer": true,
       "requer_admin": false,
@@ -180,7 +245,7 @@
     {
       "id": "disable_thumbnails",
       "label": "Desativar miniaturas (usar ícones)",
-      "descricao": "Substitui miniaturas de imagens/vídeos por ícones. Útil em pastas com muitos arquivos.",
+      "descricao": "Substitui miniaturas de imagens/vídeos por ícones genéricos. Útil em pastas com muitos arquivos.",
       "categoria": "explorer",
       "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -Name IconsOnly -EA 0).IconsOnly -eq 1",
       "apply": [
@@ -216,6 +281,32 @@
         "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager' -Name 'SubscribedContent-338388Enabled' -Value 0 -Force",
         "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager' -Name 'SubscribedContent-338389Enabled' -Value 0 -Force",
         "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager' -Name 'SubscribedContent-353698Enabled' -Value 0 -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "location_off",
+      "label": "Desativar rastreamento de localização",
+      "descricao": "Desativa o serviço de localização do Windows para todos os aplicativos. Requer admin.",
+      "categoria": "privacidade",
+      "detect": "(Get-ItemProperty 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\location' -Name Value -EA 0).Value -eq 'Deny'",
+      "apply": [
+        "if (-not (Test-Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\location')) { New-Item 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\location' -Force | Out-Null }; Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\location' -Name 'Value' -Value 'Deny' -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": true,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "clipboard_history_off",
+      "label": "Desativar histórico da área de transferência",
+      "descricao": "Desativa o histórico de cópias (Win+V) e o envio de dados da área de transferência para a Microsoft.",
+      "categoria": "privacidade",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Clipboard' -Name EnableClipboardHistory -EA 0).EnableClipboardHistory -eq 0",
+      "apply": [
+        "if (-not (Test-Path 'HKCU:\\Software\\Microsoft\\Clipboard')) { New-Item 'HKCU:\\Software\\Microsoft\\Clipboard' -Force | Out-Null }; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Clipboard' -Name 'EnableClipboardHistory' -Value 0 -Force"
       ],
       "restart_explorer": false,
       "requer_admin": false,
@@ -261,8 +352,60 @@
       "requer_reiniciar": false
     },
     {
+      "id": "game_mode_on",
+      "label": "Ativar Modo Jogo (Game Mode)",
+      "descricao": "Prioriza CPU/GPU para jogos, desativando tarefas em background durante sessões de gaming.",
+      "categoria": "performance",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\GameBar' -Name AutoGameModeEnabled -EA 0).AutoGameModeEnabled -eq 1",
+      "apply": [
+        "if (-not (Test-Path 'HKCU:\\Software\\Microsoft\\GameBar')) { New-Item 'HKCU:\\Software\\Microsoft\\GameBar' -Force | Out-Null }; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\GameBar' -Name 'AutoGameModeEnabled' -Value 1 -Force; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\GameBar' -Name 'AllowAutoGameMode' -Value 1 -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "gpu_hw_scheduling",
+      "label": "GPU Hardware Accelerated Scheduling",
+      "descricao": "Delega o agendamento da GPU ao hardware, reduzindo latência e melhorando frames em jogos. Requer admin + reinicialização.",
+      "categoria": "performance",
+      "detect": "(Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers' -Name HwSchMode -EA 0).HwSchMode -eq 2",
+      "apply": [
+        "if (-not (Test-Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers')) { New-Item 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers' -Force | Out-Null }; Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers' -Name 'HwSchMode' -Value 2 -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": true,
+      "requer_reiniciar": true
+    },
+    {
+      "id": "disable_fast_startup",
+      "label": "Desativar Inicialização Rápida (Fast Boot)",
+      "descricao": "Garante desligamento completo do PC. Resolve bugs de hardware e conflitos após ligar. Requer admin.",
+      "categoria": "performance",
+      "detect": "(Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power' -Name HiberbootEnabled -EA 0).HiberbootEnabled -eq 0",
+      "apply": [
+        "if (-not (Test-Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power')) { New-Item 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power' -Force | Out-Null }; Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power' -Name 'HiberbootEnabled' -Value 0 -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": true,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "disable_startup_delay",
+      "label": "Remover atraso de apps na inicialização",
+      "descricao": "Remove o delay de ~10s que o Windows aplica antes de iniciar apps da pasta Startup.",
+      "categoria": "performance",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Serialize' -Name StartupDelayInMSec -EA 0).StartupDelayInMSec -eq 0",
+      "apply": [
+        "if (-not (Test-Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Serialize')) { New-Item 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Serialize' -Force | Out-Null }; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Serialize' -Name 'StartupDelayInMSec' -Value 0 -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
       "id": "visual_effects_min",
-      "label": "Minimizar efeitos visuais",
+      "label": "Minimizar efeitos visuais (máx. performance)",
       "descricao": "Ajusta o Windows para máxima performance desativando animações e efeitos desnecessários.",
       "categoria": "performance",
       "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\VisualEffects' -Name VisualFXSetting -EA 0).VisualFXSetting -eq 2",
@@ -341,6 +484,19 @@
       "requer_reiniciar": false
     },
     {
+      "id": "show_user_folder_desktop",
+      "label": "Pasta pessoal na área de trabalho",
+      "descricao": "Adiciona a pasta pessoal do usuário (C:\\Usuários\\Nome) diretamente na área de trabalho.",
+      "categoria": "interface",
+      "detect": "(Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\HideDesktopIcons\\NewStartPanel' -Name '{59031a47-3f72-44a7-89c5-5595fe6b30ee}' -EA 0).'{59031a47-3f72-44a7-89c5-5595fe6b30ee}' -eq 0",
+      "apply": [
+        "if (-not (Test-Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\HideDesktopIcons\\NewStartPanel')) { New-Item 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\HideDesktopIcons\\NewStartPanel' -Force | Out-Null }; Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\HideDesktopIcons\\NewStartPanel' -Name '{59031a47-3f72-44a7-89c5-5595fe6b30ee}' -Value 0 -Force"
+      ],
+      "restart_explorer": true,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
       "id": "numlock_on",
       "label": "NumLock ligado ao iniciar",
       "descricao": "Ativa o NumLock automaticamente ao ligar o computador e fazer login.",
@@ -352,6 +508,45 @@
       "restart_explorer": false,
       "requer_admin": false,
       "requer_reiniciar": true
+    },
+    {
+      "id": "sticky_keys_off",
+      "label": "Desativar atalho de Teclas de Aderência",
+      "descricao": "Remove o aviso irritante de Teclas de Aderência (Sticky Keys) ao pressionar Shift 5 vezes seguidas.",
+      "categoria": "interface",
+      "detect": "(Get-ItemProperty 'HKCU:\\Control Panel\\Accessibility\\StickyKeys' -Name Flags -EA 0).Flags -eq '506'",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Control Panel\\Accessibility\\StickyKeys' -Name 'Flags' -Value '506' -Force; Set-ItemProperty -Path 'HKCU:\\Control Panel\\Accessibility\\ToggleKeys' -Name 'Flags' -Value '58' -Force; Set-ItemProperty -Path 'HKCU:\\Control Panel\\Accessibility\\Keyboard Response' -Name 'Flags' -Value '122' -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "scroll_inactive_on",
+      "label": "Rolar janelas inativas com o mouse",
+      "descricao": "Permite rolar o conteúdo de janelas sem precisar clicar nelas primeiro — basta passar o mouse.",
+      "categoria": "interface",
+      "detect": "(Get-ItemProperty 'HKCU:\\Control Panel\\Desktop' -Name MouseWheelRouting -EA 0).MouseWheelRouting -eq 2",
+      "apply": [
+        "Set-ItemProperty -Path 'HKCU:\\Control Panel\\Desktop' -Name 'MouseWheelRouting' -Value 2 -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": false,
+      "requer_reiniciar": false
+    },
+    {
+      "id": "disable_lockscreen",
+      "label": "Desativar tela de bloqueio",
+      "descricao": "Pula a tela de bloqueio e vai direto para a tela de login ao ligar ou acordar o PC. Requer admin.",
+      "categoria": "interface",
+      "detect": "(Get-ItemProperty 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Personalization' -Name NoLockScreen -EA 0).NoLockScreen -eq 1",
+      "apply": [
+        "if (-not (Test-Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Personalization')) { New-Item 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Personalization' -Force | Out-Null }; Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Personalization' -Name 'NoLockScreen' -Value 1 -Force"
+      ],
+      "restart_explorer": false,
+      "requer_admin": true,
+      "requer_reiniciar": false
     },
     {
       "id": "snap_assist_off",
@@ -369,7 +564,7 @@
     {
       "id": "context_menu_classic",
       "label": "Menu de contexto clássico (Win 10)",
-      "descricao": "Ativa o menu de contexto completo do botão direito estilo Windows 10. Para desativar, use o script 'Alternar menu de contexto'.",
+      "descricao": "Ativa o menu de contexto completo do botão direito estilo Windows 10. Requer reiniciar o Explorer.",
       "categoria": "interface",
       "detect": "Test-Path 'HKCU:\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32'",
       "apply": [
