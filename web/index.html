@@ -45,9 +45,25 @@
       </header>
       <nav id="nav-categories" class="nav"></nav>
       <footer class="sidebar-foot">
-        <button type="button" class="btn ghost sm" data-action="check-update">Verificar atualização</button>
-        <button type="button" class="btn ghost sm" data-action="folder">Pasta de dados</button>
-        <button type="button" class="btn ghost sm btn-danger-ghost" data-action="uninstall">Excluir Prompt Auxiliar</button>
+        <button type="button" class="btn ghost sm" data-action="check-update" data-tooltip="Verificar se há nova versão disponível">
+          <svg class="btn-ico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+            <path d="M10 3v8m0 0-3-3m3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3 14v1a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1" stroke-linecap="round"/>
+          </svg>
+          Verificar atualização
+        </button>
+        <button type="button" class="btn ghost sm" data-action="folder" data-tooltip="Abrir pasta de instalação">
+          <svg class="btn-ico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+            <path d="M2 7a2 2 0 0 1 2-2h3.586a1 1 0 0 1 .707.293L9.5 6.5H16a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7Z" stroke-linejoin="round"/>
+          </svg>
+          Pasta de dados
+        </button>
+        <button type="button" class="btn ghost sm btn-danger-ghost" data-action="uninstall" data-tooltip="Remover o Prompt Auxiliar deste PC">
+          <svg class="btn-ico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+            <path d="M4 6h12m-2 0V5a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1v1m2 4v4m4-4v4M5 6l1 10a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-10" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Excluir Prompt Auxiliar
+        </button>
         <a class="creditos" href="#" data-action="creditos">GitHub · Heyash</a>
       </footer>
     </aside>

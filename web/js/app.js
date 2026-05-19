@@ -263,7 +263,15 @@
     ui.subtitle.textContent = `${list.length} script(s) .bat disponíveis`;
     if (ui.scriptsToolbar) ui.scriptsToolbar.classList.remove("hidden");
     if (!list.length) {
-      ui.scriptsGrid.innerHTML = '<div class="empty-state"><p>Nenhum script encontrado.</p></div>';
+      ui.scriptsGrid.innerHTML = `
+        <div class="empty-state">
+          <svg class="empty-state-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <circle cx="21" cy="21" r="13"/>
+            <line x1="30.5" y1="30.5" x2="42" y2="42" stroke-linecap="round"/>
+          </svg>
+          <h3>Nenhum resultado</h3>
+          <p>Tente outra palavra-chave ou limpe a busca.</p>
+        </div>`;
       return;
     }
     ui.scriptsGrid.innerHTML = "";
