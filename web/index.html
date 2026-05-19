@@ -85,14 +85,16 @@
         </div>
       </header>
 
-      <section id="view-home">
+      <section id="view-home" class="scripts-view">
         <div id="scripts-toolbar" class="scripts-toolbar">
           <div class="view-toggle" role="group" aria-label="Visualização dos scripts">
             <button type="button" class="view-toggle-btn active" data-scripts-layout="grid" title="Grade">Grade</button>
             <button type="button" class="view-toggle-btn" data-scripts-layout="list" title="Lista">Lista</button>
           </div>
         </div>
-        <section id="actions-grid" class="grid scripts-container"></section>
+        <div id="scripts-list-wrap" class="scripts-list-wrap">
+          <section id="actions-grid" class="grid scripts-container" aria-label="Lista de scripts"></section>
+        </div>
       </section>
 
       <section id="view-panel" class="panel-view hidden" hidden>

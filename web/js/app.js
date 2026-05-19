@@ -216,17 +216,26 @@
     }
     ui.scriptsGrid.innerHTML = "";
     if (state.scriptsLayout === "list") {
-      list.forEach((acao, i) => {
+      list.forEach((acao) => {
         const row = document.createElement("button");
         row.type = "button";
-        row.className = `script-row risco-${acao.risco}`;
+        row.className = `panel-row script-action-row risco-${acao.risco}`;
         row.title = acao.descricao || acao.nome;
-        row.style.animationDelay = `${Math.min(i * 0.02, 0.3)}s`;
         const tag =
           acao.risco !== "normal"
             ? `<span class="tag risco-${acao.risco}">${acao.risco === "perigo" ? "Alto risco" : "Atenção"}</span>`
             : "";
-        row.innerHTML = `<span class="script-row-main"><strong>${escapeHtml(acao.nome)}</strong><span class="script-row-desc">${escapeHtml(acao.descricao)}</span></span><span class="script-row-meta"><span class="script-row-cat">${escapeHtml(acao.categoria)}</span>${tag}<span class="card-run">Executar →</span></span>`;
+        row.innerHTML = `
+          <span class="panel-row-body">
+            <strong>${escapeHtml(acao.nome)}</strong>
+            <span class="panel-row-id">${escapeHtml(acao.id)}</span>
+            <span class="panel-row-desc">${escapeHtml(acao.descricao)}</span>
+          </span>
+          <span class="panel-row-meta">
+            ${tag}
+            <span class="panel-row-cat">${escapeHtml(acao.categoria)}</span>
+            <span class="script-run-hint">Executar</span>
+          </span>`;
         row.addEventListener("click", () => runAction(acao));
         ui.scriptsGrid.appendChild(row);
       });
