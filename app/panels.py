@@ -6,6 +6,7 @@ import json
 import os
 import subprocess
 import threading
+import uuid
 from pathlib import Path
 from typing import Any, Literal
 
@@ -15,6 +16,7 @@ from app.winget_installed import is_installed, refresh_installed
 PanelKind = Literal["winget", "debloat"]
 _SELECTION_FILE = "panels.json"
 _LEGACY_TXT = {"winget": "winget.txt", "debloat": "bloatware.txt"}
+_PS_RUN = Path(os.environ.get("TEMP", ".")) / "PromptAuxiliar" / "run"
 
 
 def _catalog_path(kind: PanelKind) -> Path:
@@ -132,42 +134,35 @@ def get_panel(kind: PanelKind) -> dict[str, Any]:
 
 def _executar_winget_terminal(kind: PanelKind, ids: list[str]) -> None:
     titulo = "Prompt Auxiliar - Winget" if kind == "winget" else "Prompt Auxiliar - Debloat"
+    titulo_esc = titulo.replace("'", "''")
     lines = [
-        f"$Host.UI.RawUI.WindowTitle = '{titulo}'",
-        f"Write-Host '===== {titulo} =====' -ForegroundColor Cyan",
+        f"$Host.UI.RawUI.WindowTitle = '{titulo_esc}'",
+        f"Write-Host '===== {titulo_esc} =====' -ForegroundColor Cyan",
         "Write-Host ''",
     ]
     for pkg in ids:
         safe = pkg.replace("'", "''")
         if kind == "winget":
-            lines.append(f"Write-Host '[INSTALAR] {pkg}' -ForegroundColor Green")
+            lines.append(f"Write-Host '[INSTALAR] {safe}' -ForegroundColor Green")
             lines.append(
                 f"winget install --id '{safe}' "
                 "--accept-source-agreements --accept-package-agreements -h"
             )
         else:
-            lines.append(f"Write-Host '[REMOVER] {pkg}' -ForegroundColor Yellow")
+            lines.append(f"Write-Host '[REMOVER] {safe}' -ForegroundColor Yellow")
             lines.append(f"winget uninstall --id '{safe}' -h")
         lines.append("Write-Host ''")
     lines.append("Write-Host 'Processo concluido.' -ForegroundColor Green")
     lines.append("Read-Host 'Pressione Enter para fechar'")
 
-    script = "\n".join(lines)
+    _PS_RUN.mkdir(parents=True, exist_ok=True)
+    ps1 = _PS_RUN / f"panel_{uuid.uuid4().hex}.ps1"
+    ps1.write_text("\n".join(lines), encoding="utf-8-sig")
+
+    flags = getattr(subprocess, "CREATE_NEW_CONSOLE", 0)
     subprocess.Popen(
-        [
-            "cmd",
-            "/c",
-            "start",
-            titulo,
-            "powershell.exe",
-            "-NoProfile",
-            "-NoExit",
-            "-ExecutionPolicy",
-            "Bypass",
-            "-Command",
-            script,
-        ],
-        shell=False,
+        f'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "{ps1}"',
+        creationflags=flags,
     )
 
 

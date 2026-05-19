@@ -190,13 +190,30 @@ def should_skip_auto_update() -> bool:
 
 
 def launch_win_ps1_update() -> None:
-    """Abre PowerShell com win.ps1 remoto (força atualização mesmo se versões coincidirem)."""
-    url = GITHUB_RAW_WIN.replace("'", "''")
-    comando = (
-        f"$env:PROMPTAUX_UPDATE='1'; "
-        f"irm \"{url}\" | iex"
-    )
+    """Abre win.ps1 local com -Update; fallback para irm remoto se não encontrado."""
     flags = getattr(subprocess, "CREATE_NEW_CONSOLE", 0)
+
+    root = install_root()
+    win_local = (root / "win.ps1") if root else None
+
+    if win_local and win_local.is_file():
+        # Usa o script local — evita irm e garante $ScriptDir definido no PS
+        subprocess.Popen(
+            [
+                "powershell.exe",
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                str(win_local),
+                "-Update",
+            ],
+            creationflags=flags,
+        )
+        return
+
+    # Fallback: baixa do GitHub (sem $ScriptDir, mas funciona)
+    url = GITHUB_RAW_WIN.replace("'", "''")
     subprocess.Popen(
         [
             "powershell.exe",
@@ -204,7 +221,7 @@ def launch_win_ps1_update() -> None:
             "-ExecutionPolicy",
             "Bypass",
             "-Command",
-            comando,
+            f"$env:PROMPTAUX_UPDATE='1'; irm '{url}' | iex",
         ],
         creationflags=flags,
     )

@@ -495,23 +495,12 @@ function Test-PromptAuxShouldDeferFolderSwap {
 
     if (-not (Test-Path -LiteralPath $Destination)) { return $false }
 
-    if (Test-PromptAuxRunningFromPath -InstallRoot $Destination -ScriptDir $ScriptDir) {
-        return $true
-    }
+    # Adia somente se algum processo esta usando arquivos da pasta
     if (Test-PromptAuxPathInUse -Path $Destination) {
         return $true
     }
 
-    # irm | iex nao define $ScriptDir; atualizacao padrao em %LOCALAPPDATA% sempre adia troca
-    $defaultInstall = Join-Path $env:LOCALAPPDATA 'PromptAuxiliar'
-    if (Test-Path -LiteralPath $defaultInstall) {
-        try {
-            if ((Resolve-Path $Destination).Path -eq (Resolve-Path $defaultInstall).Path) {
-                return $true
-            }
-        } catch { }
-    }
-
+    # Adia se o diretorio atual esta dentro da pasta destino
     try {
         $destPath = (Resolve-Path $Destination).Path
         $pwdPath = (Resolve-Path $PWD.Path).Path
@@ -798,6 +787,10 @@ Write-PromptAuxBanner
 Enable-PromptAuxiliarExecutionPolicy
 
 $forceUpdate = $Update -or ($env:PROMPTAUX_UPDATE -eq '1')
+if ($forceUpdate) {
+    # App pode estar fechando; aguardar antes de substituir arquivos
+    Start-Sleep -Seconds 3
+}
 $script:PromptAuxDeferredExit = $false
 Invoke-PromptAuxiliarInstallOrUpdate `
     -InstallRoot $InstallRoot `

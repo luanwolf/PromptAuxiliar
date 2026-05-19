@@ -129,22 +129,12 @@ function Test-PromptAuxShouldDeferFolderSwap {
 
     if (-not (Test-Path -LiteralPath $Destination)) { return $false }
 
-    if (Test-PromptAuxRunningFromPath -InstallRoot $Destination -ScriptDir $ScriptDir) {
-        return $true
-    }
+    # Adia somente se algum processo esta usando arquivos da pasta
     if (Test-PromptAuxPathInUse -Path $Destination) {
         return $true
     }
 
-    $defaultInstall = Join-Path $env:LOCALAPPDATA 'PromptAuxiliar'
-    if (Test-Path -LiteralPath $defaultInstall) {
-        try {
-            if ((Resolve-Path $Destination).Path -eq (Resolve-Path $defaultInstall).Path) {
-                return $true
-            }
-        } catch { }
-    }
-
+    # Adia se o diretorio atual esta dentro da pasta destino
     try {
         $destPath = (Resolve-Path $Destination).Path
         $pwdPath = (Resolve-Path $PWD.Path).Path
@@ -367,6 +357,12 @@ function Update-PromptAuxiliarIfNewer {
         Write-Host $msg -ForegroundColor Cyan
     } elseif ($missing) {
         Write-Host '  Instalacao nao encontrada - baixando...' -ForegroundColor Cyan
+    }
+
+    # Aguardar o app fechar antes de tentar substituir arquivos
+    if ($Force -and -not $missing) {
+        Write-Host '  Aguardando o app encerrar...' -ForegroundColor DarkGray
+        Start-Sleep -Seconds 3
     }
 
     $zipResult = Install-PromptAuxiliarSourceZip -Destination $InstallRoot -Owner $repo.Owner -Name $repo.Name -Branch $repo.Branch -ScriptDir $ScriptDir

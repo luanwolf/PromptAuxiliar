@@ -25,9 +25,6 @@ class ScriptNaoEncontradoError(FileNotFoundError):
     pass
 
 
-def _raiz_projeto() -> Path:
-    return Path(__file__).resolve().parent.parent
-
 
 def _install_script_candidates(nome_arquivo: str) -> list[Path]:
     candidatos: list[Path] = []
@@ -48,7 +45,6 @@ def _install_script_candidates(nome_arquivo: str) -> list[Path]:
     localappdata = os.environ.get("LOCALAPPDATA", "").strip()
     if localappdata:
         add(Path(localappdata) / "PromptAuxiliar")
-    add(_raiz_projeto())
     if getattr(sys, "frozen", False):
         add(Path(sys._MEIPASS))
     add(Path(PASTA_BASE))
