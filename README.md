@@ -7,7 +7,7 @@
     <img alt="WebView2" src="https://img.shields.io/badge/WebView2-Edge-0078D4?logo=microsoftedge&logoColor=white" />
     <img alt="Winget" src="https://img.shields.io/badge/Winget-pacotes-2EA043?logo=windows&logoColor=white" />
     <img alt="PowerShell" src="https://img.shields.io/badge/PowerShell-5.1+-5391FE?logo=powershell&logoColor=white" />
-    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.7.11-0078D4" />
+    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.7.12-0078D4" />
   </p>
 
   <p>
@@ -242,6 +242,7 @@ win.ps1                 # instalador / atualizador one-liner
 
 | Versão | Destaques |
 |--------|-----------|
+| **2.7.12** | Release de teste — verificação automática na abertura (botão azul) |
 | **2.7.11** | Verificação automática na abertura — botão **Atualização disponível** sem clicar em verificar |
 | **2.7.10** | Release de teste do fluxo de atualização |
 | **2.7.9** | Janela do instalador fecha sozinha (contagem 5→1); modal de update ao verificar |
