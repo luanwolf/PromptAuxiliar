@@ -7,7 +7,7 @@
     <img alt="WebView2" src="https://img.shields.io/badge/WebView2-Edge-0078D4?logo=microsoftedge&logoColor=white" />
     <img alt="Winget" src="https://img.shields.io/badge/Winget-pacotes-2EA043?logo=windows&logoColor=white" />
     <img alt="PowerShell" src="https://img.shields.io/badge/PowerShell-5.1+-5391FE?logo=powershell&logoColor=white" />
-    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.7.9-0078D4" />
+    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.7.10-0078D4" />
   </p>
 
   <p>
@@ -50,7 +50,7 @@ Também funciona com `win.ps1` direto; o instalador configura **RemoteSigned** n
 | 1. Download | Baixa o repositório para `%LOCALAPPDATA%\PromptAuxiliar` |
 | 2. Python | Procura **Python 3.10+**; se não existir, instala via winget ou python.org |
 | 3. Dependências | Executa `pip install -r requirements.txt` |
-| 4. Pasta de dados | Prepara `C:\PromptAuxiliar` (softwares, registros, seleções) |
+| 4. Pasta de dados | Prepara `C:\PromptAuxiliar` (softwares, registros, logs, seleções) |
 | 5. Política | Define **RemoteSigned** (usuário); gera `Iniciar-PromptAuxiliar.cmd` |
 | 6. Atalhos | Cria `Prompt Auxiliar vX.Y.Z.lnk` na Área de Trabalho e Menu Iniciar |
 | 7. Abrir app | Inicia a interface WebView2 |
@@ -101,7 +101,7 @@ Cada card na aba **Scripts** executa um `.ps1` em `scripts/`. Todos usam a bibli
 2. Confirmação **S/N** (ações de risco exibem aviso extra)
 3. Execução com passos numerados e status **OK** (verde) / **ERRO** (vermelho)
 4. Resumo consolidado com contagem de sucessos/falhas e tempo decorrido
-5. Log salvo em `%TEMP%\PromptAuxiliar\logs\`
+5. Log salvo em `C:\PromptAuxiliar\logs\`
 
 Scripts de **alto risco** (WinUtil, KMS) abrem **PowerShell como administrador** após confirmação no app.
 
@@ -169,7 +169,7 @@ O painel detecta automaticamente o estado atual de cada ajuste no registro e exi
 
 | Controle | Descrição |
 |----------|-----------|
-| **Verificar atualização** | Verifica se há nova versão no GitHub; muda para "Atualização disponível" se houver |
+| **Verificar atualização** | Consulta o GitHub; se houver versão nova, abre o modal de atualização na hora |
 | **Pasta de Dados / Logs** | Abre `C:\PromptAuxiliar` no Explorer (contém subpasta `logs\` com todos os logs) |
 | **Excluir Prompt Auxiliar** | Remove a instalação local completamente |
 | **GitHub · luanwolf** | Repositório e perfil |
@@ -192,7 +192,8 @@ O painel detecta automaticamente o estado atual de cada ajuste no registro e exi
 C:\PromptAuxiliar\
 ├── panels.json       # seleção Winget / Debloat
 ├── softwares\        # .exe, .msi para instalar_software.ps1
-└── registros\        # arquivos .reg para aplicar_ajustes.ps1
+├── registros\        # arquivos .reg para aplicar_ajustes.ps1
+└── logs\             # logs de scripts e tweaks (tweaks-*.log, etc.)
 ```
 
 ---
@@ -230,6 +231,19 @@ web/
 main.py                 # entrada
 win.ps1                 # instalador / atualizador one-liner
 ```
+
+---
+
+## Histórico recente
+
+| Versão | Destaques |
+|--------|-----------|
+| **2.7.10** | Release de teste do fluxo de atualização |
+| **2.7.9** | Janela do instalador fecha sozinha (contagem 5→1); modal de update ao verificar |
+| **2.7.8** | Botão **Pasta de Dados / Logs**; remoção do botão Ver Logs nos Tweaks |
+| **2.7.7** | Tweaks com admin via UAC; logs em `C:\PromptAuxiliar\logs` |
+| **2.7.6** | Instalação de Python ignora alias da Microsoft Store |
+| **2.7.0+** | Painel Tweaks, scripts `.ps1` com visual padronizado, update manual pelo app |
 
 ---
 
