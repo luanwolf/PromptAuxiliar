@@ -411,6 +411,12 @@
       $("#welcome-path").textContent = initRes.pasta;
       ui.welcome.showModal();
     }
+    // Verifica update em background — só atualiza o botão, sem modal nem instalação automática
+    a.check_for_updates()
+      .then((r) => {
+        if (r?.ok) setUpdateAvailability(r);
+      })
+      .catch(() => {});
   }
 
   window.appToast = toast;

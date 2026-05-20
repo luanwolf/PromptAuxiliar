@@ -7,7 +7,7 @@
     <img alt="WebView2" src="https://img.shields.io/badge/WebView2-Edge-0078D4?logo=microsoftedge&logoColor=white" />
     <img alt="Winget" src="https://img.shields.io/badge/Winget-pacotes-2EA043?logo=windows&logoColor=white" />
     <img alt="PowerShell" src="https://img.shields.io/badge/PowerShell-5.1+-5391FE?logo=powershell&logoColor=white" />
-    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.7.10-0078D4" />
+    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.7.11-0078D4" />
   </p>
 
   <p>
@@ -59,12 +59,16 @@ Também funciona com `win.ps1` direto; o instalador configura **RemoteSigned** n
 
 ### 2) Atualizações
 
-O app **não atualiza automaticamente** ao abrir. Para verificar e aplicar uma atualização:
+O app **não instala atualizações automaticamente** ao abrir, mas **verifica na inicialização** se há versão nova no GitHub e deixa o botão azul (**Atualização disponível**) quando houver.
 
-1. Clique em **Verificar atualização** na barra lateral
-2. Se houver nova versão, o modal de confirmação abre na hora — confirme para iniciar
-3. O botão fica azul (**Atualização disponível**) se você cancelar e quiser tentar de novo
-4. A janela do PowerShell do instalador fecha sozinha após contagem **5…1** (sem precisar pressionar Enter)
+Para aplicar uma atualização:
+
+1. Ao abrir o app, se houver versão nova, o botão já aparece como **Atualização disponível**
+2. Clique no botão — o modal de confirmação abre na hora
+3. Confirme para iniciar — o app fecha e o PowerShell aplica a atualização
+4. A janela do instalador fecha sozinha após contagem **5…1** (sem precisar pressionar Enter)
+
+Você também pode clicar em **Verificar atualização** a qualquer momento para consultar de novo.
 
 | Situação | Comportamento |
 |----------|----------------|
@@ -238,6 +242,7 @@ win.ps1                 # instalador / atualizador one-liner
 
 | Versão | Destaques |
 |--------|-----------|
+| **2.7.11** | Verificação automática na abertura — botão **Atualização disponível** sem clicar em verificar |
 | **2.7.10** | Release de teste do fluxo de atualização |
 | **2.7.9** | Janela do instalador fecha sozinha (contagem 5→1); modal de update ao verificar |
 | **2.7.8** | Botão **Pasta de Dados / Logs**; remoção do botão Ver Logs nos Tweaks |
