@@ -72,6 +72,25 @@
     }
   }
 
+  async function confirmAndLaunchUpdate(info) {
+    const r = info || state.pendingUpdate;
+    if (!r?.update_available) return false;
+    const corpo =
+      `Versão instalada: v${r.local}\nNova versão: v${r.remote}\n\n` +
+      `O app será fechado e o PowerShell executará o instalador oficial.`;
+    const atualizar = await showAppModal({
+      title: "Atualização disponível",
+      body: corpo,
+      variant: "update",
+      confirmLabel: "Atualizar agora",
+      cancelLabel: "Depois",
+    });
+    if (!atualizar) return false;
+    const ur = await api().launch_app_update();
+    toast(ur.message, ur.ok ? "success" : "error");
+    return ur.ok;
+  }
+
   function toast(message, type = "info") {
     const el = document.createElement("div");
     el.className = `toast ${type}`;
@@ -443,26 +462,11 @@
           const r = await api().open_data_folder();
           toast(r.message, r.ok ? "success" : "error");
         } else if (kind === "check-update") {
-          // Se já detectou update disponível → confirmar e atualizar
+          // Já há update pendente (ex.: cancelou o modal antes) → abrir confirmação de novo
           if (state.pendingUpdate) {
-            const r = state.pendingUpdate;
-            const corpo =
-              `Versão instalada: v${r.local}\nNova versão: v${r.remote}\n\n` +
-              `O app será fechado e o PowerShell executará o instalador oficial.`;
-            const atualizar = await showAppModal({
-              title: "Atualização disponível",
-              body: corpo,
-              variant: "update",
-              confirmLabel: "Atualizar agora",
-              cancelLabel: "Depois",
-            });
-            if (atualizar) {
-              const ur = await api().launch_app_update();
-              toast(ur.message, ur.ok ? "success" : "error");
-            }
+            await confirmAndLaunchUpdate(state.pendingUpdate);
             return;
           }
-          // Primeira vez: verifica update
           el.disabled = true;
           _setBtnLabel(el, "Verificando…");
           try {
@@ -473,7 +477,7 @@
             }
             setUpdateAvailability(r);
             if (r.update_available) {
-              toast(`Nova versão disponível: v${r.remote}`, "info");
+              await confirmAndLaunchUpdate(r);
             } else {
               const corpo = r.remote
                 ? `Versão instalada: v${r.local}\nGitHub (main): v${r.remote}\n\nJá na versão mais recente.`

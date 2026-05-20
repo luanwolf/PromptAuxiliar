@@ -354,7 +354,6 @@ function Update-PromptAuxiliarIfNewer {
 
     $zipResult = Install-PromptAuxiliarSourceZip -Destination $InstallRoot -Owner $repo.Owner -Name $repo.Name -Branch $repo.Branch -ScriptDir $ScriptDir
     if ($zipResult.Deferred) {
-        Write-Host '  Pressione Enter e feche esta janela. Outra janela concluira a atualizacao.' -ForegroundColor Green
         return 'deferred'
     }
     Update-PromptAuxiliarRefreshShortcuts -InstallRoot $InstallRoot

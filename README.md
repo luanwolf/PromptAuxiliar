@@ -7,7 +7,7 @@
     <img alt="WebView2" src="https://img.shields.io/badge/WebView2-Edge-0078D4?logo=microsoftedge&logoColor=white" />
     <img alt="Winget" src="https://img.shields.io/badge/Winget-pacotes-2EA043?logo=windows&logoColor=white" />
     <img alt="PowerShell" src="https://img.shields.io/badge/PowerShell-5.1+-5391FE?logo=powershell&logoColor=white" />
-    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.7.8-0078D4" />
+    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.7.9-0078D4" />
   </p>
 
   <p>
@@ -62,8 +62,9 @@ Também funciona com `win.ps1` direto; o instalador configura **RemoteSigned** n
 O app **não atualiza automaticamente** ao abrir. Para verificar e aplicar uma atualização:
 
 1. Clique em **Verificar atualização** na barra lateral
-2. Se houver nova versão, o botão muda para **Atualização disponível** (azul pulsante)
-3. Clique novamente para confirmar — o app fecha e o PowerShell aplica a atualização
+2. Se houver nova versão, o modal de confirmação abre na hora — confirme para iniciar
+3. O botão fica azul (**Atualização disponível**) se você cancelar e quiser tentar de novo
+4. A janela do PowerShell do instalador fecha sozinha após contagem **5…1** (sem precisar pressionar Enter)
 
 | Situação | Comportamento |
 |----------|----------------|

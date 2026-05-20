@@ -38,6 +38,20 @@ function Write-PromptAuxBanner {
     Write-Host ''
 }
 
+function Start-PromptAuxCountdownClose {
+    param(
+        [int]$Seconds = 5,
+        [string]$Message = ''
+    )
+    Write-Host ''
+    if ($Message) { Write-Host $Message -ForegroundColor Green }
+    for ($i = $Seconds; $i -ge 1; $i--) {
+        Write-Host "  Fechando em ${i}s..." -ForegroundColor DarkGray
+        Start-Sleep -Seconds 1
+    }
+    Write-Host ''
+}
+
 function Update-PromptAuxPath {
     $machine = [System.Environment]::GetEnvironmentVariable('Path', 'Machine')
     $user = [System.Environment]::GetEnvironmentVariable('Path', 'User')
@@ -712,7 +726,7 @@ function Install-PromptAuxiliarSourceZip {
 
     $destExists = Test-Path -LiteralPath $Destination
     if ($destExists -and (Test-PromptAuxShouldDeferFolderSwap -Destination $Destination -ScriptDir $ScriptDir)) {
-        Write-Host '  Atualizacao adiada: feche ESTA janela (Enter) para concluir a copia dos arquivos.' -ForegroundColor Cyan
+        Write-Host '  Atualizacao adiada: esta janela fechara em alguns segundos.' -ForegroundColor Cyan
         Write-Host '  O atalho da nova versao ja foi criado na Area de Trabalho.' -ForegroundColor DarkGray
         Invoke-PromptAuxDeferredFolderSwap -StagingPath $staging -Destination $Destination
         Remove-Item $tempZip -Force -ErrorAction SilentlyContinue
@@ -842,12 +856,7 @@ function Start-PromptAuxiliarProcess {
 trap {
     Write-Host ''
     Write-Host "ERRO: $($_.Exception.Message)" -ForegroundColor Red
-    Write-Host ''
-    foreach ($i in 5..1) {
-        Write-Host "  Fechando em ${i}s...`r" -NoNewline -ForegroundColor Yellow
-        Start-Sleep -Seconds 1
-    }
-    Write-Host ''
+    Start-PromptAuxCountdownClose
     exit 1
 }
 
@@ -897,13 +906,7 @@ Invoke-PromptAuxiliarInstallOrUpdate `
     -Force:$forceUpdate
 
 if ($script:PromptAuxDeferredExit) {
-    Write-Host ''
-    Write-Host '  Outra janela concluira a atualizacao e abrira o app.' -ForegroundColor Green
-    foreach ($i in 5..1) {
-        Write-Host "  Fechando em ${i}s...`r" -NoNewline -ForegroundColor DarkGray
-        Start-Sleep -Seconds 1
-    }
-    Write-Host ''
+    Start-PromptAuxCountdownClose -Message '  Outra janela concluira a atualizacao e abrira o app.'
     exit 0
 }
 
