@@ -334,6 +334,7 @@ function Get-PromptAuxBatScriptNames {
 function Get-PromptAuxScriptPs1Names {
     return @(
         '_ui.ps1',
+        '_util_install.ps1',
         'aplicar_ajustes.ps1',
         'ativar_windows.ps1',
         'atualizar_softwares.ps1',

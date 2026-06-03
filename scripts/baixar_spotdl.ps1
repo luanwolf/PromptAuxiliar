@@ -1,5 +1,6 @@
 #Requires -Version 5.1
 . "$PSScriptRoot\_ui.ps1"
+. "$PSScriptRoot\_util_install.ps1"
 
 $url  = $env:PA_UTIL_URL
 $dest = $env:PA_UTIL_DEST
@@ -22,22 +23,11 @@ Write-Host ''
 
 if (-not (Confirm-PAAction)) { exit 0 }
 
-function Test-PACommand {
-    param([string]$Name)
-    return [bool](Get-Command $Name -ErrorAction SilentlyContinue)
-}
-
 $startTime = Get-Date
 $results   = [System.Collections.ArrayList]::new()
 
-Invoke-PAStep "Verificando spotdl" $results {
-    if (-not (Test-PACommand 'spotdl')) {
-        Write-Host '  spotdl nao encontrado. Instalando via pip...' -ForegroundColor Yellow
-        $py = if (Test-PACommand 'py') { @('py', '-3') } elseif (Test-PACommand 'python') { @('python') } else { $null }
-        if (-not $py) { throw 'Python nao encontrado. Instale Python 3.10+ ou: pip install spotdl' }
-        & @py -m pip install -U spotdl -q --disable-pip-version-check
-        if (-not (Test-PACommand 'spotdl')) { throw 'Falha ao instalar spotdl. Tente: pip install spotdl' }
-    }
+Invoke-PAStep "Verificar / instalar spotdl" $results {
+    Ensure-PATool -CommandName 'spotdl' -WingetId '' -PipPackage 'spotdl'
 }
 
 Invoke-PAStep "Baixando do Spotify" $results {

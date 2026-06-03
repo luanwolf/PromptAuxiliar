@@ -109,20 +109,24 @@ def _build_ps1_run_file(script_path: Path) -> Path:
     run_path = _PS_RUN / f"run_{uuid.uuid4().hex}.ps1"
 
     ui_path = script_path.parent / "_ui.ps1"
+    util_path = script_path.parent / "_util_install.ps1"
     try:
         ui_src = ui_path.read_text(encoding="utf-8-sig") if ui_path.is_file() else ""
+        util_src = util_path.read_text(encoding="utf-8-sig") if util_path.is_file() else ""
         sc_src = script_path.read_text(encoding="utf-8-sig")
     except OSError:
         return script_path  # fallback: rodar original
 
-    # Remove a linha de dot-source de _ui.ps1 (já está embutido)
-    sc_lines = [
-        ln for ln in sc_src.splitlines()
-        if not ln.strip().startswith('. "$PSScriptRoot\\_ui.ps1"')
-        and not ln.strip().startswith(". '$PSScriptRoot\\_ui.ps1'")
-        and not ln.strip().startswith('. "$PSScriptRoot/_ui.ps1"')
-    ]
-    combined = (ui_src.strip() + "\n\n" + "\n".join(sc_lines)).strip() + "\n"
+    def _is_dotsource_line(ln: str) -> bool:
+        s = ln.strip()
+        return (
+            "_ui.ps1" in s
+            or "_util_install.ps1" in s
+        ) and s.startswith(".")
+
+    sc_lines = [ln for ln in sc_src.splitlines() if not _is_dotsource_line(ln)]
+    chunks = [c for c in (ui_src.strip(), util_src.strip(), "\n".join(sc_lines).strip()) if c]
+    combined = "\n\n".join(chunks) + "\n"
     run_path.write_text(combined, encoding="utf-8-sig")
     return run_path
 
@@ -135,6 +139,7 @@ def _params_to_env(params: dict[str, str] | None) -> dict[str, str]:
         "url": "PA_UTIL_URL",
         "dest": "PA_UTIL_DEST",
         "mode": "PA_UTIL_MODE",
+        "playlist": "PA_UTIL_PLAYLIST",
     }
     out: dict[str, str] = {}
     for k, v in params.items():

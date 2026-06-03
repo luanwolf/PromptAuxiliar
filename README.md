@@ -7,7 +7,7 @@
     <img alt="WebView2" src="https://img.shields.io/badge/WebView2-Edge-0078D4?logo=microsoftedge&logoColor=white" />
     <img alt="Winget" src="https://img.shields.io/badge/Winget-pacotes-2EA043?logo=windows&logoColor=white" />
     <img alt="PowerShell" src="https://img.shields.io/badge/PowerShell-5.1+-5391FE?logo=powershell&logoColor=white" />
-    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.7.13-0078D4" />
+    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.7.14-0078D4" />
   </p>
 
   <p>
@@ -114,22 +114,25 @@ Visualização em **grade** (cards) ou **lista densa** (nome + descrição em li
 
 ---
 
-### 4) Utilitários (yt-dlp e spotdl)
+### 4) Utilitários (barra lateral)
 
-Categoria **Utilitários** na lista de scripts. Ao clicar, o app abre um formulário para você informar:
+Barra lateral → **Utilitários** — painel com **dois botões**:
+
+| Botão | Ferramenta | Uso |
+|-------|------------|-----|
+| **yt-dlp** | [yt-dlp](https://github.com/yt-dlp/yt-dlp) | Vídeo (MP4), áudio (MP3) ou **playlist do YouTube** |
+| **spotdl** | [spotdl](https://github.com/spotDL/spotify-downloader) | Música ou playlist do Spotify em MP3 |
+
+Ao clicar em um botão, o app abre um formulário:
 
 | Campo | Descrição |
 |-------|-----------|
-| **Link (URL)** | URL do vídeo, playlist ou faixa do Spotify |
-| **Pasta de destino** | Botão **Procurar** abre o seletor de pastas do Windows |
-| **Formato** (só yt-dlp) | **Vídeo (MP4)** ou **Somente áudio (MP3)** |
+| **Link (URL)** | URL do vídeo, playlist YouTube ou link Spotify |
+| **Pasta de destino** | **Procurar** abre o seletor de pastas do Windows |
+| **Formato** (yt-dlp) | **Vídeo (MP4)** ou **Somente áudio (MP3)** |
+| **Playlist** (yt-dlp) | Marque para baixar a playlist inteira do YouTube |
 
-| Script | Ferramenta | Uso |
-|--------|------------|-----|
-| **Baixar com yt-dlp** | [yt-dlp](https://github.com/yt-dlp/yt-dlp) | YouTube e centenas de sites; vídeo ou áudio |
-| **Baixar do Spotify (spotdl)** | [spotdl](https://github.com/spotDL/spotify-downloader) | Música ou playlist do Spotify em MP3 |
-
-Se `yt-dlp` ou `spotdl` não estiverem instalados, o script tenta instalar via `pip` automaticamente. Os arquivos são salvos na pasta que você escolher; o log fica em `C:\PromptAuxiliar\logs\`.
+Os scripts **verificam se a ferramenta está instalada**; se não estiver, tentam instalar via **winget** e, em seguida, **pip**. Depois executam o download. Logs em `C:\PromptAuxiliar\logs\`.
 
 ---
 
@@ -241,8 +244,10 @@ app/
     tweaks_catalog.json
 scripts/
   _ui.ps1               # biblioteca visual compartilhada
-  baixar_ytdlp.ps1      # download vídeo/áudio (parâmetros via app)
+  _util_install.ps1     # instalação winget/pip (yt-dlp, spotdl)
+  baixar_ytdlp.ps1      # download vídeo/áudio/playlist YouTube
   baixar_spotdl.ps1     # download Spotify
+  js/utils.js           # painel Utilitários (2 botões)
   *.ps1                 # demais scripts
 web/
   assets/
@@ -264,7 +269,8 @@ win.ps1                 # instalador / atualizador one-liner
 
 | Versão | Destaques |
 |--------|-----------|
-| **2.7.13** | Categoria **Utilitários**: yt-dlp (vídeo/áudio) e spotdl (Spotify) com modal de URL e pasta |
+| **2.7.14** | **Utilitários** na barra lateral com 2 botões; playlist YouTube; instalação winget+pip |
+| **2.7.13** | Utilitários iniciais (yt-dlp / spotdl) com modal de URL e pasta |
 | **2.7.12** | Release de teste — verificação automática na abertura (botão azul) |
 | **2.7.11** | Verificação automática na abertura — botão **Atualização disponível** sem clicar em verificar |
 | **2.7.10** | Release de teste do fluxo de atualização |

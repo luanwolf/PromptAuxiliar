@@ -186,8 +186,12 @@
     if (!dlg || !form || !urlIn || !destIn) return Promise.resolve(null);
 
     const showMode = acao.id === "baixar-ytdlp";
+    const playlistWrap = document.getElementById("util-playlist-wrap");
+    const playlistCb = document.getElementById("util-playlist");
     if (titleEl) titleEl.textContent = acao.nome;
     if (modeWrap) modeWrap.classList.toggle("hidden", !showMode);
+    if (playlistWrap) playlistWrap.classList.toggle("hidden", !showMode);
+    if (playlistCb && showMode) playlistCb.checked = true;
 
     urlIn.value = "";
     destIn.value = "";
@@ -226,6 +230,7 @@
         if (showMode) {
           const modeEl = form.querySelector('input[name="util-mode"]:checked');
           params.mode = modeEl?.value === "audio" ? "audio" : "video";
+          params.playlist = playlistCb?.checked ? "1" : "0";
         }
         finish(params);
       };
@@ -267,12 +272,34 @@
         if (window.Panels.isOpen() && document.body.dataset.view === p.kind) {
           window.Panels.close();
         } else {
+          if (window.Utils?.isOpen()) window.Utils.close();
           if (window.Tweaks?.isOpen()) window.Tweaks.close();
           window.Panels.open(p.kind);
         }
       });
       ui.nav.appendChild(btn);
     });
+
+    const divUtils = document.createElement("div");
+    divUtils.className = "nav-divider";
+    ui.nav.appendChild(divUtils);
+
+    const utilsBtn = document.createElement("button");
+    utilsBtn.type = "button";
+    utilsBtn.className = `nav-item nav-utils${curView === "utils" ? " active" : ""}`;
+    utilsBtn.textContent = "Utilitários";
+    utilsBtn.addEventListener("click", () => {
+      if (window.Utils?.isOpen()) {
+        window.Utils.close();
+        openScriptsView();
+      } else {
+        if (window.Panels?.isOpen()) window.Panels.close();
+        if (window.Tweaks?.isOpen()) window.Tweaks.close();
+        window.Utils?.open();
+        renderNav();
+      }
+    });
+    ui.nav.appendChild(utilsBtn);
 
     const divTweaks = document.createElement("div");
     divTweaks.className = "nav-divider";
@@ -288,6 +315,7 @@
         openScriptsView();
       } else {
         if (window.Panels?.isOpen()) window.Panels.close();
+        if (window.Utils?.isOpen()) window.Utils.close();
         window.Tweaks?.open();
         renderNav();
       }
@@ -300,8 +328,16 @@
 
     const scriptsBtn = document.createElement("button");
     scriptsBtn.type = "button";
-    scriptsBtn.className = `nav-item nav-scripts${curView === "scripts" && !window.Panels?.isOpen() && !window.Tweaks?.isOpen() ? " active" : ""}`;
-    scriptsBtn.innerHTML = `Scripts <span class="badge">${state.catalog.acoes.length}</span>`;
+    const scriptCount = state.catalog.acoes.filter((a) => a.categoria !== "Utilitários").length;
+    scriptsBtn.className = `nav-item nav-scripts${
+      curView === "scripts" &&
+      !window.Panels?.isOpen() &&
+      !window.Tweaks?.isOpen() &&
+      !window.Utils?.isOpen()
+        ? " active"
+        : ""
+    }`;
+    scriptsBtn.innerHTML = `Scripts <span class="badge">${scriptCount}</span>`;
     scriptsBtn.addEventListener("click", () => openScriptsView());
     ui.nav.appendChild(scriptsBtn);
   }
@@ -309,6 +345,7 @@
   function openScriptsView() {
     if (window.Panels?.isOpen()) window.Panels.close();
     if (window.Tweaks?.isOpen()) window.Tweaks.close();
+    if (window.Utils?.isOpen()) window.Utils.close();
     state.view = "scripts";
     document.body.dataset.view = "scripts";
     ui.viewHome.classList.remove("hidden");
@@ -343,7 +380,7 @@
   }
 
   function acoesFiltradas() {
-    let list = state.catalog.acoes.slice();
+    let list = state.catalog.acoes.filter((a) => a.categoria !== "Utilitários");
     const q = state.busca.trim().toLowerCase();
     if (q) {
       list = list.filter(
@@ -361,7 +398,7 @@
   function renderScripts() {
     const list = acoesFiltradas();
     ui.title.textContent = "Scripts";
-    ui.subtitle.textContent = `${list.length} script(s) .bat disponíveis`;
+    ui.subtitle.textContent = `${list.length} script(s) disponíveis`;
     if (ui.scriptsToolbar) ui.scriptsToolbar.classList.remove("hidden");
     if (!list.length) {
       ui.scriptsGrid.innerHTML = `
@@ -511,8 +548,16 @@
       .catch(() => {});
   }
 
+  function runActionById(actionId) {
+    const acao = state.catalog?.acoes?.find((a) => a.id === actionId);
+    if (acao) return runAction(acao);
+    toast(`Ação não encontrada: ${actionId}`, "error");
+  }
+
   window.appToast = toast;
   window.appConfirm = confirmDialog;
+  window.appRunActionById = runActionById;
+  window.appRenderNav = renderNav;
   window.appSetTitle = (t, s) => {
     ui.title.textContent = t;
     ui.subtitle.textContent = s;
@@ -525,6 +570,8 @@
     if (p) { p.classList.add("hidden"); p.hidden = true; }
     const t = document.getElementById("view-tweaks");
     if (t) { t.classList.add("hidden"); t.hidden = true; }
+    const u = document.getElementById("view-utils");
+    if (u) { u.classList.add("hidden"); u.hidden = true; }
     ui.search.placeholder = "Buscar scripts…";
     ui.search.value = "";
     state.busca = "";
@@ -535,6 +582,7 @@
   function bindEvents() {
     if (window.Panels) window.Panels.bind();
     if (window.Tweaks) window.Tweaks.bind();
+    if (window.Utils) window.Utils.bind();
     ui.search.addEventListener("input", () => {
       if (window.Panels?.isOpen()) {
         window.Panels.setBusca(ui.search.value);

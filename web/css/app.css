@@ -1364,6 +1364,104 @@ body[data-view="tweaks"] .nav-tweaks {
   color: var(--text);
 }
 
+body[data-view="utils"] .nav-utils {
+  background: var(--nav-active-bg);
+  border-color: var(--nav-active-border);
+  color: var(--text);
+}
+
+/* Painel Utilitários */
+.utils-view {
+  padding: 0 1.5rem 1.5rem;
+  animation: view-fade-in 0.28s var(--ease) both;
+}
+
+.utils-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  align-content: start;
+  max-width: 720px;
+}
+
+.utils-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.15rem 1.25rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.utils-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.utils-card-icon {
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-sm);
+  background: var(--nav-active-bg);
+  color: var(--accent-bright);
+}
+
+.utils-card-icon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.utils-card-icon-music {
+  color: #4ade80;
+}
+
+.utils-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.utils-card-body strong {
+  font-size: 1.05rem;
+}
+
+.utils-card-sub {
+  font-size: 0.78rem;
+  color: var(--accent-bright);
+  font-weight: 600;
+}
+
+.utils-card-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.utils-card-cta {
+  flex-shrink: 0;
+  align-self: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-bright);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.utils-card:hover .utils-card-cta {
+  opacity: 1;
+}
+
 .tweaks-row {
   cursor: pointer;
 }
@@ -1544,4 +1642,24 @@ html[data-theme="light"] .tweak-badge-inactive {
 
 .util-radio input {
   accent-color: var(--accent);
+}
+
+.util-playlist-wrap {
+  padding-top: 0.15rem;
+}
+
+.util-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.util-check input {
+  margin-top: 0.15rem;
+  accent-color: var(--accent);
+  flex-shrink: 0;
 }
