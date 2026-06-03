@@ -7,7 +7,7 @@
     <img alt="WebView2" src="https://img.shields.io/badge/WebView2-Edge-0078D4?logo=microsoftedge&logoColor=white" />
     <img alt="Winget" src="https://img.shields.io/badge/Winget-pacotes-2EA043?logo=windows&logoColor=white" />
     <img alt="PowerShell" src="https://img.shields.io/badge/PowerShell-5.1+-5391FE?logo=powershell&logoColor=white" />
-    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.7.12-0078D4" />
+    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.7.13-0078D4" />
   </p>
 
   <p>
@@ -26,6 +26,7 @@ O **Prompt Auxiliar** centraliza tarefas comuns de manutenção e personalizaç�
 - **Painel Winget** — catálogo curado com busca, categorias e instalação em lote
 - **Painel Debloat** — remoção de bloatware conhecido (Microsoft, Xbox, Bing legado Win10, OEM)
 - **Tweaks Windows** — ajustes de registro e sistema com detecção automática do estado atual
+- **Utilitários** — download de vídeo/música (yt-dlp) e Spotify (spotdl), com escolha de pasta e formato
 - **Ações sensíveis** — confirmação extra para registro, KMS, WinUtil e similares
 - **Pasta de dados** em `C:\PromptAuxiliar` (softwares, registros, seleções dos painéis)
 
@@ -113,7 +114,26 @@ Visualização em **grade** (cards) ou **lista densa** (nome + descrição em li
 
 ---
 
-### 4) Painel Winget
+### 4) Utilitários (yt-dlp e spotdl)
+
+Categoria **Utilitários** na lista de scripts. Ao clicar, o app abre um formulário para você informar:
+
+| Campo | Descrição |
+|-------|-----------|
+| **Link (URL)** | URL do vídeo, playlist ou faixa do Spotify |
+| **Pasta de destino** | Botão **Procurar** abre o seletor de pastas do Windows |
+| **Formato** (só yt-dlp) | **Vídeo (MP4)** ou **Somente áudio (MP3)** |
+
+| Script | Ferramenta | Uso |
+|--------|------------|-----|
+| **Baixar com yt-dlp** | [yt-dlp](https://github.com/yt-dlp/yt-dlp) | YouTube e centenas de sites; vídeo ou áudio |
+| **Baixar do Spotify (spotdl)** | [spotdl](https://github.com/spotDL/spotify-downloader) | Música ou playlist do Spotify em MP3 |
+
+Se `yt-dlp` ou `spotdl` não estiverem instalados, o script tenta instalar via `pip` automaticamente. Os arquivos são salvos na pasta que você escolher; o log fica em `C:\PromptAuxiliar\logs\`.
+
+---
+
+### 5) Painel Winget
 
 | Ação | Como fazer |
 |------|------------|
@@ -127,7 +147,7 @@ O catálogo inclui navegadores, dev tools, utilitários, jogos, personalização
 
 ---
 
-### 5) Painel Debloat
+### 6) Painel Debloat
 
 | Ação | Como fazer |
 |------|------------|
@@ -142,7 +162,7 @@ Itens em **Revisar antes de remover** (OneDrive, Edge, Store) vêm **desmarcados
 
 ---
 
-### 6) Tweaks Windows
+### 7) Tweaks Windows
 
 Barra lateral → **Tweaks Windows**
 
@@ -169,7 +189,7 @@ O painel detecta automaticamente o estado atual de cada ajuste no registro e exi
 
 ---
 
-### 7) Barra lateral
+### 8) Barra lateral
 
 | Controle | Descrição |
 |----------|-----------|
@@ -180,7 +200,7 @@ O painel detecta automaticamente o estado atual de cada ajuste no registro e exi
 
 ---
 
-### 8) Ações com nível de risco
+### 9) Ações com nível de risco
 
 | Nível | Comportamento |
 |-------|----------------|
@@ -221,7 +241,9 @@ app/
     tweaks_catalog.json
 scripts/
   _ui.ps1               # biblioteca visual compartilhada
-  *.ps1                 # scripts individuais
+  baixar_ytdlp.ps1      # download vídeo/áudio (parâmetros via app)
+  baixar_spotdl.ps1     # download Spotify
+  *.ps1                 # demais scripts
 web/
   assets/
     logo.ico            # ícone do app (taskbar / alt-tab)
@@ -242,6 +264,7 @@ win.ps1                 # instalador / atualizador one-liner
 
 | Versão | Destaques |
 |--------|-----------|
+| **2.7.13** | Categoria **Utilitários**: yt-dlp (vídeo/áudio) e spotdl (Spotify) com modal de URL e pasta |
 | **2.7.12** | Release de teste — verificação automática na abertura (botão azul) |
 | **2.7.11** | Verificação automática na abertura — botão **Atualização disponível** sem clicar em verificar |
 | **2.7.10** | Release de teste do fluxo de atualização |

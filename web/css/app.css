@@ -1463,3 +1463,85 @@ html[data-theme="light"] .tweak-badge-inactive {
 @keyframes tweaks-spin {
   to { transform: rotate(360deg); }
 }
+
+/* Modal — Utilitários (yt-dlp / spotdl) */
+.util-modal-card {
+  max-width: min(480px, 92vw);
+}
+
+.util-modal-card h3 {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+}
+
+.util-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-bottom: 1.1rem;
+}
+
+.util-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.util-input {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.util-input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.util-folder-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.util-folder-row .util-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.util-folder-row .btn {
+  width: auto;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.util-mode-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding-top: 0.25rem;
+}
+
+.util-mode-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+}
+
+.util-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.util-radio input {
+  accent-color: var(--accent);
+}

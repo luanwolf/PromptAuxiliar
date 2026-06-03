@@ -170,6 +170,82 @@
     return showAppModal({ ...opts, variant: "confirm" });
   }
 
+  /**
+   * Modal para Utilitários (yt-dlp / spotdl): URL, pasta e opcionalmente vídeo/áudio.
+   * @returns {Promise<{url:string,dest:string,mode?:string}|null>}
+   */
+  function showUtilModal(acao) {
+    const dlg = document.getElementById("util-modal");
+    const form = dlg?.querySelector("form");
+    const titleEl = document.getElementById("util-modal-title");
+    const urlIn = document.getElementById("util-url");
+    const destIn = document.getElementById("util-dest");
+    const browseBtn = document.getElementById("util-browse");
+    const modeWrap = document.getElementById("util-mode-wrap");
+    const cancelBtn = document.getElementById("util-cancel");
+    if (!dlg || !form || !urlIn || !destIn) return Promise.resolve(null);
+
+    const showMode = acao.id === "baixar-ytdlp";
+    if (titleEl) titleEl.textContent = acao.nome;
+    if (modeWrap) modeWrap.classList.toggle("hidden", !showMode);
+
+    urlIn.value = "";
+    destIn.value = "";
+    const videoRadio = form.querySelector('input[name="util-mode"][value="video"]');
+    if (videoRadio) videoRadio.checked = true;
+
+    return new Promise((resolve) => {
+      let done = false;
+      const finish = (value) => {
+        if (done) return;
+        done = true;
+        if (dlg.open) dlg.close();
+        resolve(value);
+      };
+
+      const onBrowse = async () => {
+        try {
+          const r = await api().pick_folder();
+          if (r.ok && r.path) destIn.value = r.path;
+          else if (!r.ok && r.message) toast(r.message, "error");
+        } catch (e) {
+          toast(String(e), "error");
+        }
+      };
+
+      const onCancel = () => finish(null);
+      const onSubmit = (e) => {
+        e.preventDefault();
+        const url = urlIn.value.trim();
+        const dest = destIn.value.trim();
+        if (!url || !dest) {
+          toast("Informe o link e a pasta de destino.", "error");
+          return;
+        }
+        const params = { url, dest };
+        if (showMode) {
+          const modeEl = form.querySelector('input[name="util-mode"]:checked');
+          params.mode = modeEl?.value === "audio" ? "audio" : "video";
+        }
+        finish(params);
+      };
+
+      browseBtn?.addEventListener("click", onBrowse, { once: true });
+      cancelBtn?.addEventListener("click", onCancel, { once: true });
+      form.addEventListener("submit", onSubmit, { once: true });
+      dlg.addEventListener(
+        "cancel",
+        (e) => {
+          e.preventDefault();
+          finish(null);
+        },
+        { once: true }
+      );
+      dlg.showModal();
+      setTimeout(() => urlIn.focus(), 80);
+    });
+  }
+
   function escapeHtml(s) {
     const d = document.createElement("div");
     d.textContent = s;
@@ -347,6 +423,22 @@
       toast("Aguarde — outra ação em execução.", "error");
       return;
     }
+
+    if (acao.interativo === "util") {
+      const params = await showUtilModal(acao);
+      if (!params) return;
+      state.busy = true;
+      try {
+        const res = await api().run_action_params(acao.id, params);
+        toast(res.message, res.ok ? "success" : "error");
+      } catch (e) {
+        toast(String(e), "error");
+      } finally {
+        state.busy = false;
+      }
+      return;
+    }
+
     if (acao.risco === "perigo" || acao.risco === "aviso") {
       const ok = await confirmDialog({
         title: acao.risco === "perigo" ? "Ação sensível" : "Confirmar",

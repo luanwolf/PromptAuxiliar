@@ -345,7 +345,9 @@ function Get-PromptAuxScriptPs1Names {
         'limpeza_malware.ps1',
         'limpeza_profunda.ps1',
         'limpeza_temporarios.ps1',
-        'reparar_rede.ps1'
+        'reparar_rede.ps1',
+        'baixar_ytdlp.ps1',
+        'baixar_spotdl.ps1'
     )
 }
 

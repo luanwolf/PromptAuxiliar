@@ -65,10 +65,54 @@ class PromptAuxiliarApi:
         }
         return data
 
+    def pick_folder(self) -> dict[str, Any]:
+        """Abre seletor nativo de pasta do Windows."""
+        try:
+            import tkinter as tk
+            from tkinter import filedialog
+
+            root = tk.Tk()
+            root.withdraw()
+            root.attributes("-topmost", True)
+            root.update()
+            pasta = filedialog.askdirectory(title="Escolha a pasta de destino")
+            root.destroy()
+            if pasta:
+                return {"ok": True, "path": pasta}
+            return {"ok": False, "message": "Nenhuma pasta selecionada."}
+        except Exception as e:
+            return {"ok": False, "message": str(e)}
+
     def run_action(self, action_id: str) -> dict[str, Any]:
+        return self._run_action_impl(action_id, None)
+
+    def run_action_params(self, action_id: str, params: dict[str, Any]) -> dict[str, Any]:
+        """Executa ação com parâmetros (URL, pasta, modo) vindos do modal Utilitários."""
+        clean: dict[str, str] = {}
+        if isinstance(params, dict):
+            for key in ("url", "dest", "mode"):
+                val = params.get(key)
+                if val is not None and str(val).strip():
+                    clean[key] = str(val).strip()
+        return self._run_action_impl(action_id, clean or None)
+
+    def _run_action_impl(
+        self, action_id: str, params: dict[str, str] | None
+    ) -> dict[str, Any]:
         acao = obter_acao(action_id)
         if not acao:
             return {"ok": False, "message": f"Ação desconhecida: {action_id}"}
+        if params and acao.interativo != "util":
+            return {"ok": False, "message": "Esta ação não aceita parâmetros."}
+        if acao.interativo == "util":
+            if not params or not params.get("url") or not params.get("dest"):
+                return {
+                    "ok": False,
+                    "message": "Informe o link e a pasta de destino.",
+                }
+            if acao.id == "baixar-ytdlp" and params.get("mode") not in ("video", "audio"):
+                return {"ok": False, "message": "Escolha vídeo ou áudio."}
+
         with self._lock:
             if self._busy:
                 return {"ok": False, "message": "Aguarde — outra operação em execução."}
@@ -76,7 +120,7 @@ class PromptAuxiliarApi:
 
         def worker() -> None:
             try:
-                executar_acao(acao, aguardar=False)
+                executar_acao(acao, aguardar=False, params=params)
             finally:
                 with self._lock:
                     self._busy = False

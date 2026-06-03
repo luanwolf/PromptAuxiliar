@@ -157,6 +157,34 @@
     </div>
   </dialog>
 
+  <dialog id="util-modal" class="modal util-modal">
+    <form method="dialog" class="modal-card util-modal-card">
+      <h3 id="util-modal-title">Download</h3>
+      <div class="util-form">
+        <label class="util-label" for="util-url">Link (URL)</label>
+        <input id="util-url" class="util-input" type="url" placeholder="https://..." autocomplete="off" required />
+
+        <label class="util-label" for="util-dest">Pasta de destino</label>
+        <div class="util-folder-row">
+          <input id="util-dest" class="util-input" type="text" placeholder="Clique em Procurar…" readonly required />
+          <button type="button" class="btn ghost sm" id="util-browse">Procurar</button>
+        </div>
+
+        <div id="util-mode-wrap" class="util-mode-wrap hidden">
+          <span class="util-label">Formato</span>
+          <div class="util-mode-options" role="radiogroup" aria-label="Formato do download">
+            <label class="util-radio"><input type="radio" name="util-mode" value="video" checked /> Vídeo (MP4)</label>
+            <label class="util-radio"><input type="radio" name="util-mode" value="audio" /> Somente áudio (MP3)</label>
+          </div>
+        </div>
+      </div>
+      <footer class="modal-foot">
+        <button type="button" class="btn ghost" id="util-cancel">Cancelar</button>
+        <button type="submit" class="btn primary" id="util-submit">Baixar</button>
+      </footer>
+    </form>
+  </dialog>
+
   <dialog id="welcome" class="modal welcome">
     <form method="dialog" class="modal-card">
       <h3>Bem-vindo</h3>

@@ -127,13 +127,37 @@ def _build_ps1_run_file(script_path: Path) -> Path:
     return run_path
 
 
-def _abrir_console_script(script: str, titulo: str) -> None:
+def _params_to_env(params: dict[str, str] | None) -> dict[str, str]:
+    """Converte parâmetros do app para variáveis de ambiente lidas pelos scripts."""
+    if not params:
+        return {}
+    key_map = {
+        "url": "PA_UTIL_URL",
+        "dest": "PA_UTIL_DEST",
+        "mode": "PA_UTIL_MODE",
+    }
+    out: dict[str, str] = {}
+    for k, v in params.items():
+        env_key = key_map.get(k.lower())
+        if env_key and v is not None:
+            out[env_key] = str(v)
+    return out
+
+
+def _abrir_console_script(
+    script: str,
+    titulo: str,
+    extra_env: dict[str, str] | None = None,
+) -> None:
     """Abre o script em nova janela — .ps1 via PowerShell, .bat via CMD."""
     script_path = Path(script).resolve()
     if not script_path.is_file():
         raise ScriptNaoEncontradoError(f"Script não encontrado: {script_path}")
 
     flags = getattr(subprocess, "CREATE_NEW_CONSOLE", 0)
+    env = os.environ.copy()
+    if extra_env:
+        env.update(extra_env)
 
     if script_path.suffix.lower() == ".ps1":
         # Gera arquivo temp com _ui.ps1 embutido e encoding UTF-8-BOM
@@ -149,6 +173,7 @@ def _abrir_console_script(script: str, titulo: str) -> None:
             ],
             cwd=str(script_path.parent),
             creationflags=flags,
+            env=env,
         )
     else:
         # Passar string (não lista) evita list2cmdline que converte " em \"
@@ -156,6 +181,7 @@ def _abrir_console_script(script: str, titulo: str) -> None:
             f'cmd.exe /c "{script_path}"',
             cwd=str(script_path.parent),
             creationflags=flags,
+            env=env,
         )
 
 
@@ -163,13 +189,18 @@ def usa_powershell_admin(action_id: str) -> bool:
     return action_id in _COMANDOS_PS_ADMIN
 
 
-def executar_acao(acao: Acao, *, aguardar: bool = True) -> subprocess.Popen | int:
+def executar_acao(
+    acao: Acao,
+    *,
+    aguardar: bool = True,
+    params: dict[str, str] | None = None,
+) -> subprocess.Popen | int:
     comando = _COMANDOS_PS_ADMIN.get(acao.id)
     if comando:
         _executar_ps_admin(comando, acao.nome)
         return 0
     caminho = resolver_script(acao.script)
-    _abrir_console_script(caminho, acao.nome)
+    _abrir_console_script(caminho, acao.nome, extra_env=_params_to_env(params))
     return 0
 
 

@@ -17,6 +17,7 @@ class Acao:
     descricao: str
     icone: str
     nivel_risco: NivelRisco = "normal"
+    interativo: str | None = None  # "util" = modal URL, pasta e opções no app
 
 
 _ACOES: tuple[Acao, ...] = (
@@ -42,6 +43,24 @@ _ACOES: tuple[Acao, ...] = (
     Acao("criar-atalhos", "Criar atalhos (GodMode e BIOS)", "criar_atalhos.ps1", "Sistema", "GodMode e atalho reinício BIOS.", "desktop"),
     Acao("gerenciar-inicializacao", "Apps de inicialização", "gerenciar_inicializacao.ps1", "Sistema", "Configurações de inicialização.", "rocket"),
     Acao("reparar-rede", "Reparar conexão de rede", "reparar_rede.ps1", "Sistema", "IP, DNS, Winsock e TCP/IP.", "wifi"),
+    Acao(
+        "baixar-ytdlp",
+        "Baixar com yt-dlp",
+        "baixar_ytdlp.ps1",
+        "Utilitários",
+        "Baixa vídeo ou música de YouTube e outros sites (yt-dlp).",
+        "download",
+        interativo="util",
+    ),
+    Acao(
+        "baixar-spotdl",
+        "Baixar do Spotify (spotdl)",
+        "baixar_spotdl.ps1",
+        "Utilitários",
+        "Baixa música ou playlist do Spotify em MP3 (spotdl).",
+        "music",
+        interativo="util",
+    ),
 )
 
 _POR_ID = {a.id: a for a in _ACOES}
@@ -52,6 +71,7 @@ _META_CATEGORIAS: dict[str, dict[str, str]] = {
     "Limpeza": {"slug": "limpeza", "icone": "clean", "descricao": "Temporários, disco e segurança"},
     "Otimização": {"slug": "otimizacao", "icone": "tune", "descricao": "Registro e ajustes"},
     "Sistema": {"slug": "sistema", "icone": "system", "descricao": "Rede, atalhos e configurações"},
+    "Utilitários": {"slug": "utilitarios", "icone": "tool", "descricao": "Downloads de vídeo, música e Spotify"},
 }
 
 
@@ -96,6 +116,7 @@ def acao_para_dict(acao: Acao) -> dict[str, Any]:
         "descricao": acao.descricao,
         "icone": acao.icone,
         "risco": acao.nivel_risco,
+        "interativo": acao.interativo,
     }
 
 
