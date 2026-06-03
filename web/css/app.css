@@ -890,7 +890,8 @@ input {
 }
 
 #view-home,
-.scripts-view {
+.scripts-view,
+.utils-view {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -1370,44 +1371,34 @@ body[data-view="utils"] .nav-utils {
   color: var(--text);
 }
 
-/* Painel Utilitários */
+/* Painel Utilitários — mesmo padrão Scripts (list-wrap + grade/lista) */
 .utils-view {
-  padding: 0 1.5rem 1.5rem;
   animation: view-fade-in 0.28s var(--ease) both;
 }
 
-.utils-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1rem;
-  align-content: start;
-  max-width: 720px;
+#utils-toolbar.scripts-toolbar {
+  padding: 0 1.5rem 0.65rem;
 }
 
-.utils-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1.15rem 1.25rem;
-  border-radius: var(--radius-lg);
+button.card.utils-card {
+  width: 100%;
   border: 1px solid var(--border);
-  background: var(--bg-card);
-  color: var(--text);
-  text-align: left;
-  cursor: pointer;
-  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  border-radius: var(--radius);
 }
 
-.utils-card:hover {
-  border-color: var(--accent);
-  transform: translateY(-2px);
-  box-shadow: var(--card-shadow-hover);
+.utils-card-head-top {
+  align-items: center;
+}
+
+.utils-card-head-top h3 {
+  flex: 1;
+  min-width: 0;
 }
 
 .utils-card-icon {
   flex-shrink: 0;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
   display: grid;
   place-items: center;
   border-radius: var(--radius-sm);
@@ -1416,50 +1407,59 @@ body[data-view="utils"] .nav-utils {
 }
 
 .utils-card-icon svg {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.35rem;
+  height: 1.35rem;
 }
 
 .utils-card-icon-music {
   color: #4ade80;
 }
 
-.utils-card-body {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  flex: 1;
-  min-width: 0;
-}
-
-.utils-card-body strong {
-  font-size: 1.05rem;
-}
-
 .utils-card-sub {
-  font-size: 0.78rem;
-  color: var(--accent-bright);
-  font-weight: 600;
-}
-
-.utils-card-desc {
-  font-size: 0.82rem;
+  font-size: 0.68rem;
   color: var(--text-muted);
-  line-height: 1.4;
+  padding: 0.15rem 0.45rem;
+  border-radius: 6px;
+  background: var(--chip-bg);
+  white-space: nowrap;
 }
 
-.utils-card-cta {
-  flex-shrink: 0;
-  align-self: center;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--accent-bright);
-  opacity: 0;
-  transition: opacity 0.2s;
+/* Lista — linha com ícone */
+button.panel-row.utils-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  margin: 0;
+  padding: 0.65rem 0.75rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
 }
 
-.utils-card:hover .utils-card-cta {
-  opacity: 1;
+button.panel-row.utils-row:hover {
+  background: var(--hover-bg);
+}
+
+button.panel-row.utils-row .utils-card-icon {
+  margin-top: 0;
+}
+
+button.panel-row.utils-row .panel-row-body strong {
+  display: block;
+  font-size: 0.9rem;
+}
+
+button.panel-row.utils-row .panel-row-meta {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
 }
 
 .tweaks-row {

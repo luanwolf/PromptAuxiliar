@@ -532,6 +532,18 @@
       state.scriptsLayout = initRes.scripts_layout;
     }
     setScriptsLayout(state.scriptsLayout);
+    if (window.Utils?.initLayout) {
+      let utilsLayout;
+      try {
+        utilsLayout = localStorage.getItem("promptaux-utils-layout");
+      } catch (_) {
+        /* ignore */
+      }
+      if (initRes.utils_layout === "grid" || initRes.utils_layout === "list") {
+        utilsLayout = initRes.utils_layout;
+      }
+      window.Utils.initLayout(utilsLayout);
+    }
     showApp();
     document.body.dataset.view = "scripts";
     renderNav();
@@ -570,8 +582,7 @@
     if (p) { p.classList.add("hidden"); p.hidden = true; }
     const t = document.getElementById("view-tweaks");
     if (t) { t.classList.add("hidden"); t.hidden = true; }
-    const u = document.getElementById("view-utils");
-    if (u) { u.classList.add("hidden"); u.hidden = true; }
+    if (window.Utils?.isOpen()) window.Utils.close();
     ui.search.placeholder = "Buscar scripts…";
     ui.search.value = "";
     state.busca = "";

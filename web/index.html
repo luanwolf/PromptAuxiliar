@@ -128,36 +128,15 @@
         <div class="panel-list-wrap"><div id="panel-list" class="panel-list"></div></div>
       </section>
 
-      <section id="view-utils" class="panel-view utils-view hidden" hidden>
-        <div class="utils-grid">
-          <button type="button" class="utils-card" data-util-action="baixar-ytdlp">
-            <span class="utils-card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-                <path d="M8 5v14l11-7L8 5z" stroke-linejoin="round"/>
-              </svg>
-            </span>
-            <span class="utils-card-body">
-              <strong>yt-dlp</strong>
-              <span class="utils-card-sub">YouTube e outros sites</span>
-              <span class="utils-card-desc">Vídeo, áudio ou playlist do YouTube</span>
-            </span>
-            <span class="utils-card-cta">Baixar</span>
-          </button>
-          <button type="button" class="utils-card" data-util-action="baixar-spotdl">
-            <span class="utils-card-icon utils-card-icon-music" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-                <path d="M9 18V5l12-2v13"/>
-                <circle cx="6" cy="18" r="3"/>
-                <circle cx="18" cy="16" r="3"/>
-              </svg>
-            </span>
-            <span class="utils-card-body">
-              <strong>spotdl</strong>
-              <span class="utils-card-sub">Spotify</span>
-              <span class="utils-card-desc">Música ou playlist em MP3</span>
-            </span>
-            <span class="utils-card-cta">Baixar</span>
-          </button>
+      <section id="view-utils" class="utils-view hidden" hidden>
+        <div id="utils-toolbar" class="scripts-toolbar hidden">
+          <div class="view-toggle" role="group" aria-label="Visualização dos utilitários">
+            <button type="button" class="view-toggle-btn active" data-utils-layout="grid" title="Grade">Grade</button>
+            <button type="button" class="view-toggle-btn" data-utils-layout="list" title="Lista">Lista</button>
+          </div>
+        </div>
+        <div id="utils-list-wrap" class="scripts-list-wrap">
+          <div id="utils-container" class="grid scripts-container utils-container" aria-label="Utilitários disponíveis"></div>
         </div>
       </section>
 
