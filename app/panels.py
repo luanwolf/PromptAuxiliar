@@ -12,6 +12,7 @@ from typing import Any, Literal
 
 from app.config import PASTA_BASE
 from app.runner import PS_CONSOLE_INIT
+from app.ui_strings import get_str
 from app.winget_installed import is_installed, refresh_installed
 
 PanelKind = Literal["winget", "debloat"]
@@ -118,14 +119,20 @@ def get_panel(kind: PanelKind) -> dict[str, Any]:
     categorias = sorted(catalog["categorias"], key=str.casefold)
 
     instalados = sum(1 for i in itens if i["instalado"])
-    return {
-        "kind": kind,
-        "titulo": "Instalar via Winget" if kind == "winget" else "Debloat Windows 11",
-        "subtitulo": (
+    painel = get_str("paineis", kind, "titulo", default="")
+    if not painel:
+        painel = "Instalar via Winget" if kind == "winget" else "Debloat Windows 11"
+    subtitulo = get_str("paineis", kind, "subtitulo", default="")
+    if not subtitulo:
+        subtitulo = (
             "Selecione os programas para instalar"
             if kind == "winget"
             else "Remova bloatware (Win10/11) — marque só o que existir no seu PC"
-        ),
+        )
+    return {
+        "kind": kind,
+        "titulo": painel,
+        "subtitulo": subtitulo,
         "categorias": categorias,
         "itens": itens,
         "total_selecionados": sum(1 for i in itens if i["selecionado"]),

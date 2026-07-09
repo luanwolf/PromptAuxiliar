@@ -867,6 +867,22 @@ input {
   display: none !important;
 }
 
+.util-modal-foot {
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.modal-foot-spacer {
+  flex: 1;
+  min-width: 0.5rem;
+}
+
+.modal-foot-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -1673,6 +1689,56 @@ html[data-theme="light"] .tweak-badge-inactive {
   font-size: 0.78rem;
   color: var(--text-muted);
   line-height: 1.35;
+}
+
+.util-sites-btn {
+  flex-shrink: 0;
+  width: auto;
+}
+
+.ytdlp-sites-card {
+  max-width: min(520px, 92vw);
+}
+
+.ytdlp-sites-note {
+  margin: 0 0 0.5rem;
+}
+
+.ytdlp-sites-count {
+  margin: 0 0 0.65rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.ytdlp-sites-list {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0.35rem 0;
+  max-height: min(50vh, 360px);
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+}
+
+.ytdlp-sites-list li {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+
+.ytdlp-sites-list li:last-child {
+  border-bottom: none;
+}
+
+.ytdlp-sites-loading {
+  padding: 1.5rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
 
 .util-label-optional {

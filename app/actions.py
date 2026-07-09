@@ -112,13 +112,14 @@ def iterar_categorias() -> Iterator[str]:
             yield acao.categoria
 
 
-def acao_para_dict(acao: Acao) -> dict[str, Any]:
+def acao_para_dict(acao: Acao, textos: dict[str, Any] | None = None) -> dict[str, Any]:
+    ov = (textos or {}).get(acao.id, {}) if textos else {}
     return {
         "id": acao.id,
-        "nome": acao.nome,
+        "nome": ov.get("nome", acao.nome),
         "script": acao.script,
         "categoria": acao.categoria,
-        "descricao": acao.descricao,
+        "descricao": ov.get("descricao", acao.descricao),
         "icone": acao.icone,
         "risco": acao.nivel_risco,
         "interativo": acao.interativo,
@@ -131,9 +132,15 @@ def _chave_nome(item: dict[str, Any] | Acao) -> str:
 
 
 def catalogo_para_json() -> dict[str, Any]:
+    from app.ui_strings import load_ui_strings
+
+    strings = load_ui_strings()
+    cat_textos = strings.get("categorias", {})
+    acao_textos = strings.get("acoes", {})
+
     categorias = []
     for nome in iterar_categorias():
-        meta = _META_CATEGORIAS.get(nome, {})
+        meta = {**_META_CATEGORIAS.get(nome, {}), **cat_textos.get(nome, {})}
         categorias.append(
             {
                 "nome": nome,
@@ -143,5 +150,7 @@ def catalogo_para_json() -> dict[str, Any]:
                 "total": len(obter_acoes_por_categoria(nome)),
             }
         )
-    acoes = sorted([acao_para_dict(a) for a in _ACOES], key=_chave_nome)
+    acoes = sorted(
+        [acao_para_dict(a, acao_textos) for a in _ACOES], key=_chave_nome
+    )
     return {"categorias": categorias, "acoes": acoes}

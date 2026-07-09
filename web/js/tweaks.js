@@ -17,6 +17,14 @@
     return window.pywebview && window.pywebview.api;
   }
 
+  function s(path, fallback) {
+    return window.appStr ? window.appStr(path, fallback) : fallback;
+  }
+
+  function sFmt(path, vars, fallback) {
+    return window.appStrFmt ? window.appStrFmt(path, vars, fallback) : fallback;
+  }
+
   function esc(s) {
     const d = document.createElement("div");
     d.textContent = s;
@@ -34,7 +42,10 @@
 
     document.body.dataset.view = "tweaks";
     if (window.appSetTitle) {
-      window.appSetTitle("Tweaks Windows", "Ajustes de configuração do sistema");
+      window.appSetTitle(
+        s("tweaks.titulo", "Tweaks Windows"),
+        s("tweaks.subtitulo", "Ajustes de configuração do sistema")
+      );
     }
 
     if (!state.loaded) {
@@ -133,7 +144,7 @@
     const el = document.getElementById("tweaks-list");
     if (!el) return;
     el.innerHTML =
-      '<div class="tweaks-loading"><span class="tweaks-spinner"></span><span>Detectando configurações...</span></div>';
+      `<div class="tweaks-loading"><span class="tweaks-spinner"></span><span>${s("tweaks.detectando_config", "Detectando configurações...")}</span></div>`;
   }
 
   function _renderCats() {
@@ -153,7 +164,7 @@
       el.appendChild(btn);
     }
 
-    chip("Todos", null);
+    chip(s("tweaks.chip_todos", "Todos"), null);
     Object.entries(state.categorias).forEach(([k, label]) => chip(label, k));
   }
 
@@ -164,19 +175,19 @@
         : '<span class="tweak-badge tweak-badge-unknown">?</span>';
     }
     return tw.aplicado
-      ? '<span class="tweak-badge tweak-badge-active">Ativo</span>'
-      : '<span class="tweak-badge tweak-badge-inactive">Inativo</span>';
+      ? `<span class="tweak-badge tweak-badge-active">${s("tweaks.badge_ativo", "Ativo")}</span>`
+      : `<span class="tweak-badge tweak-badge-inactive">${s("tweaks.badge_inativo", "Inativo")}</span>`;
   }
 
   function _metaHtml(tw) {
-    let s = "";
+    let html = "";
     if (tw.requer_admin) {
-      s += '<span class="tweak-icon-admin" title="Requer privilégio de Administrador">🔒</span>';
+      html += `<span class="tweak-icon-admin" title="${s("tweaks.admin_title", "Requer privilégio de Administrador")}">🔒</span>`;
     }
     if (tw.requer_reiniciar) {
-      s += '<span class="tweak-icon-restart" title="Requer reinicialização do Windows">↺</span>';
+      html += `<span class="tweak-icon-restart" title="${s("tweaks.restart_title", "Requer reinicialização do Windows")}">↺</span>`;
     }
-    return s;
+    return html;
   }
 
   function _renderList() {
@@ -196,8 +207,8 @@
             <circle cx="21" cy="21" r="13"/>
             <line x1="30.5" y1="30.5" x2="42" y2="42" stroke-linecap="round"/>
           </svg>
-          <h3>Nenhum ajuste encontrado</h3>
-          <p>Tente outra busca ou selecione outra categoria.</p>
+          <h3>${esc(s("tweaks.vazio_titulo", "Nenhum ajuste encontrado"))}</h3>
+          <p>${esc(s("tweaks.vazio_descricao", "Tente outra busca ou selecione outra categoria."))}</p>
         </div>`;
       return;
     }
@@ -247,7 +258,10 @@
     const el = document.getElementById("tweaks-selected-count");
     if (!el) return;
     const n = state.tweaks.filter(t => t._selected).length;
-    el.textContent = n === 0 ? "0 selecionados" : `${n} selecionado(s)`;
+    el.textContent =
+      n === 0
+        ? s("tweaks.selecionados_zero", "0 selecionados")
+        : sFmt("tweaks.selecionados", { count: n }, `${n} selecionado(s)`);
   }
 
   function _updateToolbar() {
@@ -255,7 +269,7 @@
     const applyBtn = document.getElementById("tweaks-apply-btn");
     if (detectBtn) {
       detectBtn.disabled = state.detecting || state.busy;
-      detectBtn.textContent = state.detecting ? "Detectando…" : "Detectar estado";
+      detectBtn.textContent = state.detecting ? s("tweaks.detectando", "Detectando…") : s("tweaks.detectar", "Detectar estado");
     }
     if (applyBtn) {
       const sel = state.tweaks.filter(t => t._selected).length;
@@ -282,12 +296,16 @@
         const needsAdmin = state.tweaks.some(t => t._selected && t.requer_admin);
         const needsRestart = state.tweaks.some(t => t._selected && t.requer_reiniciar);
 
-        let body = `${ids.length} ajuste(s) serão aplicados via PowerShell.`;
-        if (needsAdmin) body += "\n\n🔒 Alguns requerem privilégio de Administrador (UAC será solicitado).";
-        if (needsRestart) body += "\n\n↺ Alguns requerem reinicialização para ter efeito.";
+        let body = sFmt(
+          "tweaks.confirmar_corpo",
+          { count: ids.length },
+          `${ids.length} ajuste(s) serão aplicados via PowerShell.`
+        );
+        if (needsAdmin) body += s("tweaks.confirmar_admin", "\n\n🔒 Alguns requerem privilégio de Administrador (UAC será solicitado).");
+        if (needsRestart) body += s("tweaks.confirmar_restart", "\n\n↺ Alguns requerem reinicialização para ter efeito.");
 
         const ok = await (window.appConfirm
-          ? window.appConfirm({ title: "Aplicar ajustes", body })
+          ? window.appConfirm({ title: s("tweaks.confirmar_titulo", "Aplicar ajustes"), body })
           : Promise.resolve(true));
         if (!ok) return;
 

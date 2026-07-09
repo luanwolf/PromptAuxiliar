@@ -4,24 +4,16 @@
 (function () {
   const state = { layout: "grid" };
 
-  const ITEMS = [
-    {
-      id: "baixar-ytdlp",
-      title: "yt-dlp",
-      subtitle: "YouTube e outros sites",
-      desc: "Baixa vídeo (MP4), áudio (MP3) ou playlist inteira do YouTube.",
-      actionHint: "Baixar",
+  const UTIL_IDS = ["baixar-ytdlp", "baixar-spotdl", "converter-imagem"];
+
+  const UTIL_ICONS = {
+    "baixar-ytdlp": {
       iconClass: "",
       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
         <path d="M8 5v14l11-7L8 5z" stroke-linejoin="round"/>
       </svg>`,
     },
-    {
-      id: "baixar-spotdl",
-      title: "spotdl",
-      subtitle: "Spotify",
-      desc: "Baixa música ou playlist do Spotify em MP3.",
-      actionHint: "Baixar",
+    "baixar-spotdl": {
       iconClass: "utils-card-icon-music",
       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
         <path d="M9 18V5l12-2v13"/>
@@ -29,12 +21,7 @@
         <circle cx="18" cy="16" r="3"/>
       </svg>`,
     },
-    {
-      id: "converter-imagem",
-      title: "ImageMagick",
-      subtitle: "Conversão de imagens",
-      desc: "Converte JPG, PNG, WebP, GIF, PDF, ICO e outros formatos.",
-      actionHint: "Converter",
+    "converter-imagem": {
       iconClass: "utils-card-icon-image",
       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
         <rect x="3" y="5" width="18" height="14" rx="2"/>
@@ -42,7 +29,52 @@
         <path d="M21 16l-5-5L8 19"/>
       </svg>`,
     },
-  ];
+  };
+
+  const UTIL_FALLBACKS = {
+    "baixar-ytdlp": {
+      title: "yt-dlp",
+      subtitle: "YouTube e outros sites",
+      desc: "Baixa vídeo (MP4), áudio (MP3) ou playlist inteira do YouTube.",
+      actionHint: "Baixar",
+    },
+    "baixar-spotdl": {
+      title: "spotdl",
+      subtitle: "Spotify",
+      desc: "Baixa música ou playlist do Spotify em MP3.",
+      actionHint: "Baixar",
+    },
+    "converter-imagem": {
+      title: "ImageMagick",
+      subtitle: "Conversão de imagens",
+      desc: "Converte JPG, PNG, WebP, GIF, PDF, ICO e outros formatos.",
+      actionHint: "Converter",
+    },
+  };
+
+  function s(path, fallback) {
+    return window.appStr ? window.appStr(path, fallback) : fallback;
+  }
+
+  function sFmt(path, vars, fallback) {
+    return window.appStrFmt ? window.appStrFmt(path, vars, fallback) : fallback;
+  }
+
+  function getItems() {
+    return UTIL_IDS.map((id) => {
+      const fb = UTIL_FALLBACKS[id] || {};
+      const ic = UTIL_ICONS[id] || {};
+      return {
+        id,
+        title: s(`utilitarios.itens.${id}.title`, fb.title || id),
+        subtitle: s(`utilitarios.itens.${id}.subtitle`, fb.subtitle || ""),
+        desc: s(`utilitarios.itens.${id}.desc`, fb.desc || ""),
+        actionHint: s(`utilitarios.itens.${id}.actionHint`, fb.actionHint || s("utilitarios.acao_baixar", "Baixar")),
+        iconClass: ic.iconClass || "",
+        icon: ic.icon || "",
+      };
+    });
+  }
 
   function esc(s) {
     const d = document.createElement("div");
@@ -77,7 +109,8 @@
     if (!container) return;
     container.innerHTML = "";
 
-    ITEMS.forEach((item, i) => {
+    const items = getItems();
+    items.forEach((item, i) => {
       if (state.layout === "list") {
         const row = document.createElement("button");
         row.type = "button";
@@ -92,7 +125,7 @@
           </span>
           <span class="panel-row-meta">
             <span class="panel-row-cat">${esc(item.subtitle)}</span>
-            <span class="script-run-hint">${esc(item.actionHint || "Baixar")}</span>
+            <span class="script-run-hint">${esc(item.actionHint || s("utilitarios.acao_baixar", "Baixar"))}</span>
           </span>`;
         row.addEventListener("click", () => onAction(item.id));
         container.appendChild(row);
@@ -110,7 +143,7 @@
           <div class="card-head-top utils-card-head-top">
             <span class="utils-card-icon ${item.iconClass}" aria-hidden="true">${item.icon}</span>
             <h3>${esc(item.title)}</h3>
-            <span class="card-run-top">${esc(item.actionHint || "Baixar")}</span>
+            <span class="card-run-top">${esc(item.actionHint || s("utilitarios.acao_baixar", "Baixar"))}</span>
           </div>
           <p>${esc(item.desc)}</p>
         </div>
@@ -141,8 +174,12 @@
     if (toolbar) toolbar.classList.remove("hidden");
 
     document.body.dataset.view = "utils";
+    const items = getItems();
     if (window.appSetTitle) {
-      window.appSetTitle("Utilitários", `${ITEMS.length} ferramentas`);
+      window.appSetTitle(
+        s("utilitarios.titulo", "Utilitários"),
+        sFmt("utilitarios.subtitulo", { count: items.length }, `${items.length} ferramentas`)
+      );
     }
     if (window.appRenderNav) window.appRenderNav();
     render();
@@ -180,5 +217,5 @@
     setLayout(layout === "list" ? "list" : "grid");
   }
 
-  window.Utils = { open, close, isOpen, bind, initLayout, ITEMS };
+  window.Utils = { open, close, isOpen, bind, initLayout, getItems };
 })();

@@ -48,6 +48,18 @@ $wsh = New-Object -ComObject WScript.Shell
 $shortcutFileName = "Prompt Auxiliar v$version.lnk"
 $description = "Prompt Auxiliar v$version - Winget e Debloat"
 
+function Set-PromptAuxShortcutIcon {
+    param(
+        [object]$Shortcut,
+        [string]$IconPath
+    )
+    if (-not $IconPath) { return }
+    # ponytail: mesmo caminho .ico — Explorer mantém cache; troca rápida força recarregar
+    $Shortcut.IconLocation = "$env:SystemRoot\System32\imageres.dll,0"
+    $Shortcut.Save()
+    $Shortcut.IconLocation = "$IconPath,0"
+}
+
 function Set-PromptAuxShortcut {
     param([string]$LnkPath)
     $dir = Split-Path -Parent $LnkPath
@@ -65,7 +77,7 @@ function Set-PromptAuxShortcut {
     $s.WorkingDirectory = $ProjectRoot
     $s.WindowStyle = 1
     $s.Description = $description
-    if ($ico) { $s.IconLocation = "$ico,0" }
+    Set-PromptAuxShortcutIcon -Shortcut $s -IconPath $ico
     $s.Save()
 }
 
@@ -103,6 +115,11 @@ function Repair-PromptAuxShortcutFile {
         if ($useCmd -and $s.TargetPath -ne $launcherCmd) { $needsFix = $true }
         if ($s.Description -ne $description) { $needsFix = $true }
         if ($ico -and $s.IconLocation -ne "$ico,0") { $needsFix = $true }
+        if ($ico -and (Test-Path -LiteralPath $ico)) {
+            $icoTime = (Get-Item -LiteralPath $ico).LastWriteTimeUtc
+            $lnkTime = (Get-Item -LiteralPath $LnkPath).LastWriteTimeUtc
+            if ($icoTime -gt $lnkTime) { $needsFix = $true }
+        }
         if (-not $needsFix) { return $false }
         Set-PromptAuxShortcut -LnkPath $LnkPath
         return $true

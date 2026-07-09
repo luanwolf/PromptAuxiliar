@@ -90,6 +90,14 @@
     return d.innerHTML;
   }
 
+  function s(path, fallback) {
+    return window.appStr ? window.appStr(path, fallback) : fallback;
+  }
+
+  function sFmt(path, vars, fallback) {
+    return window.appStrFmt ? window.appStrFmt(path, vars, fallback) : fallback;
+  }
+
   function compararNome(a, b) {
     return a.nome.localeCompare(b.nome, "pt-BR", { sensitivity: "base" });
   }
@@ -128,7 +136,10 @@
 
   function updateCount() {
     const n = state.selecionados.size;
-    el.count.textContent = `${n} selecionado${n !== 1 ? "s" : ""}`;
+    el.count.textContent =
+      n === 0
+        ? s("paineis.comum.selecionados_zero", "0 selecionados")
+        : sFmt("paineis.comum.selecionados", { count: n }, `${n} selecionado${n !== 1 ? "s" : ""}`);
   }
 
   function renderCats() {
@@ -138,7 +149,7 @@
     const all = document.createElement("button");
     all.type = "button";
     all.className = `panel-cat${!state.categoria ? " active" : ""}`;
-    all.textContent = "Todas";
+    all.textContent = s("paineis.comum.todas", "Todas");
     all.addEventListener("click", () => {
       state.categoria = null;
       renderCats();
@@ -169,8 +180,7 @@
     el.list.innerHTML = "";
 
     if (!list.length) {
-      el.list.innerHTML =
-        '<p class="panel-empty">Nenhum item nesta categoria ou busca.</p>';
+      el.list.innerHTML = `<p class="panel-empty">${s("paineis.comum.vazio", "Nenhum item nesta categoria ou busca.")}</p>`;
       return;
     }
 
@@ -180,7 +190,7 @@
       const tip = item.descricao_detalhada || item.descricao || item.nome;
       const checked = state.selecionados.has(item.id);
       const instaladoTag = item.instalado
-        ? '<span class="tag tag-installed">Instalado</span>'
+        ? `<span class="tag tag-installed">${s("paineis.comum.tag_instalado", "Instalado")}</span>`
         : "";
       row.innerHTML = `
         <input type="checkbox" ${checked ? "checked" : ""} />
@@ -248,7 +258,7 @@
 
   async function open(kind) {
     if (!api()) {
-      window.appToast("API indisponível.", "error");
+      window.appToast(s("paineis.comum.api_indisponivel", "API indisponível."), "error");
       return;
     }
 
@@ -256,8 +266,8 @@
       kind === "winget" ? api().get_winget_panel : api().get_debloat_panel;
     state.kind = kind;
     window.appSetTitle(
-      kind === "winget" ? "Instalar via Winget" : "Debloat Windows 11",
-      "Lendo software instalado (winget list)…"
+      s(`paineis.${kind}.titulo`, kind === "winget" ? "Instalar via Winget" : "Debloat Windows 11"),
+      s("paineis.comum.carregando_winget", "Lendo software instalado (winget list)…")
     );
     setViewVisible(true);
     const scriptsToolbar = document.getElementById("scripts-toolbar");
@@ -274,19 +284,22 @@
     window._panelBusca = "";
     if (el.search) {
       el.search.value = "";
-      el.search.placeholder = "Buscar no catálogo…";
+      el.search.placeholder = s("paineis.comum.busca_placeholder", "Buscar no catálogo…");
     }
     syncSelecionadosFromData();
 
-    const runLabel =
-      kind === "winget" ? "Instalar selecionados" : "Remover selecionados";
+    const runLabel = s(`paineis.${kind}.executar`, kind === "winget" ? "Instalar selecionados" : "Remover selecionados");
     el.run.textContent = runLabel;
     el.run.className =
       kind === "debloat" ? "btn primary danger-run" : "btn primary";
 
     const sub =
       data.total_instalados != null
-        ? `${data.subtitulo} · ${data.total_instalados} instalado(s) no PC`
+        ? sFmt(
+            "paineis.comum.subtitulo_instalados",
+            { subtitulo: data.subtitulo, count: data.total_instalados },
+            `${data.subtitulo} · ${data.total_instalados} instalado(s) no PC`
+          )
         : data.subtitulo;
     window.appSetTitle(data.titulo, sub);
     atualizarToolbarPainel();
@@ -327,14 +340,18 @@
   async function executar() {
     const ids = idsSelecionados();
     if (!ids.length) {
-      window.appToast("Selecione ao menos um item.", "error");
+      window.appToast(s("paineis.comum.selecione_item", "Selecione ao menos um item."), "error");
       return;
     }
 
     if (state.kind === "debloat") {
       const ok = await window.appConfirm({
-        title: "Confirmar Debloat",
-        body: `Serão removidos ${ids.length} app(s) via Winget.\nAlguns são componentes do Windows — use com cautela.\n\nContinuar?`,
+        title: s("paineis.debloat.confirmar_titulo", "Confirmar Debloat"),
+        body: sFmt(
+          "paineis.debloat.confirmar_corpo",
+          { count: ids.length },
+          `Serão removidos ${ids.length} app(s) via Winget.\nAlguns são componentes do Windows — use com cautela.\n\nContinuar?`
+        ),
         danger: true,
       });
       if (!ok) return;
@@ -373,8 +390,8 @@
     render();
     window.appToast(
       n
-        ? `${n} app(s) instalado(s) selecionado(s) para remoção.`
-        : "Nenhum item do catálogo foi detectado como instalado (winget list).",
+        ? sFmt("paineis.debloat.toast_instalados", { count: n }, `${n} app(s) instalado(s) selecionado(s) para remoção.`)
+        : s("paineis.debloat.toast_nenhum_instalado", "Nenhum item do catálogo foi detectado como instalado (winget list)."),
       n ? "success" : "info"
     );
   }

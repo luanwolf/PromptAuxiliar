@@ -4,11 +4,14 @@ from __future__ import annotations
 
 import os
 import re
+import shutil
+import subprocess
 import threading
 import webbrowser
 from typing import Any, Literal
 
 from app.actions import catalogo_para_json, obter_acao
+from app.ui_strings import load_ui_strings
 from app.config import CREDITOS_URL, PASTA_BASE, PASTA_LOGS
 from app.environment import preparar_ambiente
 from app.uninstall import paths_for_display, schedule_uninstall
@@ -31,6 +34,47 @@ _IMAGEMAGICK_FORMATS = frozenset(
     {"jpg", "jpeg", "png", "webp", "gif", "bmp", "tiff", "tif", "pdf", "ico", "avif"}
 )
 _INVALID_WIN_FILENAME = re.compile(r'[\\/:*?"<>|]')
+_YTDLP_SITES_ALL_CACHE: list[str] | None = None
+
+# ponytail: substring match on extractor id — misses niche mirrors; upgrade = explicit id map
+_YTDLP_POPULAR_PATTERNS = (
+    "youtube",
+    "tiktok",
+    "instagram",
+    "twitter",
+    "facebook",
+    "twitch",
+    "vimeo",
+    "reddit",
+    "soundcloud",
+    "spotify",
+    "bandcamp",
+    "dailymotion",
+    "bilibili",
+    "niconico",
+    "rumble",
+    "linkedin",
+    "pinterest",
+    "kick",
+    "mixcloud",
+    "streamable",
+    "odysee",
+    "lbry",
+    "archive.org",
+    "peertube",
+    "ted",
+    "coub",
+    "loom",
+    "vk",
+)
+
+
+def _popular_ytdlp_sites(all_sites: list[str]) -> list[str]:
+    def is_popular(name: str) -> bool:
+        n = name.lower()
+        return any(p in n for p in _YTDLP_POPULAR_PATTERNS)
+
+    return sorted(s for s in all_sites if is_popular(s))
 
 
 class PromptAuxiliarApi:
@@ -78,6 +122,7 @@ class PromptAuxiliarApi:
             "pasta": PASTA_BASE,
             "creditos": CREDITOS_URL,
         }
+        data["ui_strings"] = load_ui_strings()
         return data
 
     def _tk_pick(self, mode: Literal["file", "folder"]) -> dict[str, Any]:
@@ -118,6 +163,63 @@ class PromptAuxiliarApi:
 
     def pick_folder(self) -> dict[str, Any]:
         return self._tk_pick("folder")
+
+    def list_ytdlp_sites(self) -> dict[str, Any]:
+        """Lista extractors populares do yt-dlp (--list-extractors, filtrado)."""
+        global _YTDLP_SITES_ALL_CACHE
+        if _YTDLP_SITES_ALL_CACHE is not None:
+            popular = _popular_ytdlp_sites(_YTDLP_SITES_ALL_CACHE)
+            return {
+                "ok": True,
+                "sites": popular,
+                "count": len(popular),
+                "total": len(_YTDLP_SITES_ALL_CACHE),
+            }
+
+        if not shutil.which("yt-dlp"):
+            return {
+                "ok": False,
+                "message": "yt-dlp não encontrado. Execute o download uma vez para instalar.",
+                "sites": [],
+                "count": 0,
+            }
+
+        kwargs: dict[str, Any] = {
+            "capture_output": True,
+            "text": True,
+            "encoding": "utf-8",
+            "errors": "replace",
+            "timeout": 30,
+            "shell": False,
+        }
+        if hasattr(subprocess, "CREATE_NO_WINDOW"):
+            kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW  # type: ignore[attr-defined]
+
+        try:
+            proc = subprocess.run(["yt-dlp", "--list-extractors"], **kwargs)
+        except subprocess.TimeoutExpired:
+            return {
+                "ok": False,
+                "message": "yt-dlp demorou demais para responder. Tente novamente.",
+                "sites": [],
+                "count": 0,
+            }
+        except Exception as e:
+            return {"ok": False, "message": str(e), "sites": [], "count": 0}
+
+        if proc.returncode != 0:
+            err = (proc.stderr or proc.stdout or "").strip()
+            return {
+                "ok": False,
+                "message": err or f"yt-dlp encerrou com código {proc.returncode}.",
+                "sites": [],
+                "count": 0,
+            }
+
+        all_sites = [line.strip() for line in (proc.stdout or "").splitlines() if line.strip()]
+        _YTDLP_SITES_ALL_CACHE = all_sites
+        popular = _popular_ytdlp_sites(all_sites)
+        return {"ok": True, "sites": popular, "count": len(popular), "total": len(all_sites)}
 
     def run_action(self, action_id: str) -> dict[str, Any]:
         return self._run_action_impl(action_id, None)

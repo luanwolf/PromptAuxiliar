@@ -15,8 +15,11 @@
     if (!btn) return;
     const isLight = theme === "light";
     btn.setAttribute("aria-pressed", isLight ? "true" : "false");
-    btn.title = isLight ? "Usar modo escuro" : "Usar modo claro";
-    btn.setAttribute("aria-label", btn.title);
+    const title = isLight
+      ? (window.appStr ? window.appStr("tema.modo_escuro", "Usar modo escuro") : "Usar modo escuro")
+      : (window.appStr ? window.appStr("tema.modo_claro", "Usar modo claro") : "Usar modo claro");
+    btn.title = title;
+    btn.setAttribute("aria-label", window.appStr ? window.appStr("tema.alternar", title) : title);
     const sun = btn.querySelector(".theme-icon-sun");
     const moon = btn.querySelector(".theme-icon-moon");
     if (sun) sun.classList.toggle("hidden", isLight);

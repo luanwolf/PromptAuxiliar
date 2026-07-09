@@ -77,6 +77,13 @@ def detect_all() -> dict[str, Any]:
     ps1 = _PS_RUN / f"detect_{uuid.uuid4().hex}.ps1"
     try:
         ps1.write_text(ps_script, encoding="utf-8-sig")
+        kwargs: dict[str, Any] = {
+            "capture_output": True,
+            "text": True,
+            "timeout": 25,
+        }
+        if hasattr(subprocess, "CREATE_NO_WINDOW"):
+            kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW  # type: ignore[attr-defined]
         result = subprocess.run(
             [
                 "powershell.exe",
@@ -86,9 +93,7 @@ def detect_all() -> dict[str, Any]:
                 "-File",
                 str(ps1),
             ],
-            capture_output=True,
-            text=True,
-            timeout=25,
+            **kwargs,
         )
         raw = result.stdout.strip()
         if result.returncode == 0 and raw:

@@ -7,7 +7,7 @@
     <img alt="WebView2" src="https://img.shields.io/badge/WebView2-Edge-0078D4?logo=microsoftedge&logoColor=white" />
     <img alt="Winget" src="https://img.shields.io/badge/Winget-pacotes-2EA043?logo=windows&logoColor=white" />
     <img alt="PowerShell" src="https://img.shields.io/badge/PowerShell-5.1+-5391FE?logo=powershell&logoColor=white" />
-    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.7.17-0078D4" />
+    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.7.19-0078D4" />
   </p>
 
   <p>
@@ -26,7 +26,7 @@ O **Prompt Auxiliar** centraliza tarefas comuns de manutenção e personalizaç�
 - **Painel Winget** — catálogo curado com busca, categorias e instalação em lote
 - **Painel Debloat** — remoção de bloatware conhecido (Microsoft, Xbox, Bing legado Win10, OEM)
 - **Tweaks Windows** — ajustes de registro e sistema com detecção automática do estado atual
-- **Utilitários** — download de vídeo/música (yt-dlp) e Spotify (spotdl), com escolha de pasta e formato
+- **Utilitários** — download de vídeo/música (yt-dlp), Spotify (spotdl) e conversão de imagens (ImageMagick)
 - **Ações sensíveis** — confirmação extra para registro, KMS, WinUtil e similares
 - **Pasta de dados** em `C:\PromptAuxiliar` (softwares, registros, seleções dos painéis)
 
@@ -116,12 +116,13 @@ Visualização em **grade** (cards) ou **lista densa** (nome + descrição em li
 
 ### 4) Utilitários (barra lateral)
 
-Barra lateral → **Utilitários** — painel com **dois botões**, no mesmo padrão visual dos Scripts (borda arredondada, alternância **Grade** / **Lista**):
+Barra lateral → **Utilitários** — painel com **três botões**, no mesmo padrão visual dos Scripts (borda arredondada, alternância **Grade** / **Lista**):
 
 | Botão | Ferramenta | Uso |
 |-------|------------|-----|
 | **yt-dlp** | [yt-dlp](https://github.com/yt-dlp/yt-dlp) | Vídeo (MP4), áudio (MP3) ou **playlist do YouTube** |
 | **spotdl** | [spotdl](https://github.com/spotDL/spotify-downloader) | Música ou playlist do Spotify em MP3 |
+| **ImageMagick** | [ImageMagick](https://imagemagick.org/) | Converte JPG, PNG, WebP, GIF, PDF, ICO e outros formatos |
 
 Ao clicar em um botão, o app abre um formulário:
 
@@ -131,8 +132,10 @@ Ao clicar em um botão, o app abre um formulário:
 | **Pasta de destino** | **Procurar** abre o seletor de pastas do Windows |
 | **Formato** (yt-dlp) | **Vídeo (MP4)** ou **Somente áudio (MP3)** |
 | **Playlist** (yt-dlp) | Marque para baixar a playlist inteira do YouTube |
+| **Sites suportados** (yt-dlp) | Lista filtrada das **principais plataformas** (YouTube, TikTok, Instagram, etc.) |
+| **Arquivo / formato** (ImageMagick) | Arquivo de origem, pasta de destino, formato de saída e nome opcional |
 
-Os scripts **verificam se a ferramenta está instalada**; se não estiver, tentam instalar via **winget** e, em seguida, **pip**. Depois executam o download. Logs em `C:\PromptAuxiliar\logs\`.
+Os scripts **verificam se a ferramenta está instalada**; se não estiver, tentam instalar via **winget** e, em seguida, **pip** (yt-dlp/spotdl). Depois executam o download ou conversão. Logs em `C:\PromptAuxiliar\logs\`.
 
 ---
 
@@ -236,28 +239,32 @@ app/
   paths.py              # resolução de caminhos + geração do .ico
   runner.py             # execução de scripts (embute _ui.ps1 + UTF-8-BOM)
   tweaks.py             # lógica do painel Tweaks Windows
+  ui_strings.py         # carrega textos de ui_strings.json
   webview_app.py        # inicialização WebView2 + AUMID taskbar
   win_icon.py           # ícone da janela via WM_SETICON
   data/
     winget_catalog.json
     debloat_catalog.json
     tweaks_catalog.json
+    ui_strings.json
 scripts/
   _ui.ps1               # biblioteca visual compartilhada
   _util_install.ps1     # instalação winget/pip (yt-dlp, spotdl)
   baixar_ytdlp.ps1      # download vídeo/áudio/playlist YouTube
   baixar_spotdl.ps1     # download Spotify
-  js/utils.js           # painel Utilitários (2 botões)
+  converter_imagem.ps1  # conversão de imagens (ImageMagick)
   *.ps1                 # demais scripts
 web/
   assets/
     logo.ico            # ícone do app (taskbar / alt-tab)
     logo-mark.png
+    logo.svg            # fallback embutido na interface
   css/app.css
   js/
     app.js              # scripts + navegação + atualização
     panels.js           # painéis Winget/Debloat
     tweaks.js           # painel Tweaks Windows
+    utils.js            # painel Utilitários
   index.html
 main.py                 # entrada
 win.ps1                 # instalador / atualizador one-liner
@@ -269,6 +276,8 @@ win.ps1                 # instalador / atualizador one-liner
 
 | Versão | Destaques |
 |--------|-----------|
+| **2.7.19** | Atalhos recarregam **ícone** após troca do `.ico` (cache do Explorer); botão **Sites suportados** no padrão do modal yt-dlp |
+| **2.7.18** | Textos da interface em **`ui_strings.json`**; yt-dlp com **Sites suportados** (plataformas principais); Tweaks sem flash de CMD na detecção; correções de menu lateral e i18n |
 | **2.7.17** | Ícone do app na **barra de tarefas** (`icon=` no webview + AUMID); atalhos com ícone correto e reparo automático (`Criar-Atalho.ps1`) |
 | **2.7.16** | Terminal com **UTF-8/acentos**; utilitário **ImageMagick** (converter + renomear); limpeza de código morto (ponytail); launcher **CMD** fecha sozinho; spotdl sem alterações |
 | **2.7.15** | Utilitários alinhados aos Scripts: **Grade/Lista**, container com bordas arredondadas; ícones mantidos |
@@ -287,7 +296,7 @@ win.ps1                 # instalador / atualizador one-liner
 
 ## Personalizar catálogos
 
-Edite `app/data/winget_catalog.json`, `app/data/debloat_catalog.json` ou `app/data/tweaks_catalog.json`.
+Edite `app/data/winget_catalog.json`, `app/data/debloat_catalog.json`, `app/data/tweaks_catalog.json` ou `app/data/ui_strings.json` (textos da interface).
 
 IDs Winget devem ser válidos para:
 

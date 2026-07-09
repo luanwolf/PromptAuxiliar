@@ -1,0 +1,337 @@
+{
+  "_schema": "Textos de interface do Prompt Auxiliar. Edite os valores em português; mantenha as chaves (IDs) inalteradas.",
+
+  "app": {
+    "nome": "Prompt Auxiliar",
+    "tagline": "Scripts .bat do Prompt Auxiliar",
+    "titulo_html": "Prompt Auxiliar"
+  },
+
+  "boot": {
+    "preparando": "Preparando…",
+    "conectando": "Conectando…",
+    "preparando_pasta": "Preparando pasta de dados…",
+    "carregando_acoes": "Carregando ações…",
+    "pronto": "Pronto.",
+    "bridge_indisponivel": "Bridge Python indisponível.",
+    "falha_iniciar": "Falha ao iniciar.",
+    "ambiente_pronto": "Ambiente pronto."
+  },
+
+  "nav": {
+    "scripts": "Scripts",
+    "utilitarios": "Utilitários",
+    "tweaks": "Tweaks Windows",
+    "paineis": {
+      "winget": "Painel Winget",
+      "debloat": "Painel Debloat"
+    }
+  },
+
+  "scripts": {
+    "titulo": "Scripts",
+    "subtitulo": "{count} script(s) disponíveis",
+    "busca_placeholder": "Buscar scripts…",
+    "executar": "Executar",
+    "vazio_titulo": "Nenhum resultado",
+    "vazio_descricao": "Tente outra palavra-chave ou limpe a busca.",
+    "layout_grade": "Grade",
+    "layout_lista": "Lista",
+    "layout_aria": "Visualização dos scripts",
+    "risco_atencao": "Atenção",
+    "risco_alto": "Alto risco",
+    "acao_sensivel": "Ação sensível",
+    "confirmar": "Confirmar",
+    "confirmar_continuar": "{descricao}\n\nContinuar?",
+    "aguarde_acao": "Aguarde — outra ação em execução.",
+    "acao_nao_encontrada": "Ação não encontrada: {id}"
+  },
+
+  "categorias": {
+    "Instalação": {
+      "slug": "instalacao",
+      "icone": "install",
+      "descricao": "Atualização e instaladores locais"
+    },
+    "Limpeza": {
+      "slug": "limpeza",
+      "icone": "clean",
+      "descricao": "Temporários, disco e segurança"
+    },
+    "Otimização": {
+      "slug": "otimizacao",
+      "icone": "tune",
+      "descricao": "Registro e ajustes"
+    },
+    "Sistema": {
+      "slug": "sistema",
+      "icone": "system",
+      "descricao": "Rede, atalhos e configurações"
+    },
+    "Utilitários": {
+      "slug": "utilitarios",
+      "icone": "tool",
+      "descricao": "Downloads, conversão de imagens e ferramentas"
+    }
+  },
+
+  "acoes": {
+    "atualizar-programas": {
+      "nome": "Atualizar programas",
+      "descricao": "Atualiza programas via Winget."
+    },
+    "instalar-software": {
+      "nome": "Instalar da pasta Software",
+      "descricao": "Instala .exe, .msi e .lnk da pasta softwares."
+    },
+    "instalar-vcredist-aio": {
+      "nome": "Visual C++ Runtimes (All-in-One)",
+      "descricao": "Instala o pacote AIO de Visual C++ Redistributables (abbodi1406) via Winget."
+    },
+    "limpeza-temporarios": {
+      "nome": "Limpeza de temporários",
+      "descricao": "Remove temporários, lixeira e cache."
+    },
+    "limpeza-disco": {
+      "nome": "Limpeza de armazenamento",
+      "descricao": "Abre a Limpeza de Disco do Windows."
+    },
+    "limpeza-malware": {
+      "nome": "Limpeza MRT (malware)",
+      "descricao": "Executa a Ferramenta MRT."
+    },
+    "limpeza-profunda": {
+      "nome": "Limpeza profunda do Windows",
+      "descricao": "TEMP, prefetch, DNS, cleanmgr, SFC e DISM."
+    },
+    "aplicar-registro": {
+      "nome": "Aplicar ajustes de registro",
+      "descricao": "Aplica .reg da pasta registros."
+    },
+    "utilitario-externo": {
+      "nome": "Utilitário Windows (externo)",
+      "descricao": "WinUtil Chris Titus (terceiros)."
+    },
+    "ativar-office-kms": {
+      "nome": "Ativar Office (KMS)",
+      "descricao": "Ativação Office — use por sua conta e risco."
+    },
+    "ativar-windows-kms": {
+      "nome": "Ativar Windows (KMS)",
+      "descricao": "Ativação Windows — use por sua conta e risco."
+    },
+    "ativar-windows-slmgr": {
+      "nome": "Ativar Windows (slmgr)",
+      "descricao": "slmgr /ato."
+    },
+    "criar-atalhos": {
+      "nome": "Criar atalhos (GodMode e BIOS)",
+      "descricao": "GodMode e atalho reinício BIOS."
+    },
+    "gerenciar-inicializacao": {
+      "nome": "Apps de inicialização",
+      "descricao": "Configurações de inicialização."
+    },
+    "reparar-rede": {
+      "nome": "Reparar conexão de rede",
+      "descricao": "IP, DNS, Winsock e TCP/IP."
+    },
+    "baixar-ytdlp": {
+      "nome": "Baixar com yt-dlp",
+      "descricao": "Baixa vídeo ou música de YouTube e outros sites (yt-dlp)."
+    },
+    "baixar-spotdl": {
+      "nome": "Baixar do Spotify (spotdl)",
+      "descricao": "Baixa música ou playlist do Spotify em MP3 (spotdl)."
+    },
+    "converter-imagem": {
+      "nome": "Converter imagem (ImageMagick)",
+      "descricao": "Converte imagens entre JPEG, PNG, WebP, GIF, PDF, ICO e outros formatos."
+    }
+  },
+
+  "utilitarios": {
+    "titulo": "Utilitários",
+    "subtitulo": "{count} ferramentas",
+    "layout_aria": "Visualização dos utilitários",
+    "acao_baixar": "Baixar",
+    "acao_converter": "Converter",
+    "itens": {
+      "baixar-ytdlp": {
+        "title": "yt-dlp",
+        "subtitle": "YouTube e outros sites",
+        "desc": "Baixa vídeo (MP4), áudio (MP3) ou playlist inteira do YouTube.",
+        "actionHint": "Baixar"
+      },
+      "baixar-spotdl": {
+        "title": "spotdl",
+        "subtitle": "Spotify",
+        "desc": "Baixa música ou playlist do Spotify em MP3.",
+        "actionHint": "Baixar"
+      },
+      "converter-imagem": {
+        "title": "ImageMagick",
+        "subtitle": "Conversão de imagens",
+        "desc": "Converte JPG, PNG, WebP, GIF, PDF, ICO e outros formatos.",
+        "actionHint": "Converter"
+      }
+    }
+  },
+
+  "paineis": {
+    "comum": {
+      "todas": "Todas",
+      "selecionados": "{count} selecionado(s)",
+      "selecionados_zero": "0 selecionados",
+      "marcar_categoria": "Marcar categoria",
+      "desmarcar_categoria": "Desmarcar categoria",
+      "salvar_selecao": "Salvar seleção",
+      "busca_placeholder": "Buscar no catálogo…",
+      "vazio": "Nenhum item nesta categoria ou busca.",
+      "tag_instalado": "Instalado",
+      "selecione_item": "Selecione ao menos um item.",
+      "carregando_winget": "Lendo software instalado (winget list)…",
+      "subtitulo_instalados": "{subtitulo} · {count} instalado(s) no PC",
+      "api_indisponivel": "API indisponível."
+    },
+    "winget": {
+      "titulo": "Instalar via Winget",
+      "subtitulo": "Selecione os programas para instalar",
+      "executar": "Instalar selecionados"
+    },
+    "debloat": {
+      "titulo": "Debloat Windows 11",
+      "subtitulo": "Remova bloatware (Win10/11) — marque só o que existir no seu PC",
+      "executar": "Remover selecionados",
+      "selecionar_instalados": "Selecionar instalados",
+      "confirmar_titulo": "Confirmar Debloat",
+      "confirmar_corpo": "Serão removidos {count} app(s) via Winget.\nAlguns são componentes do Windows — use com cautela.\n\nContinuar?",
+      "toast_instalados": "{count} app(s) instalado(s) selecionado(s) para remoção.",
+      "toast_nenhum_instalado": "Nenhum item do catálogo foi detectado como instalado (winget list)."
+    }
+  },
+
+  "tweaks": {
+    "titulo": "Tweaks Windows",
+    "subtitulo": "Ajustes de configuração do sistema",
+    "marcar_todos": "Marcar todos",
+    "desmarcar_todos": "Desmarcar todos",
+    "detectar": "Detectar estado",
+    "detectando": "Detectando…",
+    "aplicar": "Aplicar selecionados",
+    "detectando_config": "Detectando configurações...",
+    "chip_todos": "Todos",
+    "badge_ativo": "Ativo",
+    "badge_inativo": "Inativo",
+    "admin_title": "Requer privilégio de Administrador",
+    "restart_title": "Requer reinicialização do Windows",
+    "vazio_titulo": "Nenhum ajuste encontrado",
+    "vazio_descricao": "Tente outra busca ou selecione outra categoria.",
+    "selecionados": "{count} selecionado(s)",
+    "selecionados_zero": "0 selecionados",
+    "confirmar_titulo": "Aplicar ajustes",
+    "confirmar_corpo": "{count} ajuste(s) serão aplicados via PowerShell.",
+    "confirmar_admin": "\n\n🔒 Alguns requerem privilégio de Administrador (UAC será solicitado).",
+    "confirmar_restart": "\n\n↺ Alguns requerem reinicialização para ter efeito."
+  },
+
+  "modais": {
+    "confirmar": "Confirmar",
+    "cancelar": "Cancelar",
+    "ok": "OK",
+    "depois": "Depois",
+    "atualizar": "Atualizar",
+    "atualizar_agora": "Atualizar agora",
+    "util_download": {
+      "titulo": "Download",
+      "url": "Link (URL)",
+      "url_placeholder": "https://...",
+      "destino": "Pasta de destino",
+      "destino_placeholder": "Clique em Procurar…",
+      "procurar": "Procurar",
+      "formato": "Formato",
+      "formato_aria": "Formato do download",
+      "video": "Vídeo (MP4)",
+      "audio": "Somente áudio (MP3)",
+      "playlist": "Baixar playlist inteira (quando o link for uma playlist do YouTube)",
+      "baixar": "Baixar",
+      "sites_suportados": "Sites suportados",
+      "erro_url_destino": "Informe o link e a pasta de destino."
+    },
+    "ytdlp_sites": {
+      "titulo": "Sites suportados",
+      "nota": "Principais plataformas suportadas pelo yt-dlp — qualquer URL reconhecida funciona no download",
+      "filtrar": "Filtrar sites…",
+      "fechar": "Fechar",
+      "carregando": "Carregando…",
+      "count": "{shown} de {total} sites principais",
+      "count_filtrado": "{shown} de {total} sites"
+    },
+    "util_imagem": {
+      "titulo": "Converter imagem",
+      "origem": "Arquivo de origem",
+      "destino": "Pasta de destino",
+      "converter_para": "Converter para",
+      "formato_placeholder": "Escolha o formato de saída…",
+      "formatos": {
+        "jpg": "JPEG (.jpg) — fotos, boa compressão",
+        "png": "PNG (.png) — transparência, sem perda",
+        "webp": "WebP (.webp) — web moderna, compacto",
+        "gif": "GIF (.gif) — animações (1º quadro se estático)",
+        "bmp": "BMP (.bmp) — bitmap sem compressão",
+        "tiff": "TIFF (.tiff) — arquivamento e impressão",
+        "pdf": "PDF (.pdf) — documento a partir da imagem",
+        "ico": "ICO (.ico) — ícone Windows",
+        "avif": "AVIF (.avif) — web eficiente"
+      },
+      "nome_saida": "Nome do arquivo de saída",
+      "nome_opcional": "(opcional)",
+      "nome_placeholder": "Ex.: MinhaFoto — sem extensão",
+      "converter": "Converter",
+      "hint_origem": "Origem detectada: .{ext}. Formatos iguais ao original foram ocultados.",
+      "hint_arquivo": "Arquivo final: {nome}.{ext}",
+      "erro_campos": "Informe o arquivo, a pasta de destino e o formato.",
+      "erro_nome": "Nome inválido. Evite \\ / : * ? \" < > | e não use extensão."
+    },
+    "welcome": {
+      "titulo": "Bem-vindo",
+      "corpo": "Pasta {pasta} pronta. Use os scripts ou os painéis Winget/Debloat.",
+      "comecar": "Começar"
+    },
+    "update": {
+      "titulo": "Atualização disponível",
+      "corpo": "Versão instalada: v{local}\nNova versão: v{remote}\n\nO app será fechado e o PowerShell executará o instalador oficial.",
+      "verificar_titulo": "Verificar atualização",
+      "verificar_atualizado": "Versão instalada: v{local}\nGitHub (main): v{remote}\n\nJá na versão mais recente.",
+      "verificar_simples": "Já na versão mais recente.",
+      "erro": "Erro ao verificar atualização."
+    },
+    "uninstall": {
+      "titulo": "Excluir Prompt Auxiliar",
+      "corpo": "Tem certeza? Esta ação é permanente e não pode ser desfeita.\n\nPastas que serão removidas:\n{lista}\n\nAtalhos na Área de Trabalho e Menu Iniciar também serão apagados.\n\nO aplicativo será fechado em seguida.",
+      "erro_preview": "Não foi possível preparar a exclusão."
+    }
+  },
+
+  "footer": {
+    "verificar_atualizacao": "Verificar atualização",
+    "atualizacao_disponivel": "Atualização disponível",
+    "verificando": "Verificando…",
+    "pasta_dados": "Pasta de Dados / Logs",
+    "excluir_app": "Excluir Prompt Auxiliar",
+    "creditos": "GitHub · Heyash",
+    "tooltip_atualizacao": "Verificar se há nova versão disponível",
+    "tooltip_pasta": "Abrir C:\\PromptAuxiliar (dados e logs)",
+    "tooltip_excluir": "Remover o Prompt Auxiliar deste PC"
+  },
+
+  "busca": {
+    "placeholder": "Buscar…"
+  },
+
+  "tema": {
+    "modo_claro": "Usar modo claro",
+    "modo_escuro": "Usar modo escuro",
+    "alternar": "Alternar tema claro ou escuro"
+  }
+}

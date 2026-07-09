@@ -196,11 +196,29 @@
           </label>
         </div>
       </div>
-      <footer class="modal-foot">
-        <button type="button" class="btn ghost" id="util-cancel">Cancelar</button>
-        <button type="submit" class="btn primary" id="util-submit">Baixar</button>
+      <footer class="modal-foot util-modal-foot">
+        <button type="button" class="btn ghost util-sites-btn hidden" id="util-sites-btn">Sites suportados</button>
+        <div class="modal-foot-spacer" aria-hidden="true"></div>
+        <div class="modal-foot-actions">
+          <button type="button" class="btn ghost" id="util-cancel">Cancelar</button>
+          <button type="submit" class="btn primary" id="util-submit">Baixar</button>
+        </div>
       </footer>
     </form>
+  </dialog>
+
+  <dialog id="ytdlp-sites-modal" class="modal util-modal ytdlp-sites-modal">
+    <div class="modal-card util-modal-card ytdlp-sites-card">
+      <h3>Sites suportados</h3>
+      <p class="util-hint ytdlp-sites-note">Principais plataformas suportadas pelo yt-dlp — qualquer URL reconhecida funciona no download</p>
+      <p id="ytdlp-sites-count" class="ytdlp-sites-count" aria-live="polite"></p>
+      <input id="ytdlp-sites-filter" class="util-input hidden" type="search" placeholder="Filtrar sites…" autocomplete="off" />
+      <div id="ytdlp-sites-loading" class="ytdlp-sites-loading">Carregando…</div>
+      <ul id="ytdlp-sites-list" class="ytdlp-sites-list hidden" role="list"></ul>
+      <footer class="modal-foot">
+        <button type="button" class="btn primary" id="ytdlp-sites-close">Fechar</button>
+      </footer>
+    </div>
   </dialog>
 
   <dialog id="util-imagem-modal" class="modal util-modal">
