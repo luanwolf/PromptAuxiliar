@@ -7,7 +7,7 @@
     <img alt="WebView2" src="https://img.shields.io/badge/WebView2-Edge-0078D4?logo=microsoftedge&logoColor=white" />
     <img alt="Winget" src="https://img.shields.io/badge/Winget-pacotes-2EA043?logo=windows&logoColor=white" />
     <img alt="PowerShell" src="https://img.shields.io/badge/PowerShell-5.1+-5391FE?logo=powershell&logoColor=white" />
-    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.8.0-0078D4" />
+    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.8.1-0078D4" />
   </p>
 
   <p>
@@ -44,7 +44,7 @@ irm "https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/install.ps1"
 
 Também funciona com `win.ps1` direto; o instalador configura **RemoteSigned** no seu usuário e cria `Iniciar-PromptAuxiliar.cmd` para os próximos usos.
 
-O `install.ps1` baixa o `win.ps1` para `%TEMP%` e executa como arquivo (mais confiável que `Invoke-Expression` em scripts com `param()`).
+O `install.ps1` é salvo em **UTF-8 sem BOM** para funcionar com `irm ... | iex` e baixa o `win.ps1` para `%TEMP%` antes de executar.
 
 **O que o instalador faz automaticamente**
 
@@ -278,6 +278,7 @@ win.ps1                 # instalador / atualizador one-liner
 
 | Versão | Destaques |
 |--------|-----------|
+| **2.8.1** | Fix **`irm \| iex`**: `install.ps1` sem BOM UTF-8 — evita erro `recomendado` ao interpretar comentário como comando |
 | **2.8.0** | Release **2.8**: `logo.svg` / `.ico` regenerados a partir de `logo.png`; instalador `irm` corrigido (`install.ps1` → arquivo temporário); fix `Concluir-Troca-Instalacao.ps1` no fluxo de update |
 | **2.7.19** | Atalhos recarregam **ícone** após troca do `.ico` (cache do Explorer); botão **Sites suportados** no padrão do modal yt-dlp |
 | **2.7.18** | Textos da interface em **`ui_strings.json`**; yt-dlp com **Sites suportados** (plataformas principais); Tweaks sem flash de CMD na detecção; correções de menu lateral e i18n |
