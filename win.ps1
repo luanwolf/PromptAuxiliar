@@ -311,7 +311,7 @@ function Get-PromptAuxEssentialScriptNames {
     return @(
         'Update-PromptAuxiliar.ps1',
         'Criar-Atalho.ps1',
-        'Concluir-Troca-Instalação.ps1',
+        'Concluir-Troca-Instalacao.ps1',
         'Reparar-Atalho.ps1'
     )
 }
@@ -679,7 +679,7 @@ if (Test-Path -LiteralPath `$dest) {
 New-Item -ItemType Directory -Path (Split-Path `$dest -Parent) -Force | Out-Null
 Move-Item -LiteralPath `$staging -Destination `$dest -Force
 
-`$concluir = Join-Path `$dest 'powershell\Concluir-Troca-Instalação.ps1'
+`$concluir = Join-Path `$dest 'powershell\Concluir-Troca-Instalacao.ps1'
 if (Test-Path -LiteralPath `$concluir) {
     Write-Host '  Abrindo Prompt Auxiliar atualizado...' -ForegroundColor Green
     Start-Process -FilePath 'powershell.exe' -ArgumentList @(

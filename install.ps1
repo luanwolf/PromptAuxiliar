@@ -30,5 +30,8 @@ if ($localWin -and (Test-Path -LiteralPath $localWin)) {
     $scriptText = (Invoke-WebRequest -Uri $url -UseBasicParsing -Headers @{
         'User-Agent' = 'PromptAuxiliar-Installer'
     }).Content
-    Invoke-Expression $scriptText
+    $winPath = Join-Path $env:TEMP 'PromptAuxiliar-win.ps1'
+    $utf8 = New-Object System.Text.UTF8Encoding $false
+    [System.IO.File]::WriteAllText($winPath, $scriptText.TrimStart([char]0xFEFF), $utf8)
+    & $winPath @args
 }
