@@ -22,7 +22,17 @@ function Get-PromptAuxInstalledVersion {
 }
 
 $version = if ($VersionLabel) { $VersionLabel.Trim() } else { Get-PromptAuxInstalledVersion -Root $ProjectRoot }
-$ico = Join-Path $ProjectRoot 'imagens\logo.ico'
+
+function Get-PromptAuxIconPath {
+    param([string]$Root)
+    foreach ($rel in @('imagens\logo.ico', 'web\assets\logo.ico')) {
+        $p = Join-Path $Root $rel
+        if (Test-Path -LiteralPath $p) { return $p }
+    }
+    return $null
+}
+
+$ico = Get-PromptAuxIconPath -Root $ProjectRoot
 $launcherPs1 = Join-Path $ProjectRoot 'win.ps1'
 $launcherCmd = Join-Path $ProjectRoot 'Iniciar-PromptAuxiliar.cmd'
 $main = Join-Path $ProjectRoot 'main.py'
@@ -55,7 +65,7 @@ function Set-PromptAuxShortcut {
     $s.WorkingDirectory = $ProjectRoot
     $s.WindowStyle = 1
     $s.Description = $description
-    if (Test-Path -LiteralPath $ico) { $s.IconLocation = "$ico,0" }
+    if ($ico) { $s.IconLocation = "$ico,0" }
     $s.Save()
 }
 
@@ -92,6 +102,7 @@ function Repair-PromptAuxShortcutFile {
         }
         if ($useCmd -and $s.TargetPath -ne $launcherCmd) { $needsFix = $true }
         if ($s.Description -ne $description) { $needsFix = $true }
+        if ($ico -and $s.IconLocation -ne "$ico,0") { $needsFix = $true }
         if (-not $needsFix) { return $false }
         Set-PromptAuxShortcut -LnkPath $LnkPath
         return $true

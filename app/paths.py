@@ -38,7 +38,7 @@ def _gerar_ico(png: Path, ico: Path) -> bool:
 def caminho_icone() -> Path:
     raiz = raiz_projeto()
     # Prefer an already-generated .ico file
-    for rel in ("web/assets/logo.ico", "imagens/logo.ico"):
+    for rel in ("imagens/logo.ico", "web/assets/logo.ico"):
         p = raiz / rel
         if p.is_file():
             return p

@@ -6,8 +6,8 @@ import os
 import sys
 
 from app.api import PromptAuxiliarApi
+from app.paths import caminho_icone
 from app.updater import get_local_version
-from app.win_icon import aplicar_icone_por_titulo
 
 
 def _base_projeto() -> str:
@@ -62,5 +62,4 @@ def iniciar_webview() -> None:
         text_select=True,
     )
 
-    aplicar_icone_por_titulo("Prompt Auxiliar")
-    webview.start(gui="edgechromium", debug=False)
+    webview.start(gui="edgechromium", debug=False, icon=str(caminho_icone()))
