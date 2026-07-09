@@ -1,8 +1,7 @@
-﻿# Cria atalhos versionados (Area de Trabalho e Menu Iniciar) apontando para win.ps1
+# Cria atalho na Area de Trabalho e Menu Iniciar com icone do Prompt Auxiliar
 #Requires -Version 5.1
 param(
-    [string]$ProjectRoot = $env:PROMPTAUX_HOME,
-    [string]$VersionLabel = ''
+    [string]$ProjectRoot = $env:PROMPTAUX_HOME
 )
 
 $ErrorActionPreference = 'Stop'
@@ -10,155 +9,61 @@ if (-not $ProjectRoot) {
     $ProjectRoot = Split-Path -Parent $PSScriptRoot
 }
 $ProjectRoot = (Resolve-Path $ProjectRoot).Path
-$env:PROMPTAUX_HOME = $ProjectRoot
 
-function Get-PromptAuxInstalledVersion {
-    param([string]$Root)
-    $cfg = Join-Path $Root 'app\config.py'
-    if (-not (Test-Path -LiteralPath $cfg)) { return '0.0.0' }
-    $text = Get-Content -LiteralPath $cfg -Raw
-    if ($text -match 'APP_VERSION\s*=\s*"([^"]+)"') { return $Matches[1].Trim() }
-    return '0.0.0'
-}
+$iconScript = Join-Path $ProjectRoot 'scripts\build_icon.py'
+$python = (Get-Command python -ErrorAction SilentlyContinue).Source
+if (-not $python) { $python = 'py' }
 
-$version = if ($VersionLabel) { $VersionLabel.Trim() } else { Get-PromptAuxInstalledVersion -Root $ProjectRoot }
-
-function Get-PromptAuxIconPath {
-    param([string]$Root)
-    foreach ($rel in @('imagens\logo.ico', 'web\assets\logo.ico')) {
-        $p = Join-Path $Root $rel
-        if (Test-Path -LiteralPath $p) { return $p }
-    }
-    return $null
-}
-
-$ico = Get-PromptAuxIconPath -Root $ProjectRoot
-$launcherPs1 = Join-Path $ProjectRoot 'win.ps1'
-$launcherCmd = Join-Path $ProjectRoot 'Iniciar-PromptAuxiliar.cmd'
-$main = Join-Path $ProjectRoot 'main.py'
-if (-not (Test-Path -LiteralPath $launcherPs1)) {
-    throw "win.ps1 não encontrado em $ProjectRoot"
-}
-if (-not (Test-Path -LiteralPath $main)) {
-    throw "main.py não encontrado em $ProjectRoot"
-}
-
-$useCmd = Test-Path -LiteralPath $launcherCmd
-$wsh = New-Object -ComObject WScript.Shell
-$shortcutFileName = "Prompt Auxiliar v$version.lnk"
-$description = "Prompt Auxiliar v$version - Winget e Debloat"
-
-function Set-PromptAuxShortcutIcon {
-    param(
-        [object]$Shortcut,
-        [string]$IconPath
-    )
-    if (-not $IconPath) { return }
-    # ponytail: mesmo caminho .ico — Explorer mantém cache; troca rápida força recarregar
-    $Shortcut.IconLocation = "$env:SystemRoot\System32\imageres.dll,0"
-    $Shortcut.Save()
-    $Shortcut.IconLocation = "$IconPath,0"
-}
-
-function Set-PromptAuxShortcut {
-    param([string]$LnkPath)
-    $dir = Split-Path -Parent $LnkPath
-    if ($dir -and -not (Test-Path -LiteralPath $dir)) {
-        New-Item -ItemType Directory -Path $dir -Force | Out-Null
-    }
-    $s = $wsh.CreateShortcut($LnkPath)
-    if ($useCmd) {
-        $s.TargetPath = $launcherCmd
-        $s.Arguments = ''
-    } else {
-        $s.TargetPath = 'powershell.exe'
-        $s.Arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$launcherPs1`""
-    }
-    $s.WorkingDirectory = $ProjectRoot
-    $s.WindowStyle = 1
-    $s.Description = $description
-    Set-PromptAuxShortcutIcon -Shortcut $s -IconPath $ico
-    $s.Save()
-}
-
-function Remove-PromptAuxOldShortcuts {
-    param(
-        [string[]]$SearchDirs,
-        [string]$KeepFileName
-    )
-    $removed = 0
-    foreach ($dir in $SearchDirs) {
-        if (-not (Test-Path -LiteralPath $dir)) { continue }
-        Get-ChildItem -LiteralPath $dir -Filter 'Prompt Auxiliar*.lnk' -File -ErrorAction SilentlyContinue |
-            Where-Object { $_.Name -ne $KeepFileName } |
-            ForEach-Object {
-                Remove-Item -LiteralPath $_.FullName -Force -ErrorAction SilentlyContinue
-                Write-Host "  Removido atalho antigo: $($_.Name)" -ForegroundColor DarkGray
-                $removed++
-            }
-    }
-    return $removed
-}
-
-function Repair-PromptAuxShortcutFile {
-    param([string]$LnkPath, [string]$ExpectedName)
-    if (-not (Test-Path -LiteralPath $LnkPath)) { return $false }
+if ((Test-Path $iconScript) -and $python) {
     try {
-        $leaf = Split-Path -Leaf $LnkPath
-        if ($leaf -ne $ExpectedName) { return $false }
-        $s = $wsh.CreateShortcut($LnkPath)
-        $needsFix = $false
-        if ($s.Arguments -match 'Atualizar-e-Iniciar\.ps1') { $needsFix = $true }
-        if (-not $useCmd -and $s.Arguments -and $s.Arguments -notmatch [regex]::Escape($launcherPs1)) {
-            $needsFix = $true
+        if ($python -eq 'py') {
+            & py -3 $iconScript | Out-Null
+        } else {
+            & $python $iconScript | Out-Null
         }
-        if ($useCmd -and $s.TargetPath -ne $launcherCmd) { $needsFix = $true }
-        if ($s.Description -ne $description) { $needsFix = $true }
-        if ($ico -and $s.IconLocation -ne "$ico,0") { $needsFix = $true }
-        if ($ico -and (Test-Path -LiteralPath $ico)) {
-            $icoTime = (Get-Item -LiteralPath $ico).LastWriteTimeUtc
-            $lnkTime = (Get-Item -LiteralPath $LnkPath).LastWriteTimeUtc
-            if ($icoTime -gt $lnkTime) { $needsFix = $true }
-        }
-        if (-not $needsFix) { return $false }
-        Set-PromptAuxShortcut -LnkPath $LnkPath
-        return $true
     } catch {
-        return $false
+        Write-Warning "Nao foi possivel regenerar logo.ico: $_"
     }
+}
+
+$ico = Join-Path $ProjectRoot 'imagens\logo.ico'
+if (-not (Test-Path $ico)) {
+    $ico = Join-Path $ProjectRoot 'web\assets\logo.ico'
+}
+$main = Join-Path $ProjectRoot 'main.py'
+if (-not $python -or $python -eq 'py') {
+    $python = (Get-Command python -ErrorAction SilentlyContinue).Source
+}
+if (-not $python) { $python = 'python' }
+
+if (-not (Test-Path $main)) {
+    throw "main.py nao encontrado em $ProjectRoot"
+}
+
+$version = '2.8.0'
+$configPy = Join-Path $ProjectRoot 'app\config.py'
+if (Test-Path $configPy) {
+    $m = Select-String -Path $configPy -Pattern 'APP_VERSION\s*=\s*"([^"]+)"' | Select-Object -First 1
+    if ($m) { $version = $m.Matches[0].Groups[1].Value }
 }
 
 $desktop = [Environment]::GetFolderPath('Desktop')
 $startMenu = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
-$searchDirs = @($desktop, $startMenu)
-
-Remove-PromptAuxOldShortcuts -SearchDirs $searchDirs -KeepFileName $shortcutFileName | Out-Null
-
 $targets = @(
-    (Join-Path $desktop $shortcutFileName),
-    (Join-Path $startMenu $shortcutFileName)
+    (Join-Path $desktop 'Prompt Auxiliar.lnk'),
+    (Join-Path $startMenu 'Prompt Auxiliar.lnk')
 )
 
 foreach ($lnkPath in $targets) {
-    Set-PromptAuxShortcut -LnkPath $lnkPath
+    $s = (New-Object -ComObject WScript.Shell).CreateShortcut($lnkPath)
+    $s.TargetPath = $python
+    $s.Arguments = "`"$main`""
+    $s.WorkingDirectory = $ProjectRoot
+    $s.WindowStyle = 1
+    $s.Description = "Prompt Auxiliar v$version - Winget, Debloat e scripts"
+    if (Test-Path $ico) { $s.IconLocation = "$ico,0" }
+    $s.Save()
     Write-Host "Atalho: $lnkPath" -ForegroundColor Green
 }
 
-$repaired = 0
-foreach ($dir in $searchDirs) {
-    if (-not (Test-Path -LiteralPath $dir)) { continue }
-    $expected = Join-Path $dir $shortcutFileName
-    if (Repair-PromptAuxShortcutFile -LnkPath $expected -ExpectedName $shortcutFileName) {
-        $repaired++
-    }
-}
-
-if ($repaired -gt 0) {
-    Write-Host "$repaired atalho(s) corrigido(s)." -ForegroundColor DarkGray
-}
-
-if ($useCmd) {
-    Write-Host "Atalhos usam Iniciar-PromptAuxiliar.cmd (versão v$version)." -ForegroundColor DarkGray
-} else {
-    Write-Host "Atalhos usam win.ps1 com Bypass (versão v$version)." -ForegroundColor DarkGray
-}
+Write-Host "Icone: $ico" -ForegroundColor DarkGray

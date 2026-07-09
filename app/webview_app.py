@@ -6,8 +6,8 @@ import os
 import sys
 
 from app.api import PromptAuxiliarApi
-from app.paths import caminho_icone
-from app.updater import get_local_version
+from app.config import APP_VERSION
+from app.win_icon import aplicar_icone_por_titulo
 
 
 def _base_projeto() -> str:
@@ -20,19 +20,6 @@ def _caminho_web_index() -> str:
     return os.path.join(_base_projeto(), "web", "index.html")
 
 
-def _definir_aumid() -> None:
-    """Sets the App User Model ID so Windows shows the app icon instead of python.exe."""
-    if sys.platform != "win32":
-        return
-    try:
-        import ctypes
-        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
-            "PromptAuxiliar.App.1"
-        )
-    except Exception:
-        pass
-
-
 def iniciar_webview() -> None:
     try:
         import webview
@@ -42,14 +29,12 @@ def iniciar_webview() -> None:
             "Execute: pip install -r requirements.txt"
         ) from e
 
-    _definir_aumid()
-
     index = _caminho_web_index()
     if not os.path.isfile(index):
         raise SystemExit(f"Interface web não encontrada: {index}")
 
     api = PromptAuxiliarApi()
-    titulo = f"Prompt Auxiliar v{get_local_version()}"
+    titulo = f"Prompt Auxiliar v{APP_VERSION}"
 
     webview.create_window(
         titulo,
@@ -62,4 +47,5 @@ def iniciar_webview() -> None:
         text_select=True,
     )
 
-    webview.start(gui="edgechromium", debug=False, icon=str(caminho_icone()))
+    aplicar_icone_por_titulo("Prompt Auxiliar")
+    webview.start(gui="edgechromium", debug=False)
