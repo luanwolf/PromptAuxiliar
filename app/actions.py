@@ -61,6 +61,15 @@ _ACOES: tuple[Acao, ...] = (
         "music",
         interativo="util",
     ),
+    Acao(
+        "converter-imagem",
+        "Converter imagem (ImageMagick)",
+        "converter_imagem.ps1",
+        "Utilitários",
+        "Converte imagens entre JPEG, PNG, WebP, GIF, PDF, ICO e outros formatos.",
+        "image",
+        interativo="util-imagem",
+    ),
 )
 
 _POR_ID = {a.id: a for a in _ACOES}
@@ -71,12 +80,8 @@ _META_CATEGORIAS: dict[str, dict[str, str]] = {
     "Limpeza": {"slug": "limpeza", "icone": "clean", "descricao": "Temporários, disco e segurança"},
     "Otimização": {"slug": "otimizacao", "icone": "tune", "descricao": "Registro e ajustes"},
     "Sistema": {"slug": "sistema", "icone": "system", "descricao": "Rede, atalhos e configurações"},
-    "Utilitários": {"slug": "utilitarios", "icone": "tool", "descricao": "Downloads de vídeo, música e Spotify"},
+    "Utilitários": {"slug": "utilitarios", "icone": "tool", "descricao": "Downloads, conversão de imagens e ferramentas"},
 }
-
-
-def listar_acoes() -> list[Acao]:
-    return list(_ACOES)
 
 
 def obter_acao(identificador: str) -> Acao | None:

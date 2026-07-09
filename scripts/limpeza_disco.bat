@@ -1,3 +1,4 @@
+chcp 65001 >nul 2>&1
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
 call "%~dp0_ui.bat" :banner "Limpeza de armazenamento" "Abre a ferramenta Limpeza de Disco do Windows (cleanmgr)."

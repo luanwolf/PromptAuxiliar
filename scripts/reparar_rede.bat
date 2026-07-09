@@ -1,11 +1,12 @@
+chcp 65001 >nul 2>&1
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
-call "%~dp0_ui.bat" :banner "Reparar conexao de rede" "Libera e renova o IP, limpa o cache DNS, redefine Winsock e a pilha TCP/IP."
+call "%~dp0_ui.bat" :banner "Reparar conexão de rede" "Libera e renova o IP, limpa o cache DNS, redefine Winsock e a pilha TCP/IP."
 
 call "%~dp0_ui.bat" :confirmar
 if errorlevel 1 call "%~dp0_ui.bat" :sair 0 & exit /b 0
 set "EXIT_CODE=0"
-title Reparar conexao de rede
+title Reparar conexão de rede
 echo   [1/6] Liberando IP...
 ipconfig /release >nul 2>&1
 echo   [2/6] Renovando IP...

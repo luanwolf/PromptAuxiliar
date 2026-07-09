@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 from app.config import PASTA_BASE
+from app.runner import PS_CONSOLE_INIT
 from app.winget_installed import is_installed, refresh_installed
 
 PanelKind = Literal["winget", "debloat"]
@@ -136,6 +137,7 @@ def _executar_winget_terminal(kind: PanelKind, ids: list[str]) -> None:
     titulo = "Prompt Auxiliar - Winget" if kind == "winget" else "Prompt Auxiliar - Debloat"
     titulo_esc = titulo.replace("'", "''")
     lines = [
+        PS_CONSOLE_INIT.strip(),
         f"$Host.UI.RawUI.WindowTitle = '{titulo_esc}'",
         f"Write-Host '===== {titulo_esc} =====' -ForegroundColor Cyan",
         "Write-Host ''",
@@ -152,7 +154,7 @@ def _executar_winget_terminal(kind: PanelKind, ids: list[str]) -> None:
             lines.append(f"Write-Host '[REMOVER] {safe}' -ForegroundColor Yellow")
             lines.append(f"winget uninstall --id '{safe}' -h")
         lines.append("Write-Host ''")
-    lines.append("Write-Host 'Processo concluido.' -ForegroundColor Green")
+    lines.append("Write-Host 'Processo concluído.' -ForegroundColor Green")
     lines.append("Read-Host 'Pressione Enter para fechar'")
 
     _PS_RUN.mkdir(parents=True, exist_ok=True)

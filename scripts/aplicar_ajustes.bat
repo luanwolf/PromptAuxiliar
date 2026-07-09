@@ -1,3 +1,4 @@
+chcp 65001 >nul 2>&1
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
 call "%~dp0_ui.bat" :banner "Aplicar ajustes de registro" "Importa todos os arquivos .reg da pasta C:\PromptAuxiliar\registros."
@@ -11,7 +12,7 @@ if not exist "!REG_FOLDER!" mkdir "!REG_FOLDER!"
 set "COUNT=0"
 pushd "!REG_FOLDER!" 2>nul
 if errorlevel 1 (
-  echo   Pasta nao encontrada: !REG_FOLDER!
+  echo   Pasta não encontrada: !REG_FOLDER!
   set "EXIT_CODE=1"
   goto :fim_reg
 )

@@ -1663,3 +1663,19 @@ html[data-theme="light"] .tweak-badge-inactive {
   accent-color: var(--accent);
   flex-shrink: 0;
 }
+
+.util-select {
+  cursor: pointer;
+}
+
+.util-hint {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+.util-label-optional {
+  font-weight: 400;
+  opacity: 0.75;
+}

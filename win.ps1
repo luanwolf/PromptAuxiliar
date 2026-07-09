@@ -1,4 +1,4 @@
-# Prompt Auxiliar - instalador one-liner
+﻿# Prompt Auxiliar - instalador one-liner
 # Uso: irm "https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/win.ps1" | iex
 #Requires -Version 5.1
 
@@ -10,6 +10,13 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+
+try {
+    [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+    [Console]::InputEncoding  = [System.Text.Encoding]::UTF8
+    $global:OutputEncoding     = [System.Text.Encoding]::UTF8
+    if ($Host.Name -eq 'ConsoleHost') { chcp 65001 | Out-Null }
+} catch {}
 
 if (-not $Branch) { $Branch = 'main' }
 
@@ -63,7 +70,7 @@ function Test-PromptAuxPythonExe {
 
     if (-not $ExePath -or -not (Test-Path -LiteralPath $ExePath)) { return $null }
 
-    # Ignorar aliases do WindowsApps (redirecionam para Microsoft Store, nao sao Python real)
+    # Ignorar aliases do WindowsApps (redirecionam para Microsoft Store, não sao Python real)
     if ($ExePath -like '*\WindowsApps\*') { return $null }
 
     try {
@@ -95,7 +102,7 @@ function Test-PromptAuxPythonCmd {
 function Find-PromptAuxPythonFromDisk {
     $candidates = [System.Collections.Generic.List[string]]::new()
 
-    # Caminhos tipicos de instalacao usuario (winget --scope user) e sistema
+    # Caminhos tipicos de instalação usuario (winget --scope user) e sistema
     $searchRoots = @(
         (Join-Path $env:LOCALAPPDATA 'Programs\Python')
         (Join-Path $env:LOCALAPPDATA 'Programs\Python\Python312')
@@ -181,7 +188,7 @@ function Install-PromptAuxPythonViaOfficial {
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         Invoke-WebRequest -Uri $url -OutFile $installer -UseBasicParsing -TimeoutSec 120
     } catch {
-        throw "Nao foi possivel baixar o instalador Python. Verifique a internet e tente novamente.`nURL: $url`nDetalhes: $($_.Exception.Message)"
+        throw "Não foi possivel baixar o instalador Python. Verifique a internet e tente novamente.`nURL: $url`nDetalhes: $($_.Exception.Message)"
     }
 
     Write-Host '  Instalando Python (modo silencioso, adiciona ao PATH)...' -ForegroundColor DarkGray
@@ -196,26 +203,26 @@ function Install-PromptAuxPythonViaOfficial {
 
     Remove-Item $installer -Force -ErrorAction SilentlyContinue
 
-    # Codigos conhecidos: 0=ok, 1638=versao mais recente ja instalada
+    # Codigos conhecidos: 0=ok, 1638=versão mais recente ja instalada
     if ($proc.ExitCode -ne 0 -and $proc.ExitCode -ne 1638) {
-        throw "Instalador Python retornou codigo $($proc.ExitCode). Tente instalar manualmente: https://www.python.org/downloads/"
+        throw "Instalador Python retornou código $($proc.ExitCode). Tente instalar manualmente: https://www.python.org/downloads/"
     }
     return $true
 }
 
 function Install-PromptAuxDisableStoreAlias {
     # Desabilita os aliases do Windows App Execution para python/python3
-    # para que chamadas a 'python' nao abram a Microsoft Store
+    # para que chamadas a 'python' não abram a Microsoft Store
     try {
         $key = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\App Paths'
-        # Nao mexer no registro neste passo; apenas avisar o usuario
+        # Não mexer no registro neste passo; apenas avisar o usuario
         Write-Host '  Aviso: aliases do Windows App Execution (python.exe -> Store) detectados.' -ForegroundColor Yellow
-        Write-Host '  Se Python nao abrir apos instalar, desative em: Configuracoes > Aplicativos > Aliases de execucao do aplicativo.' -ForegroundColor Yellow
+        Write-Host '  Se Python não abrir apos instalar, desative em: Configurações > Aplicativos > Aliases de execução do aplicativo.' -ForegroundColor Yellow
     } catch { }
 }
 
 function Install-PromptAuxPython {
-    Write-Host '  Python 3.10+ nao encontrado. Iniciando instalacao...' -ForegroundColor Yellow
+    Write-Host '  Python 3.10+ não encontrado. Iniciando instalação...' -ForegroundColor Yellow
     Install-PromptAuxDisableStoreAlias
 
     $wingetOk = $false
@@ -226,7 +233,7 @@ function Install-PromptAuxPython {
             Write-Host '  Python instalado via winget.' -ForegroundColor Green
         }
     } else {
-        Write-Host '  winget nao disponivel neste PC.' -ForegroundColor DarkYellow
+        Write-Host '  winget não disponível neste PC.' -ForegroundColor DarkYellow
     }
 
     if (-not $wingetOk) {
@@ -255,14 +262,14 @@ function Get-PromptAuxPython {
     }
 
     throw @"
-Python 3.10+ nao foi detectado apos a instalacao.
+Python 3.10+ não foi detectado apos a instalação.
 Possiveis causas:
   1. O alias do Windows App Execution ainda intercepta 'python'. Desative em:
-     Configuracoes > Aplicativos > Aliases de execucao do aplicativo
+     Configurações > Aplicativos > Aliases de execução do aplicativo
      (desative python.exe e python3.exe) e execute este instalador novamente.
-  2. O PATH nao foi atualizado. Feche este PowerShell, abra um novo e execute o irm novamente.
+  2. O PATH não foi atualizado. Feche este PowerShell, abra um novo e execute o irm novamente.
   3. Instale manualmente: https://www.python.org/downloads/
-     (marque 'Add python.exe to PATH' durante a instalacao).
+     (marque 'Add python.exe to PATH' durante a instalação).
 "@
 }
 
@@ -304,7 +311,7 @@ function Get-PromptAuxEssentialScriptNames {
     return @(
         'Update-PromptAuxiliar.ps1',
         'Criar-Atalho.ps1',
-        'Concluir-Troca-Instalacao.ps1',
+        'Concluir-Troca-Instalação.ps1',
         'Reparar-Atalho.ps1'
     )
 }
@@ -348,7 +355,8 @@ function Get-PromptAuxScriptPs1Names {
         'limpeza_temporarios.ps1',
         'reparar_rede.ps1',
         'baixar_ytdlp.ps1',
-        'baixar_spotdl.ps1'
+        'baixar_spotdl.ps1',
+        'converter_imagem.ps1'
     )
 }
 
@@ -392,7 +400,7 @@ function Sync-PromptAuxRepoFile {
                 Copy-Item -LiteralPath $src -Destination $dest -Force -ErrorAction Stop
                 return $true
             } catch {
-                Write-Host "  Aviso: nao foi possivel copiar $RelativePath (arquivo em uso?)." -ForegroundColor DarkYellow
+                Write-Host "  Aviso: não foi possivel copiar $RelativePath (arquivo em uso?)." -ForegroundColor DarkYellow
             }
         }
     }
@@ -415,7 +423,7 @@ function Sync-PromptAuxRepoFile {
         }
         $hint = 'sem internet ou arquivo ausente no GitHub'
         if ($_.Exception.Response -and $_.Exception.Response.StatusCode.value__ -eq 404) {
-            $hint = 'ainda nao publicado na branch main (faca push) ou URL incorreta'
+            $hint = 'ainda não publicado na branch main (faça push) ou URL incorreta'
         }
         Write-Host "  Aviso: $RelativePath - $hint" -ForegroundColor DarkYellow
         return $false
@@ -524,7 +532,7 @@ function Enable-PromptAuxiliarExecutionPolicy {
             Write-Host '  ExecutionPolicy: RemoteSigned (usuario) - scripts locais sem -Bypass' -ForegroundColor DarkGray
         }
     } catch {
-        Write-Host '  Aviso: nao foi possivel definir RemoteSigned. Atalhos usam launcher com Bypass.' -ForegroundColor DarkYellow
+        Write-Host '  Aviso: não foi possivel definir RemoteSigned. Atalhos usam launcher com Bypass.' -ForegroundColor DarkYellow
     }
 }
 
@@ -631,8 +639,8 @@ function Invoke-PromptAuxDeferredFolderSwap {
     $stageEsc = $StagingPath.Replace("'", "''")
     $ps1 = Join-Path ([System.IO.Path]::GetTempPath()) 'promptauxiliar-update-swap.ps1'
     $content = @"
-# Prompt Auxiliar - troca de pasta apos atualizacao
-`$Host.UI.RawUI.WindowTitle = 'Prompt Auxiliar - concluindo atualizacao'
+# Prompt Auxiliar - troca de pasta apos atualização
+`$Host.UI.RawUI.WindowTitle = 'Prompt Auxiliar - concluindo atualização'
 `$ErrorActionPreference = 'SilentlyContinue'
 `$dest = '$destEsc'
 `$staging = '$stageEsc'
@@ -661,7 +669,7 @@ for (`$w = 0; `$w -lt 60; `$w++) {
     Start-Sleep -Seconds 1
 }
 
-Write-Host '  Substituindo arquivos da instalacao...' -ForegroundColor DarkGray
+Write-Host '  Substituindo arquivos da instalação...' -ForegroundColor DarkGray
 if (Test-Path -LiteralPath `$dest) {
     Remove-Item -LiteralPath `$dest -Recurse -Force -ErrorAction SilentlyContinue
 }
@@ -671,7 +679,7 @@ if (Test-Path -LiteralPath `$dest) {
 New-Item -ItemType Directory -Path (Split-Path `$dest -Parent) -Force | Out-Null
 Move-Item -LiteralPath `$staging -Destination `$dest -Force
 
-`$concluir = Join-Path `$dest 'powershell\Concluir-Troca-Instalacao.ps1'
+`$concluir = Join-Path `$dest 'powershell\Concluir-Troca-Instalação.ps1'
 if (Test-Path -LiteralPath `$concluir) {
     Write-Host '  Abrindo Prompt Auxiliar atualizado...' -ForegroundColor Green
     Start-Process -FilePath 'powershell.exe' -ArgumentList @(
@@ -690,7 +698,7 @@ if (Test-Path -LiteralPath `$concluir) {
     }
 }
 Write-Host ''
-Write-Host '  Atualizacao concluida.' -ForegroundColor Green
+Write-Host '  Atualizacao concluída.' -ForegroundColor Green
 Start-Sleep -Seconds 4
 "@
     Write-PromptAuxUtf8NoBom -Path $ps1 -Content $content
@@ -730,7 +738,7 @@ function Install-PromptAuxiliarSourceZip {
     $destExists = Test-Path -LiteralPath $Destination
     if ($destExists -and (Test-PromptAuxShouldDeferFolderSwap -Destination $Destination -ScriptDir $ScriptDir)) {
         Write-Host '  Atualizacao adiada: esta janela fechara em alguns segundos.' -ForegroundColor Cyan
-        Write-Host '  O atalho da nova versao ja foi criado na Area de Trabalho.' -ForegroundColor DarkGray
+        Write-Host '  O atalho da nova versão ja foi criado na Area de Trabalho.' -ForegroundColor DarkGray
         Invoke-PromptAuxDeferredFolderSwap -StagingPath $staging -Destination $Destination
         Remove-Item $tempZip -Force -ErrorAction SilentlyContinue
         Remove-Item $tempExtract -Force -ErrorAction SilentlyContinue
@@ -738,11 +746,11 @@ function Install-PromptAuxiliarSourceZip {
     }
 
     if ($destExists) {
-        Write-Host '  Substituindo arquivos da instalacao...' -ForegroundColor DarkGray
+        Write-Host '  Substituindo arquivos da instalação...' -ForegroundColor DarkGray
         try {
             Remove-Item -LiteralPath $Destination -Recurse -Force -ErrorAction Stop
         } catch {
-            Write-Host '  Nao foi possivel substituir agora - aguardando fechar esta janela...' -ForegroundColor Cyan
+            Write-Host '  Não foi possivel substituir agora - aguardando fechar esta janela...' -ForegroundColor Cyan
             Invoke-PromptAuxDeferredFolderSwap -StagingPath $staging -Destination $Destination
             Remove-Item $tempZip -Force -ErrorAction SilentlyContinue
             Remove-Item $tempExtract -Force -ErrorAction SilentlyContinue
@@ -781,13 +789,13 @@ function Invoke-PromptAuxiliarInstallOrUpdate {
     try {
         Sync-PromptAuxUpdateModuleFromGitHub -InstallRoot $InstallRoot -Owner $Owner -Name $Name -Branch $Branch -SourceRoot $ScriptDir
     } catch {
-        Write-Host '  Aviso: nao foi possivel baixar Update-PromptAuxiliar.ps1 do GitHub.' -ForegroundColor DarkYellow
+        Write-Host '  Aviso: não foi possivel baixar Update-PromptAuxiliar.ps1 do GitHub.' -ForegroundColor DarkYellow
     }
 
     $moduleOk = Test-PromptAuxPs1Syntax -Path $updateModule
 
     if (-not $moduleOk) {
-        Write-Host '  Script de atualizacao local invalido - reinstalando via ZIP...' -ForegroundColor Cyan
+        Write-Host '  Script de atualização local invalido - reinstalando via ZIP...' -ForegroundColor Cyan
         $zipResult = Install-PromptAuxiliarSourceZip -Destination $InstallRoot -Owner $Owner -Name $Name -Branch $Branch -ScriptDir $ScriptDir
         if ($zipResult.Deferred) { $script:PromptAuxDeferredExit = $true; return }
         $moduleOk = Test-PromptAuxPs1Syntax -Path $updateModule
@@ -798,7 +806,7 @@ function Invoke-PromptAuxiliarInstallOrUpdate {
         if ($missingInstall -or $Force) {
             Write-Host '  Instalando Prompt Auxiliar...' -ForegroundColor Gray
         } else {
-            Write-Host "  Usando instalacao em: $InstallRoot" -ForegroundColor DarkGray
+            Write-Host "  Usando instalação em: $InstallRoot" -ForegroundColor DarkGray
         }
         $updateResult = Update-PromptAuxiliarIfNewer -InstallRoot $InstallRoot -ScriptDir $ScriptDir -Force:$Force
         if ($updateResult -eq 'deferred') { $script:PromptAuxDeferredExit = $true }
@@ -808,7 +816,7 @@ function Invoke-PromptAuxiliarInstallOrUpdate {
     if ($missingInstall -or $Force) {
         Write-Host '  Instalando Prompt Auxiliar...' -ForegroundColor Gray
     } else {
-        Write-Host "  Usando instalacao em: $InstallRoot" -ForegroundColor DarkGray
+        Write-Host "  Usando instalação em: $InstallRoot" -ForegroundColor DarkGray
     }
     $zipResult = Install-PromptAuxiliarSourceZip -Destination $InstallRoot -Owner $Owner -Name $Name -Branch $Branch -ScriptDir $ScriptDir
     if ($zipResult.Deferred) {
@@ -832,30 +840,54 @@ function Install-PromptAuxiliarPythonDeps {
     }
 }
 
+function Get-PromptAuxGuiPython {
+    param($PythonInfo)
+
+    if ($PythonInfo.Cmd -eq 'py') {
+        return @{ Cmd = 'py'; Arg = @('-3w') }
+    }
+
+    $pythonw = Join-Path (Split-Path -Parent $PythonInfo.Cmd) 'pythonw.exe'
+    if (Test-Path -LiteralPath $pythonw) {
+        return @{ Cmd = $pythonw; Arg = @() }
+    }
+
+    return $PythonInfo
+}
+
 function Start-PromptAuxiliarProcess {
     param($PythonInfo, [string]$ProjectRoot, [string[]]$ExtraArgs)
 
     $main = Join-Path $ProjectRoot 'main.py'
     if (-not (Test-Path $main)) { throw "main.py não encontrado em $ProjectRoot" }
 
-    $runArgs = $PythonInfo.Arg + @($main)
-    if ($ExtraArgs.Count -gt 0) {
-        $runArgs += $ExtraArgs
-    }
-
     Push-Location $ProjectRoot
     try {
-        & $PythonInfo.Cmd @runArgs
+        & $PythonInfo.Cmd @($PythonInfo.Arg + @('-c', 'import main'))
         $code = if ($null -ne $LASTEXITCODE) { $LASTEXITCODE } else { 0 }
         if ($code -ne 0) {
-            throw "main.py encerrou com codigo $code"
+            throw "Falha ao carregar o aplicativo (código $code)"
+        }
+
+        $guiPython = Get-PromptAuxGuiPython -PythonInfo $PythonInfo
+        $runArgs = $guiPython.Arg + @($main)
+        if ($ExtraArgs.Count -gt 0) {
+            $runArgs += $ExtraArgs
+        }
+
+        $proc = Start-Process -FilePath $guiPython.Cmd -ArgumentList $runArgs -WorkingDirectory $ProjectRoot -PassThru
+        # ponytail: 2s alive check; upgrade path = wait on named window / readiness file
+        Start-Sleep -Seconds 2
+        if ($proc.HasExited) {
+            $exitCode = if ($null -ne $proc.ExitCode) { $proc.ExitCode } else { 1 }
+            throw "main.py encerrou antes de abrir a interface (código $exitCode)"
         }
     } finally {
         Pop-Location
     }
 }
 
-# --- Execucao ---
+# --- Execução ---
 trap {
     Write-Host ''
     Write-Host "ERRO: $($_.Exception.Message)" -ForegroundColor Red
@@ -898,7 +930,7 @@ if (-not $forceUpdate -and (Test-Path -LiteralPath $mainPy)) {
     exit 0
 }
 
-# Instalacao inicial ou atualizacao forcada (-Update)
+# Instalação inicial ou atualização forcada (-Update)
 $script:PromptAuxDeferredExit = $false
 Invoke-PromptAuxiliarInstallOrUpdate `
     -InstallRoot $InstallRoot `
@@ -909,7 +941,7 @@ Invoke-PromptAuxiliarInstallOrUpdate `
     -Force:$forceUpdate
 
 if ($script:PromptAuxDeferredExit) {
-    Start-PromptAuxCountdownClose -Message '  Outra janela concluira a atualizacao e abrira o app.'
+    Start-PromptAuxCountdownClose -Message '  Outra janela concluira a atualização e abrira o app.'
     exit 0
 }
 
@@ -929,12 +961,12 @@ Sync-PromptAuxEssentialScriptsFromGitHub `
 $uiBat = Join-Path $InstallRoot 'scripts\_ui.bat'
 if ($batSync.Fail -gt 0 -and $batSync.Ok -eq 0) {
     if (Test-PromptAuxRepoFilePresent -Path $uiBat) {
-        Write-Host '  Scripts .bat: usando copia local (download do GitHub indisponivel nesta execucao).' -ForegroundColor DarkGray
+        Write-Host '  Scripts .bat: usando copia local (download do GitHub indisponivel nesta execução).' -ForegroundColor DarkGray
     } else {
-        Write-Host '  Aviso: nenhum script .bat disponivel. Verifique internet ou faca push no GitHub.' -ForegroundColor DarkYellow
+        Write-Host '  Aviso: nenhum script .bat disponível. Verifique internet ou faça push no GitHub.' -ForegroundColor DarkYellow
     }
 } elseif ($batSync.Fail -gt 0) {
-    Write-Host "  Scripts: $($batSync.Ok) atualizado(s), $($batSync.Fail) mantido(s) da instalacao local." -ForegroundColor DarkGray
+    Write-Host "  Scripts: $($batSync.Ok) atualizado(s), $($batSync.Fail) mantido(s) da instalação local." -ForegroundColor DarkGray
 }
 
 $env:PROMPTAUX_HOME = $InstallRoot

@@ -1,6 +1,7 @@
+chcp 65001 >nul 2>&1
 @echo off
 setlocal DisableDelayedExpansion
-rem Biblioteca de interface - nao executar diretamente.
+rem Biblioteca de interface - não executar diretamente.
 if /i "%~1"==":banner" goto :banner
 if /i "%~1"==":confirmar" goto :confirmar
 if /i "%~1"==":confirmar_perigo" goto :confirmar_perigo
@@ -9,7 +10,6 @@ exit /b 0
 
 :banner
 cls
-chcp 65001 >nul 2>&1
 echo.
 echo   ==============================================================
 echo     %~2
@@ -25,7 +25,7 @@ call :_pergunta_sn
 exit /b %ERRORLEVEL%
 
 :confirmar_perigo
-echo   ATENCAO: operacao sensivel - use por sua conta e risco.
+echo   ATENÇÃO: operação sensível - use por sua conta e risco.
 echo.
 call :_pergunta_sn
 exit /b %ERRORLEVEL%
@@ -33,10 +33,10 @@ exit /b %ERRORLEVEL%
 :_pergunta_sn
 echo   Pressione S para continuar ou N para cancelar:
 set "PA_SN="
-set /p "PA_SN=  Opcao: "
+set /p "PA_SN=  Opção: "
 if /i "%PA_SN%"=="N" exit /b 1
 if /i "%PA_SN%"=="S" exit /b 0
-echo   Opcao invalida. Use S ou N.
+echo   Opção inválida. Use S ou N.
 exit /b 1
 
 :sair
@@ -44,9 +44,9 @@ set "_ec=%~1"
 if not defined _ec set "_ec=0"
 echo.
 if not "%_ec%"=="0" (
-  echo   Finalizado com codigo %_ec%.
+  echo   Finalizado com código %_ec%.
 ) else (
-  echo   Concluido.
+  echo   Concluído.
 )
 echo.
 echo   Pressione qualquer tecla para sair...

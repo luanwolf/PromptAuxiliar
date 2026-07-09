@@ -3,7 +3,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-HEADER = r"""@echo off
+HEADER = r"""chcp 65001 >nul 2>&1
+@echo off
 setlocal EnableExtensions EnableDelayedExpansion
 """
 
@@ -64,7 +65,7 @@ def script(
 SCRIPTS: dict[str, str] = {
     "reparar_rede.bat": script(
         "reparar_rede",
-        "Reparar conexao de rede",
+        "Reparar conexão de rede",
         "Libera e renova o IP, limpa o cache DNS, redefine Winsock e a pilha TCP/IP.",
         r"""
 echo   [1/6] Liberando IP...
@@ -85,10 +86,10 @@ echo   Reinicie o PC se o problema continuar.
     ),
     "gerenciar_inicializacao.bat": script(
         "gerenciar_inicializacao",
-        "Apps de inicializacao",
-        "Abre as Configuracoes do Windows para gerenciar programas que iniciam com o sistema.",
+        "Apps de inicialização",
+        "Abre as Configurações do Windows para gerenciar programas que iniciam com o sistema.",
         r"""
-echo   Abrindo Configuracoes...
+echo   Abrindo Configurações...
 start ms-settings:startupapps
 echo   Janela aberta. Ajuste os apps desejados.
 """,
@@ -96,7 +97,7 @@ echo   Janela aberta. Ajuste os apps desejados.
     "atualizar_softwares.bat": script(
         "atualizar_softwares",
         "Atualizar programas",
-        "Atualiza pacotes instalados via Winget (pode demorar varios minutos).",
+        "Atualiza pacotes instalados via Winget (pode demorar vários minutos).",
         r"""
 echo   Iniciando winget upgrade --all ...
 winget upgrade --all --silent --accept-package-agreements --include-unknown
@@ -116,23 +117,23 @@ echo   Selecione os itens a remover na janela aberta.
     "limpeza_malware.bat": script(
         "limpeza_malware",
         "Limpeza MRT (malware)",
-        "Abre a Ferramenta de Remocao de Malware do Windows (MRT.exe).",
+        "Abre a Ferramenta de Remoção de Malware do Windows (MRT.exe).",
         r"""
 echo   Abrindo MRT...
 start "" "%SystemRoot%\System32\MRT.exe"
-echo   Siga as instrucoes na janela da ferramenta.
+echo   Siga as instruções na janela da ferramenta.
 """,
     ),
     "limpeza_temporarios.bat": script(
         "limpeza_temporarios",
-        "Limpeza de temporarios",
-        "Remove temporarios, esvazia a Lixeira e limpa cache das pastas Temp.",
+        "Limpeza de temporários",
+        "Remove temporários, esvazia a Lixeira e limpa cache das pastas Temp.",
         r"""
 if exist "%~dp0limpeza_temporarios.ps1" (
   powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0limpeza_temporarios.ps1"
   if errorlevel 1 set "EXIT_CODE=1"
 ) else (
-  echo   [1/1] Limpando TEMP da sessao...
+  echo   [1/1] Limpando TEMP da sessão...
   del /q /f /s "%TEMP%\*" >nul 2>&1
 )
 """,
@@ -140,7 +141,7 @@ if exist "%~dp0limpeza_temporarios.ps1" (
     "limpeza_profunda.bat": script(
         "limpeza_profunda",
         "Limpeza profunda do Windows",
-        "Limpa TEMP e Prefetch, flush DNS, cleanmgr, SFC e DISM - operacao longa.",
+        "Limpa TEMP e Prefetch, flush DNS, cleanmgr, SFC e DISM - operação longa.",
         r"""
 echo   [1/6] Pastas TEMP...
 del /q /f /s "%TEMP%\*" >nul 2>&1
@@ -152,7 +153,7 @@ ipconfig /flushdns
 echo   [4/6] Limpeza de disco (cleanmgr)...
 cleanmgr /sageset:1 >nul 2>&1
 cleanmgr /sagerun:1
-echo   [5/6] Verificacao de arquivos do sistema (SFC)...
+echo   [5/6] Verificação de arquivos do sistema (SFC)...
 sfc /scannow
 echo   [6/6] Reparo de imagem (DISM)...
 Dism /online /cleanup-image /restorehealth
@@ -168,7 +169,7 @@ if not exist "!REG_FOLDER!" mkdir "!REG_FOLDER!"
 set "COUNT=0"
 pushd "!REG_FOLDER!" 2>nul
 if errorlevel 1 (
-  echo   Pasta nao encontrada: !REG_FOLDER!
+  echo   Pasta não encontrada: !REG_FOLDER!
   set "EXIT_CODE=1"
   goto :fim_reg
 )
@@ -222,11 +223,11 @@ for %%f in ("!PASTA!\*.exe" "!PASTA!\*.msi" "!PASTA!\*.lnk") do (
     "criar_atalhos.bat": script(
         "criar_atalhos",
         "Criar atalhos (GodMode e BIOS)",
-        "Cria a pasta GodMode na Area de Trabalho e atalho para reiniciar no BIOS.",
+        "Cria a pasta GodMode na Área de Trabalho e atalho para reiniciar no BIOS.",
         r"""
 set "GM=%USERPROFILE%\Desktop\GodMode.{ED7BA470-8E54-465E-825C-99712043E01C}"
 if not exist "!GM!" mkdir "!GM!"
-echo   Pasta GodMode criada na Area de Trabalho.
+echo   Pasta GodMode criada na Área de Trabalho.
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ^
   "$d=[Environment]::GetFolderPath('Desktop');$s=(New-Object -ComObject WScript.Shell).CreateShortcut(\"$d\Reiniciar BIOS.lnk\");$s.TargetPath='shutdown.exe';$s.Arguments='/r /fw /t 0';$s.Save();Write-Host '   Atalho Reiniciar BIOS criado.'"
 """,
@@ -234,7 +235,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ^
     "ativar_windows.bat": script(
         "ativar_windows",
         "Ativar Windows (slmgr)",
-        "Executa slmgr /ato para tentar ativacao online do Windows.",
+        "Executa slmgr /ato para tentar ativação online do Windows.",
         r"""
 echo   Executando slmgr /ato ...
 cscript //nologo "%SystemRoot%\System32\slmgr.vbs" /ato
@@ -258,7 +259,7 @@ if errorlevel 1 set "EXIT_CODE=1"
     ),
     "windows_utility.bat": script(
         "windows_utility",
-        "Utilitario Windows (WinUtil)",
+        "Utilitário Windows (WinUtil)",
         "Executa WinUtil (Chris Titus) no PowerShell como administrador.",
         admin_ps_corpo('irm "https://christitus.com/win" | iex', "WinUtil"),
         perigo=True,
@@ -267,7 +268,7 @@ if errorlevel 1 set "EXIT_CODE=1"
 
 ALTERNAR_CONTEXTO = (
     HEADER
-    + r"""call "%~dp0_ui.bat" :banner "Alternar menu de contexto" "Escolha menu classico (estilo Windows 10) ou moderno (Windows 11). O Explorer sera reiniciado."
+    + r"""call "%~dp0_ui.bat" :banner "Alternar menu de contexto" "Escolha menu clássico (estilo Windows 10) ou moderno (Windows 11). O Explorer será reiniciado."
 call "%~dp0_ui.bat" :confirmar
 if errorlevel 1 call "%~dp0_ui.bat" :sair 0 & exit /b 0
 set "EXIT_CODE=0"
@@ -281,22 +282,22 @@ echo     Alternar menu de contexto
 echo     Prompt Auxiliar
 echo   ==============================================================
 echo.
-echo     1  Menu classico (Windows 10)
+echo     1  Menu clássico (Windows 10)
 echo     2  Menu moderno (Windows 11)
 echo     0  Sair
 echo.
 set "OP="
-set /p "OP=  Opcao: "
+set /p "OP=  Opção: "
 if "!OP!"=="1" goto CLASSICO
 if "!OP!"=="2" goto MODERNO
 if "!OP!"=="0" call "%~dp0_ui.bat" :sair 0 & exit /b 0
-echo   Opcao invalida.
+echo   Opção inválida.
 timeout /t 2 >nul
 goto MENU
 
 :CLASSICO
 echo.
-echo   Aplicando menu classico...
+echo   Aplicando menu clássico...
 reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve >nul
 goto RESTART
 

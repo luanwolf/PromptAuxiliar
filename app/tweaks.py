@@ -7,13 +7,14 @@ import json
 import os
 import subprocess
 import sys
-import threading
 import uuid
 from pathlib import Path
 from typing import Any
 
-_PS_RUN   = Path(os.environ.get("TEMP", ".")) / "PromptAuxiliar" / "run"
-_LOGS_DIR = Path(r"C:\PromptAuxiliar\logs")
+from app.config import PASTA_LOGS
+from app.runner import PS_CONSOLE_INIT
+
+_PS_RUN = Path(os.environ.get("TEMP", ".")) / "PromptAuxiliar" / "run"
 _CATALOG_REL = Path(__file__).parent / "data" / "tweaks_catalog.json"
 
 
@@ -105,13 +106,12 @@ def detect_all() -> dict[str, Any]:
 
 def _build_apply_script(
     selected: list[dict[str, Any]],
-    needs_admin: bool,
     needs_restart: bool,
 ) -> str:
     """Gera o script PowerShell para aplicar os tweaks selecionados.
     A elevação de admin é feita pelo Python antes de chamar este script.
     """
-    lines: list[str] = []
+    lines: list[str] = [PS_CONSOLE_INIT.strip(), ""]
 
     lines += [
         "$Host.UI.RawUI.WindowTitle = 'Prompt Auxiliar - Tweaks'",
@@ -190,8 +190,8 @@ def _build_apply_script(
         "$logLines = @(",
         "    'Prompt Auxiliar - Log de Tweaks'",
         "    \"Data   : $(Get-Date -Format 'dd/MM/yyyy HH:mm:ss')\"",
-        "    \"Duracao: ${elapsed}s\"",
-        "    \"Usuario: $env:USERNAME\"",
+        "    \"Duração: ${elapsed}s\"",
+        "    \"Usuário: $env:USERNAME\"",
         "    ''",
         "    '---- Ajustes ----'",
         ")",
@@ -211,7 +211,7 @@ def _build_apply_script(
         lines += [
             "",
             "Write-Host ''",
-            "Write-Host '  ATENCAO: reinicie o computador para que todos os ajustes tenham efeito.' -ForegroundColor Yellow",
+            "Write-Host '  ATENÇÃO: reinicie o computador para que todos os ajustes tenham efeito.' -ForegroundColor Yellow",
         ]
 
     lines += [
@@ -235,10 +235,10 @@ def apply_tweaks(ids: list[str]) -> dict[str, Any]:
     needs_admin   = any(tw.get("requer_admin")    for tw in selected)
     needs_restart = any(tw.get("requer_reiniciar") for tw in selected)
 
-    ps_script = _build_apply_script(selected, needs_admin, needs_restart)
+    ps_script = _build_apply_script(selected, needs_restart)
 
     _PS_RUN.mkdir(parents=True, exist_ok=True)
-    _LOGS_DIR.mkdir(parents=True, exist_ok=True)
+    Path(PASTA_LOGS).mkdir(parents=True, exist_ok=True)
     ps1 = _PS_RUN / f"tweaks_{uuid.uuid4().hex}.ps1"
     ps1.write_text(ps_script, encoding="utf-8-sig")
 
@@ -266,12 +266,3 @@ def apply_tweaks(ids: list[str]) -> dict[str, Any]:
         "message": f"{len(selected)} ajuste(s) em aplicação."
         + (" (UAC solicitado)" if needs_admin else ""),
     }
-
-
-def detect_async(callback: Any) -> None:
-    """Executa detecção em thread separada e chama callback com o resultado."""
-    def _run() -> None:
-        result = detect_all()
-        callback(result)
-
-    threading.Thread(target=_run, daemon=True).start()

@@ -162,10 +162,6 @@
     });
   }
 
-  function infoDialog(opts) {
-    return showAppModal({ ...opts, variant: "alert" });
-  }
-
   function confirmDialog(opts) {
     return showAppModal({ ...opts, variant: "confirm" });
   }
@@ -248,6 +244,201 @@
       );
       dlg.showModal();
       setTimeout(() => urlIn.focus(), 80);
+    });
+  }
+
+  const IMAGEMAGICK_FORMATS = [
+    { id: "jpg", label: "JPEG", aliases: ["jpg", "jpeg"] },
+    { id: "png", label: "PNG", aliases: ["png"] },
+    { id: "webp", label: "WebP", aliases: ["webp"] },
+    { id: "gif", label: "GIF", aliases: ["gif"] },
+    { id: "bmp", label: "BMP", aliases: ["bmp"] },
+    { id: "tiff", label: "TIFF", aliases: ["tiff", "tif"] },
+    { id: "pdf", label: "PDF", aliases: ["pdf"] },
+    { id: "ico", label: "ICO", aliases: ["ico"] },
+    { id: "avif", label: "AVIF", aliases: ["avif"] },
+  ];
+
+  function sourceExt(path) {
+    const m = String(path || "").trim().toLowerCase().match(/\.([a-z0-9]+)$/);
+    return m ? m[1] : "";
+  }
+
+  const WIN_INVALID_NAME = /[\\/:*?"<>|]/;
+
+  function sourceBasename(path) {
+    const name = String(path || "").trim().replace(/\\/g, "/").split("/").pop() || "";
+    const dot = name.lastIndexOf(".");
+    return dot > 0 ? name.slice(0, dot) : name;
+  }
+
+  function formatOutputExt(format) {
+    const f = String(format || "").toLowerCase();
+    if (f === "jpeg") return "jpg";
+    if (f === "tif") return "tiff";
+    return f;
+  }
+
+  function sanitizeOutname(raw) {
+    let name = String(raw || "").trim();
+    if (!name) return "";
+    const dot = name.lastIndexOf(".");
+    if (dot > 0) name = name.slice(0, dot);
+    name = name.trim();
+    if (!name || WIN_INVALID_NAME.test(name)) return null;
+    if (name.endsWith(".") || name.endsWith(" ")) return null;
+    return name;
+  }
+
+  function refreshImagemFormatOptions(formatSel, srcPath, hintEl, outnameIn) {
+    if (!formatSel) return;
+    const ext = sourceExt(srcPath);
+    let firstEnabled = null;
+    Array.from(formatSel.options).forEach((opt) => {
+      if (!opt.value) return;
+      const fmt = IMAGEMAGICK_FORMATS.find((f) => f.id === opt.value);
+      const same = fmt && ext && fmt.aliases.includes(ext);
+      opt.hidden = same;
+      opt.disabled = same;
+      if (!same && firstEnabled === null) firstEnabled = opt.value;
+    });
+    const current = formatSel.options[formatSel.selectedIndex];
+    if (!current?.value || current.disabled) {
+      formatSel.value = firstEnabled || "";
+    }
+    refreshImagemOutPreview(outnameIn, formatSel, hintEl, srcPath, ext);
+  }
+
+  function refreshImagemOutPreview(outnameIn, formatSel, hintEl, srcPath, srcExt) {
+    if (!hintEl) return;
+    const parts = [];
+    if (srcExt) {
+      parts.push(`Origem detectada: .${srcExt}. Formatos iguais ao original foram ocultados.`);
+    }
+    const format = formatSel?.value?.trim();
+    const base = sanitizeOutname(outnameIn?.value) || sourceBasename(srcPath);
+    if (format && base) {
+      parts.push(`Arquivo final: ${base}.${formatOutputExt(format)}`);
+    }
+    if (parts.length) {
+      hintEl.textContent = parts.join(" ");
+      hintEl.classList.remove("hidden");
+    } else {
+      hintEl.textContent = "";
+      hintEl.classList.add("hidden");
+    }
+  }
+
+  /**
+   * Modal ImageMagick: arquivo, pasta de destino, formato e nome opcional.
+   * @returns {Promise<{src:string,dest:string,format:string,outname?:string}|null>}
+   */
+  function showUtilImagemModal(acao) {
+    const dlg = document.getElementById("util-imagem-modal");
+    const form = dlg?.querySelector("form");
+    const titleEl = document.getElementById("util-imagem-modal-title");
+    const srcIn = document.getElementById("util-imagem-src");
+    const destIn = document.getElementById("util-imagem-dest");
+    const formatSel = document.getElementById("util-imagem-format");
+    const outnameIn = document.getElementById("util-imagem-outname");
+    const hintEl = document.getElementById("util-imagem-hint");
+    const browseSrcBtn = document.getElementById("util-imagem-browse-src");
+    const browseDestBtn = document.getElementById("util-imagem-browse-dest");
+    const cancelBtn = document.getElementById("util-imagem-cancel");
+    if (!dlg || !form || !srcIn || !destIn || !formatSel) return Promise.resolve(null);
+
+    if (titleEl) titleEl.textContent = acao.nome;
+    srcIn.value = "";
+    destIn.value = "";
+    if (outnameIn) outnameIn.value = "";
+    formatSel.selectedIndex = 0;
+    if (hintEl) {
+      hintEl.textContent = "";
+      hintEl.classList.add("hidden");
+    }
+
+    const onFormatChange = () => {
+      refreshImagemOutPreview(outnameIn, formatSel, hintEl, srcIn.value, sourceExt(srcIn.value));
+    };
+    const onOutnameInput = () => {
+      refreshImagemOutPreview(outnameIn, formatSel, hintEl, srcIn.value, sourceExt(srcIn.value));
+    };
+
+    return new Promise((resolve) => {
+      let done = false;
+      const finish = (value) => {
+        if (done) return;
+        done = true;
+        formatSel.removeEventListener("change", onFormatChange);
+        outnameIn?.removeEventListener("input", onOutnameInput);
+        if (dlg.open) dlg.close();
+        resolve(value);
+      };
+
+      const onBrowseSrc = async () => {
+        try {
+          const r = await api().pick_file();
+          if (r.ok && r.path) {
+            srcIn.value = r.path;
+            if (outnameIn) outnameIn.value = sourceBasename(r.path);
+            refreshImagemFormatOptions(formatSel, r.path, hintEl, outnameIn);
+          } else if (!r.ok && r.message) toast(r.message, "error");
+        } catch (e) {
+          toast(String(e), "error");
+        }
+      };
+
+      const onBrowseDest = async () => {
+        try {
+          const r = await api().pick_folder();
+          if (r.ok && r.path) destIn.value = r.path;
+          else if (!r.ok && r.message) toast(r.message, "error");
+        } catch (e) {
+          toast(String(e), "error");
+        }
+      };
+
+      const onCancel = () => finish(null);
+      const onSubmit = (e) => {
+        e.preventDefault();
+        const src = srcIn.value.trim();
+        const dest = destIn.value.trim();
+        const format = formatSel.value.trim();
+        const rawOutname = outnameIn?.value.trim() || "";
+        if (!src || !dest || !format) {
+          toast("Informe o arquivo, a pasta de destino e o formato.", "error");
+          return;
+        }
+        let outname = "";
+        if (rawOutname) {
+          const clean = sanitizeOutname(rawOutname);
+          if (!clean) {
+            toast('Nome inválido. Evite \\ / : * ? " < > | e não use extensão.', "error");
+            return;
+          }
+          outname = clean;
+        }
+        const params = { src, dest, format };
+        if (outname) params.outname = outname;
+        finish(params);
+      };
+
+      formatSel.addEventListener("change", onFormatChange);
+      outnameIn?.addEventListener("input", onOutnameInput);
+      browseSrcBtn?.addEventListener("click", onBrowseSrc, { once: true });
+      browseDestBtn?.addEventListener("click", onBrowseDest, { once: true });
+      cancelBtn?.addEventListener("click", onCancel, { once: true });
+      form.addEventListener("submit", onSubmit, { once: true });
+      dlg.addEventListener(
+        "cancel",
+        (e) => {
+          e.preventDefault();
+          finish(null);
+        },
+        { once: true }
+      );
+      dlg.showModal();
+      setTimeout(() => browseSrcBtn?.focus(), 80);
     });
   }
 
@@ -463,6 +654,21 @@
 
     if (acao.interativo === "util") {
       const params = await showUtilModal(acao);
+      if (!params) return;
+      state.busy = true;
+      try {
+        const res = await api().run_action_params(acao.id, params);
+        toast(res.message, res.ok ? "success" : "error");
+      } catch (e) {
+        toast(String(e), "error");
+      } finally {
+        state.busy = false;
+      }
+      return;
+    }
+
+    if (acao.interativo === "util-imagem") {
+      const params = await showUtilImagemModal(acao);
       if (!params) return;
       state.busy = true;
       try {

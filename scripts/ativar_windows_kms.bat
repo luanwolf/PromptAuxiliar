@@ -1,3 +1,4 @@
+chcp 65001 >nul 2>&1
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
 call "%~dp0_ui.bat" :banner "Ativar Windows (KMS)" "Executa irm https://get.activated.win | iex no PowerShell como administrador."

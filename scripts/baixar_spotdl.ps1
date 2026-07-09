@@ -1,14 +1,14 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 . "$PSScriptRoot\_ui.ps1"
 . "$PSScriptRoot\_util_install.ps1"
 
 $url  = $env:PA_UTIL_URL
 $dest = $env:PA_UTIL_DEST
 
-Show-PABanner "Download Spotify (spotdl)" "Baixa musica ou playlist do Spotify em MP3."
+Show-PABanner "Download Spotify (spotdl)" "Baixa música ou playlist do Spotify em MP3."
 
 if ([string]::IsNullOrWhiteSpace($url) -or [string]::IsNullOrWhiteSpace($dest)) {
-    Write-Host '  URL ou pasta de destino nao informados pelo app.' -ForegroundColor Red
+    Write-Host '  URL ou pasta de destino não informados pelo app.' -ForegroundColor Red
     Read-Host '  Pressione Enter para fechar'
     exit 1
 }
@@ -33,7 +33,7 @@ Invoke-PAStep "Verificar / instalar spotdl" $results {
 Invoke-PAStep "Baixando do Spotify" $results {
     spotdl download $url --output $dest --format mp3
     if ($LASTEXITCODE -and $LASTEXITCODE -ne 0) {
-        throw "spotdl encerrou com codigo $LASTEXITCODE"
+        throw "spotdl encerrou com código $LASTEXITCODE"
     }
 }
 

@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 . "$PSScriptRoot\_ui.ps1"
 
 Show-PABanner "Atualizar programas" "Atualiza pacotes instalados via Winget (pode demorar varios minutos)."
@@ -11,7 +11,7 @@ $results   = [System.Collections.ArrayList]::new()
 Invoke-PAStep "Atualizando todos os pacotes via Winget" $results {
     winget upgrade --all --silent --accept-package-agreements --include-unknown
     if ($LASTEXITCODE -and $LASTEXITCODE -ne 0) {
-        throw "winget saiu com codigo $LASTEXITCODE"
+        throw "winget saiu com código $LASTEXITCODE"
     }
 }
 

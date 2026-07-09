@@ -1,4 +1,4 @@
-# Verifica versao no GitHub e atualiza a pasta de instalacao (ZIP da branch).
+﻿# Verifica versão no GitHub e atualiza a pasta de instalação (ZIP da branch).
 #Requires -Version 5.1
 # Encoding: UTF-8 with BOM (compativel com Windows PowerShell 5.1)
 
@@ -46,7 +46,7 @@ function Get-PromptAuxRemoteVersion {
         $text = (Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 25).Content
         return Get-PromptAuxVersionFromConfigText -Text $text
     } catch {
-        Write-Host "  Nao foi possivel consultar atualizacoes ($url)." -ForegroundColor DarkYellow
+        Write-Host "  Não foi possivel consultar atualizacoes ($url)." -ForegroundColor DarkYellow
         return $null
     }
 }
@@ -186,8 +186,8 @@ function Invoke-PromptAuxDeferredFolderSwap {
     $stageEsc = $StagingPath.Replace("'", "''")
     $ps1 = Join-Path ([System.IO.Path]::GetTempPath()) 'promptauxiliar-update-swap.ps1'
     $content = @"
-# Prompt Auxiliar - troca de pasta apos atualizacao
-`$Host.UI.RawUI.WindowTitle = 'Prompt Auxiliar - concluindo atualizacao'
+# Prompt Auxiliar - troca de pasta apos atualização
+`$Host.UI.RawUI.WindowTitle = 'Prompt Auxiliar - concluindo atualização'
 `$ErrorActionPreference = 'SilentlyContinue'
 `$dest = '$destEsc'
 `$staging = '$stageEsc'
@@ -216,7 +216,7 @@ for (`$w = 0; `$w -lt 60; `$w++) {
     Start-Sleep -Seconds 1
 }
 
-Write-Host '  Substituindo arquivos da instalacao...' -ForegroundColor DarkGray
+Write-Host '  Substituindo arquivos da instalação...' -ForegroundColor DarkGray
 if (Test-Path -LiteralPath `$dest) {
     Remove-Item -LiteralPath `$dest -Recurse -Force -ErrorAction SilentlyContinue
 }
@@ -226,7 +226,7 @@ if (Test-Path -LiteralPath `$dest) {
 New-Item -ItemType Directory -Path (Split-Path `$dest -Parent) -Force | Out-Null
 Move-Item -LiteralPath `$staging -Destination `$dest -Force
 
-`$concluir = Join-Path `$dest 'powershell\Concluir-Troca-Instalacao.ps1'
+`$concluir = Join-Path `$dest 'powershell\Concluir-Troca-Instalação.ps1'
 if (Test-Path -LiteralPath `$concluir) {
     Write-Host '  Abrindo Prompt Auxiliar atualizado...' -ForegroundColor Green
     Start-Process -FilePath 'powershell.exe' -ArgumentList @(
@@ -245,7 +245,7 @@ if (Test-Path -LiteralPath `$concluir) {
     }
 }
 Write-Host ''
-Write-Host '  Atualizacao concluida.' -ForegroundColor Green
+Write-Host '  Atualizacao concluída.' -ForegroundColor Green
 Start-Sleep -Seconds 4
 "@
     Write-PromptAuxUtf8NoBom -Path $ps1 -Content $content
@@ -284,11 +284,11 @@ function Install-PromptAuxiliarSourceZip {
 
     $destExists = Test-Path -LiteralPath $Destination
     if ($destExists) {
-        Write-Host '  Substituindo arquivos da instalacao...' -ForegroundColor DarkGray
+        Write-Host '  Substituindo arquivos da instalação...' -ForegroundColor DarkGray
         try {
             Remove-Item -LiteralPath $Destination -Recurse -Force -ErrorAction Stop
         } catch {
-            Write-Host '  Arquivo em uso - atualizacao sera aplicada apos fechar esta janela.' -ForegroundColor Cyan
+            Write-Host '  Arquivo em uso - atualização sera aplicada apos fechar esta janela.' -ForegroundColor Cyan
             Invoke-PromptAuxDeferredFolderSwap -StagingPath $staging -Destination $Destination
             Remove-Item $tempZip -Force -ErrorAction SilentlyContinue
             Remove-Item $tempExtract -Force -ErrorAction SilentlyContinue
@@ -332,7 +332,7 @@ function Update-PromptAuxiliarIfNewer {
     $cmp = Compare-PromptAuxVersion -Local $local -Remote $remote
 
     if ($null -eq $cmp -and -not $missing -and -not $Force) {
-        Write-Host '  Nao foi possivel comparar com a versao remota.' -ForegroundColor DarkYellow
+        Write-Host '  Não foi possivel comparar com a versão remota.' -ForegroundColor DarkYellow
         return $false
     }
 
@@ -346,10 +346,10 @@ function Update-PromptAuxiliarIfNewer {
     }
 
     if ($remote) {
-        $msg = "  Atualizacao disponivel: v$local -> v$remote"
+        $msg = "  Atualizacao disponível: v$local -> v$remote"
         Write-Host $msg -ForegroundColor Cyan
     } elseif ($missing) {
-        Write-Host '  Instalacao nao encontrada - baixando...' -ForegroundColor Cyan
+        Write-Host '  Instalação não encontrada - baixando...' -ForegroundColor Cyan
     }
 
     $zipResult = Install-PromptAuxiliarSourceZip -Destination $InstallRoot -Owner $repo.Owner -Name $repo.Name -Branch $repo.Branch -ScriptDir $ScriptDir

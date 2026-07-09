@@ -203,6 +203,47 @@
     </form>
   </dialog>
 
+  <dialog id="util-imagem-modal" class="modal util-modal">
+    <form method="dialog" class="modal-card util-modal-card">
+      <h3 id="util-imagem-modal-title">Converter imagem</h3>
+      <div class="util-form">
+        <label class="util-label" for="util-imagem-src">Arquivo de origem</label>
+        <div class="util-folder-row">
+          <input id="util-imagem-src" class="util-input" type="text" placeholder="Clique em Procurar…" readonly required />
+          <button type="button" class="btn ghost sm" id="util-imagem-browse-src">Procurar</button>
+        </div>
+
+        <label class="util-label" for="util-imagem-dest">Pasta de destino</label>
+        <div class="util-folder-row">
+          <input id="util-imagem-dest" class="util-input" type="text" placeholder="Clique em Procurar…" readonly required />
+          <button type="button" class="btn ghost sm" id="util-imagem-browse-dest">Procurar</button>
+        </div>
+
+        <label class="util-label" for="util-imagem-format">Converter para</label>
+        <select id="util-imagem-format" class="util-input util-select" required>
+          <option value="" disabled selected>Escolha o formato de saída…</option>
+          <option value="jpg">JPEG (.jpg) — fotos, boa compressão</option>
+          <option value="png">PNG (.png) — transparência, sem perda</option>
+          <option value="webp">WebP (.webp) — web moderna, compacto</option>
+          <option value="gif">GIF (.gif) — animações (1º quadro se estático)</option>
+          <option value="bmp">BMP (.bmp) — bitmap sem compressão</option>
+          <option value="tiff">TIFF (.tiff) — arquivamento e impressão</option>
+          <option value="pdf">PDF (.pdf) — documento a partir da imagem</option>
+          <option value="ico">ICO (.ico) — ícone Windows</option>
+          <option value="avif">AVIF (.avif) — web eficiente</option>
+        </select>
+
+        <label class="util-label" for="util-imagem-outname">Nome do arquivo de saída <span class="util-label-optional">(opcional)</span></label>
+        <input id="util-imagem-outname" class="util-input" type="text" placeholder="Ex.: MinhaFoto — sem extensão" autocomplete="off" />
+        <p id="util-imagem-hint" class="util-hint hidden" aria-live="polite"></p>
+      </div>
+      <footer class="modal-foot">
+        <button type="button" class="btn ghost" id="util-imagem-cancel">Cancelar</button>
+        <button type="submit" class="btn primary" id="util-imagem-submit">Converter</button>
+      </footer>
+    </form>
+  </dialog>
+
   <dialog id="welcome" class="modal welcome">
     <form method="dialog" class="modal-card">
       <h3>Bem-vindo</h3>

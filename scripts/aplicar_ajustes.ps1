@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 . "$PSScriptRoot\_ui.ps1"
 
 Show-PABanner "Aplicar ajustes de registro" "Importa todos os arquivos .reg da pasta C:\PromptAuxiliar\registros."
@@ -30,7 +30,7 @@ if ($regFiles.Count -eq 0) {
                 -ArgumentList "import `"$($reg.FullName)`"" `
                 -Wait -PassThru -NoNewWindow
             if ($proc.ExitCode -ne 0) {
-                throw "reg import saiu com codigo $($proc.ExitCode)"
+                throw "reg import saiu com código $($proc.ExitCode)"
             }
         }
     }

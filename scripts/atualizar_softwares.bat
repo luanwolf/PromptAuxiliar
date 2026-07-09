@@ -1,6 +1,7 @@
+chcp 65001 >nul 2>&1
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
-call "%~dp0_ui.bat" :banner "Atualizar programas" "Atualiza pacotes instalados via Winget (pode demorar varios minutos)."
+call "%~dp0_ui.bat" :banner "Atualizar programas" "Atualiza pacotes instalados via Winget (pode demorar vários minutos)."
 
 call "%~dp0_ui.bat" :confirmar
 if errorlevel 1 call "%~dp0_ui.bat" :sair 0 & exit /b 0

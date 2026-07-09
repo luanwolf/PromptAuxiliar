@@ -176,22 +176,6 @@ def install_root() -> Path | None:
     return None
 
 
-def should_skip_auto_update() -> bool:
-    if os.environ.get("PROMPTAUX_SKIP_AUTO_UPDATE") == "1":
-        return True
-    root = install_root()
-    if not root or not (root / ".git").is_dir():
-        return False
-    default = _default_install_root()
-    if default:
-        try:
-            if root.resolve() == default.resolve():
-                return False
-        except OSError:
-            pass
-    return True
-
-
 def launch_win_ps1_update() -> None:
     """Abre win.ps1 local com -Update; fallback para irm remoto se não encontrado."""
     flags = getattr(subprocess, "CREATE_NEW_CONSOLE", 0)

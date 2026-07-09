@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 . "$PSScriptRoot\_ui.ps1"
 
 Show-PABanner "Instalar da pasta Software" "Executa instaladores .exe, .msi e atalhos .lnk de C:\PromptAuxiliar\softwares."

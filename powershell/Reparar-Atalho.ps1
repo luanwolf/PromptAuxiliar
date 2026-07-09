@@ -1,4 +1,4 @@
-# Repara atalhos que ainda apontam para Atualizar-e-Iniciar.ps1 ausente
+﻿# Repara atalhos que ainda apontam para Atualizar-e-Iniciar.ps1 ausente
 #Requires -Version 5.1
 param(
     [string]$ProjectRoot = $env:PROMPTAUX_HOME
@@ -18,13 +18,13 @@ if (-not $ProjectRoot) {
     }
 }
 if (-not $ProjectRoot) {
-    Write-Host 'Instalacao nao encontrada. Execute o instalador irm do GitHub.' -ForegroundColor Red
+    Write-Host 'Instalação não encontrada. Execute o instalador irm do GitHub.' -ForegroundColor Red
     exit 1
 }
 
 $criar = Join-Path $ProjectRoot 'powershell\Criar-Atalho.ps1'
 if (-not (Test-Path -LiteralPath $criar)) {
-    Write-Host "Criar-Atalho.ps1 nao encontrado em $ProjectRoot" -ForegroundColor Red
+    Write-Host "Criar-Atalho.ps1 não encontrado em $ProjectRoot" -ForegroundColor Red
     exit 1
 }
 

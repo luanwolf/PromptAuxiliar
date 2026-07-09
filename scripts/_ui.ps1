@@ -1,6 +1,18 @@
-#Requires -Version 5.1
-# Biblioteca visual compartilhada — nao executar diretamente.
+﻿#Requires -Version 5.1
+# Biblioteca visual compartilhada - não executar diretamente.
 # Encoding: UTF-8 with BOM
+
+function Initialize-PAConsole {
+    if ($script:PAConsoleInitialized) { return }
+    $script:PAConsoleInitialized = $true
+    try {
+        [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+        [Console]::InputEncoding  = [System.Text.Encoding]::UTF8
+        $global:OutputEncoding     = [System.Text.Encoding]::UTF8
+        if ($Host.Name -eq 'ConsoleHost') { chcp 65001 | Out-Null }
+    } catch {}
+}
+Initialize-PAConsole
 
 function Show-PABanner {
     param(
@@ -23,11 +35,11 @@ function Show-PABanner {
 function Confirm-PAAction {
     param([switch]$Perigo)
     if ($Perigo) {
-        Write-Host "  ATENCAO: operacao sensivel — use por sua conta e risco." -ForegroundColor Yellow
+        Write-Host "  ATENÇÃO: operação sensível - use por sua conta e risco." -ForegroundColor Yellow
         Write-Host ""
     }
     Write-Host "  Pressione S para continuar ou N para cancelar:" -ForegroundColor Gray
-    $resp = Read-Host "  Opcao"
+    $resp = Read-Host "  Opção"
     return ($resp -ieq "S")
 }
 
@@ -78,13 +90,13 @@ function Write-PASummary {
     if ($errCount -gt 0) {
         Write-Host "   Resultado: $okCount OK  |  $errCount erro(s)  |  Tempo: ${elapsed}s" -ForegroundColor Yellow
     } else {
-        Write-Host "   Resultado: $okCount passo(s) concluido(s) com sucesso  |  Tempo: ${elapsed}s" -ForegroundColor Green
+        Write-Host "   Resultado: $okCount passo(s) concluído(s) com sucesso  |  Tempo: ${elapsed}s" -ForegroundColor Green
     }
     Write-Host "  ================================================" -ForegroundColor DarkCyan
 
     if ($NeedRestart) {
         Write-Host ""
-        Write-Host "  ATENCAO: reinicie o computador para que as alteracoes tenham efeito." -ForegroundColor Yellow
+        Write-Host "  ATENÇÃO: reinicie o computador para que as alterações tenham efeito." -ForegroundColor Yellow
     }
 
     # Salvar log em C:\PromptAuxiliar\logs
@@ -95,8 +107,8 @@ function Write-PASummary {
         "Prompt Auxiliar - Log de Script"
         "Script : $Titulo"
         "Data   : $(Get-Date -Format 'dd/MM/yyyy HH:mm:ss')"
-        "Duracao: ${elapsed}s"
-        "Usuario: $env:USERNAME"
+        "Duração: ${elapsed}s"
+        "Usuário: $env:USERNAME"
         ""
         "---- Passos ----"
     )

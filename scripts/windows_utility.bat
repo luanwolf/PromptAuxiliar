@@ -1,11 +1,12 @@
+chcp 65001 >nul 2>&1
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
-call "%~dp0_ui.bat" :banner "Utilitario Windows (WinUtil)" "Executa WinUtil (Chris Titus) no PowerShell como administrador."
+call "%~dp0_ui.bat" :banner "Utilitário Windows (WinUtil)" "Executa WinUtil (Chris Titus) no PowerShell como administrador."
 
 call "%~dp0_ui.bat" :confirmar_perigo
 if errorlevel 1 call "%~dp0_ui.bat" :sair 0 & exit /b 0
 set "EXIT_CODE=0"
-title Utilitario Windows (WinUtil)
+title Utilitário Windows (WinUtil)
 set "PA_PS=%TEMP%\pa_WinUtil.ps1"
 (
   echo $Host.UI.RawUI.WindowTitle = 'WinUtil ^| Prompt Auxiliar'

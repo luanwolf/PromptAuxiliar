@@ -8,10 +8,19 @@ import sys
 import uuid
 from pathlib import Path
 
-from app.actions import Acao, obter_acao
+from app.actions import Acao
 from app.config import PASTA_BASE
 
 _PS_RUN = Path(os.environ.get("TEMP", ".")) / "PromptAuxiliar" / "run"
+
+# ponytail: mesmo bloco de _ui.ps1 — scripts temporários não dot-source _ui.ps1.
+PS_CONSOLE_INIT = """try {
+    [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+    [Console]::InputEncoding  = [System.Text.Encoding]::UTF8
+    $global:OutputEncoding     = [System.Text.Encoding]::UTF8
+    if ($Host.Name -eq 'ConsoleHost') { chcp 65001 | Out-Null }
+} catch {}
+"""
 
 # Apos confirmacao no app: PowerShell elevado (sem .bat intermediario).
 _COMANDOS_PS_ADMIN: dict[str, str] = {
@@ -38,6 +47,10 @@ def _install_script_candidates(nome_arquivo: str) -> list[Path]:
         if key not in vistos:
             vistos.add(key)
             candidatos.append(p)
+
+    # ponytail: em dev, prioriza scripts do repositório aberto (py main.py).
+    if not getattr(sys, "frozen", False):
+        add(Path(__file__).resolve().parent.parent)
 
     home = os.environ.get("PROMPTAUX_HOME", "").strip()
     if home:
@@ -68,7 +81,8 @@ def _executar_ps_admin(comando: str, titulo: str) -> None:
     titulo_esc = _escape_ps(titulo)
     script_admin = _PS_RUN / f"admin_{uuid.uuid4().hex}.ps1"
     script_admin.write_text(
-        f"$Host.UI.RawUI.WindowTitle = '{titulo_esc} | Prompt Auxiliar'\n{comando}\n",
+        PS_CONSOLE_INIT
+        + f"$Host.UI.RawUI.WindowTitle = '{titulo_esc} | Prompt Auxiliar'\n{comando}\n",
         encoding="utf-8-sig",
     )
     script_path = _escape_ps(str(script_admin.resolve()))
@@ -125,7 +139,7 @@ def _build_ps1_run_file(script_path: Path) -> Path:
         ) and s.startswith(".")
 
     sc_lines = [ln for ln in sc_src.splitlines() if not _is_dotsource_line(ln)]
-    chunks = [c for c in (ui_src.strip(), util_src.strip(), "\n".join(sc_lines).strip()) if c]
+    chunks = [c for c in (PS_CONSOLE_INIT.strip(), ui_src.strip(), util_src.strip(), "\n".join(sc_lines).strip()) if c]
     combined = "\n\n".join(chunks) + "\n"
     run_path.write_text(combined, encoding="utf-8-sig")
     return run_path
@@ -140,6 +154,9 @@ def _params_to_env(params: dict[str, str] | None) -> dict[str, str]:
         "dest": "PA_UTIL_DEST",
         "mode": "PA_UTIL_MODE",
         "playlist": "PA_UTIL_PLAYLIST",
+        "src": "PA_UTIL_SRC",
+        "format": "PA_UTIL_FORMAT",
+        "outname": "PA_UTIL_OUTNAME",
     }
     out: dict[str, str] = {}
     for k, v in params.items():
@@ -197,20 +214,11 @@ def usa_powershell_admin(action_id: str) -> bool:
 def executar_acao(
     acao: Acao,
     *,
-    aguardar: bool = True,
     params: dict[str, str] | None = None,
-) -> subprocess.Popen | int:
+) -> None:
     comando = _COMANDOS_PS_ADMIN.get(acao.id)
     if comando:
         _executar_ps_admin(comando, acao.nome)
-        return 0
+        return
     caminho = resolver_script(acao.script)
     _abrir_console_script(caminho, acao.nome, extra_env=_params_to_env(params))
-    return 0
-
-
-def executar_por_id(identificador: str, *, aguardar: bool = True) -> subprocess.Popen | int:
-    acao = obter_acao(identificador)
-    if not acao:
-        raise ValueError(f"Ação desconhecida: {identificador}")
-    return executar_acao(acao, aguardar=aguardar)

@@ -1,4 +1,4 @@
-# Cria atalhos versionados (Area de Trabalho e Menu Iniciar) apontando para win.ps1
+﻿# Cria atalhos versionados (Area de Trabalho e Menu Iniciar) apontando para win.ps1
 #Requires -Version 5.1
 param(
     [string]$ProjectRoot = $env:PROMPTAUX_HOME,
@@ -27,10 +27,10 @@ $launcherPs1 = Join-Path $ProjectRoot 'win.ps1'
 $launcherCmd = Join-Path $ProjectRoot 'Iniciar-PromptAuxiliar.cmd'
 $main = Join-Path $ProjectRoot 'main.py'
 if (-not (Test-Path -LiteralPath $launcherPs1)) {
-    throw "win.ps1 nao encontrado em $ProjectRoot"
+    throw "win.ps1 não encontrado em $ProjectRoot"
 }
 if (-not (Test-Path -LiteralPath $main)) {
-    throw "main.py nao encontrado em $ProjectRoot"
+    throw "main.py não encontrado em $ProjectRoot"
 }
 
 $useCmd = Test-Path -LiteralPath $launcherCmd
@@ -130,7 +130,7 @@ if ($repaired -gt 0) {
 }
 
 if ($useCmd) {
-    Write-Host "Atalhos usam Iniciar-PromptAuxiliar.cmd (versao v$version)." -ForegroundColor DarkGray
+    Write-Host "Atalhos usam Iniciar-PromptAuxiliar.cmd (versão v$version)." -ForegroundColor DarkGray
 } else {
-    Write-Host "Atalhos usam win.ps1 com Bypass (versao v$version)." -ForegroundColor DarkGray
+    Write-Host "Atalhos usam win.ps1 com Bypass (versão v$version)." -ForegroundColor DarkGray
 }

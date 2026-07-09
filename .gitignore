@@ -48,13 +48,19 @@ $RECYCLE.BIN/
 .pydevproject
 .settings/
 
-# Cursor (local do workspace; não versionar estado da IDE)
-.cursor/
+# Cursor (estado local da IDE; regras do projeto podem ser versionadas)
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**
+
+# Saída de agentes / ferramentas Cursor
+agent-tools/
 
 # Logs e temporários locais
 *.log
 *.tmp
 *.temp
+*.orig
 .cache/
 
 # Build / artefatos locais

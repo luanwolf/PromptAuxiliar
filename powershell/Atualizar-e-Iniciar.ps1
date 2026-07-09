@@ -1,5 +1,5 @@
-# Legado: redireciona para win.ps1 (atalhos novos usam Iniciar-PromptAuxiliar.cmd).
-# Atualiza do GitHub quando houver versao nova e abre o Prompt Auxiliar.
+﻿# Legado: redireciona para win.ps1 (atalhos novos usam Iniciar-PromptAuxiliar.cmd).
+# Atualiza do GitHub quando houver versão nova e abre o Prompt Auxiliar.
 #Requires -Version 5.1
 
 $ErrorActionPreference = 'Stop'
@@ -20,7 +20,7 @@ $env:PROMPTAUX_HOME = $InstallRoot
 
 $win = Join-Path $InstallRoot 'win.ps1'
 if (-not (Test-Path -LiteralPath $win)) {
-    Write-Host "Instalacao nao encontrada: $InstallRoot" -ForegroundColor Red
+    Write-Host "Instalação não encontrada: $InstallRoot" -ForegroundColor Red
     Write-Host 'Execute: irm "https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/win.ps1" | iex'
     Wait-PromptAuxEnter
     exit 1
@@ -29,7 +29,7 @@ if (-not (Test-Path -LiteralPath $win)) {
 try {
     & $win
     if ($LASTEXITCODE -and $LASTEXITCODE -ne 0) {
-        throw "win.ps1 retornou codigo $LASTEXITCODE"
+        throw "win.ps1 retornou código $LASTEXITCODE"
     }
 } catch {
     Write-Host ''

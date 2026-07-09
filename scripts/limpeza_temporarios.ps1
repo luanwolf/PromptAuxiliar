@@ -1,7 +1,7 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 . "$PSScriptRoot\_ui.ps1"
 
-Show-PABanner "Limpeza de temporarios" "Remove temporarios do usuario e do sistema, esvazia a Lixeira e limpa caches de pastas Temp."
+Show-PABanner "Limpeza de temporários" "Remove temporários do usuario e do sistema, esvazia a Lixeira e limpa caches de pastas Temp."
 
 if (-not (Confirm-PAAction)) { exit 0 }
 

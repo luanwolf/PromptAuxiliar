@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 . "$PSScriptRoot\_ui.ps1"
 
 Show-PABanner "Limpeza de armazenamento" "Abre a ferramenta Limpeza de Disco do Windows (cleanmgr)."

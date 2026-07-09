@@ -3,16 +3,17 @@
 from __future__ import annotations
 
 import os
+import re
 import threading
 import webbrowser
-from typing import Any
+from typing import Any, Literal
 
 from app.actions import catalogo_para_json, obter_acao
-from app.config import APP_VERSION, CREDITOS_URL, PASTA_BASE, PASTA_LOGS
+from app.config import CREDITOS_URL, PASTA_BASE, PASTA_LOGS
 from app.environment import preparar_ambiente
 from app.uninstall import paths_for_display, schedule_uninstall
 from app.updater import check_for_update, get_local_version, launch_win_ps1_update
-from app.panels import get_panel, run_panel, write_selected_ids
+from app.panels import PanelKind, get_panel, run_panel, write_selected_ids
 from app.tweaks import apply_tweaks, detect_all, get_tweaks_catalog
 from app.ui_settings import (
     get_scripts_layout,
@@ -24,6 +25,12 @@ from app.ui_settings import (
 )
 from app.winget_installed import prefetch_installed_scan
 from app.runner import ScriptNaoEncontradoError, executar_acao, usa_powershell_admin
+
+
+_IMAGEMAGICK_FORMATS = frozenset(
+    {"jpg", "jpeg", "png", "webp", "gif", "bmp", "tiff", "tif", "pdf", "ico", "avif"}
+)
+_INVALID_WIN_FILENAME = re.compile(r'[\\/:*?"<>|]')
 
 
 class PromptAuxiliarApi:
@@ -73,8 +80,8 @@ class PromptAuxiliarApi:
         }
         return data
 
-    def pick_folder(self) -> dict[str, Any]:
-        """Abre seletor nativo de pasta do Windows."""
+    def _tk_pick(self, mode: Literal["file", "folder"]) -> dict[str, Any]:
+        """Abre seletor nativo de arquivo ou pasta (tkinter)."""
         try:
             import tkinter as tk
             from tkinter import filedialog
@@ -83,13 +90,34 @@ class PromptAuxiliarApi:
             root.withdraw()
             root.attributes("-topmost", True)
             root.update()
-            pasta = filedialog.askdirectory(title="Escolha a pasta de destino")
+            if mode == "file":
+                path = filedialog.askopenfilename(
+                    title="Escolha o arquivo de origem",
+                    filetypes=[
+                        (
+                            "Imagens",
+                            "*.jpg *.jpeg *.png *.webp *.gif *.bmp *.tiff *.tif "
+                            "*.pdf *.svg *.avif *.heic *.ico",
+                        ),
+                        ("Todos os arquivos", "*.*"),
+                    ],
+                )
+                empty_msg = "Nenhum arquivo selecionado."
+            else:
+                path = filedialog.askdirectory(title="Escolha a pasta de destino")
+                empty_msg = "Nenhuma pasta selecionada."
             root.destroy()
-            if pasta:
-                return {"ok": True, "path": pasta}
-            return {"ok": False, "message": "Nenhuma pasta selecionada."}
+            if path:
+                return {"ok": True, "path": path}
+            return {"ok": False, "message": empty_msg}
         except Exception as e:
             return {"ok": False, "message": str(e)}
+
+    def pick_file(self) -> dict[str, Any]:
+        return self._tk_pick("file")
+
+    def pick_folder(self) -> dict[str, Any]:
+        return self._tk_pick("folder")
 
     def run_action(self, action_id: str) -> dict[str, Any]:
         return self._run_action_impl(action_id, None)
@@ -98,7 +126,7 @@ class PromptAuxiliarApi:
         """Executa ação com parâmetros (URL, pasta, modo) vindos do modal Utilitários."""
         clean: dict[str, str] = {}
         if isinstance(params, dict):
-            for key in ("url", "dest", "mode"):
+            for key in ("url", "dest", "mode", "src", "format", "playlist", "outname"):
                 val = params.get(key)
                 if val is not None and str(val).strip():
                     clean[key] = str(val).strip()
@@ -110,7 +138,7 @@ class PromptAuxiliarApi:
         acao = obter_acao(action_id)
         if not acao:
             return {"ok": False, "message": f"Ação desconhecida: {action_id}"}
-        if params and acao.interativo != "util":
+        if params and acao.interativo not in ("util", "util-imagem"):
             return {"ok": False, "message": "Esta ação não aceita parâmetros."}
         if acao.interativo == "util":
             if not params or not params.get("url") or not params.get("dest"):
@@ -120,6 +148,24 @@ class PromptAuxiliarApi:
                 }
             if acao.id == "baixar-ytdlp" and params.get("mode") not in ("video", "audio"):
                 return {"ok": False, "message": "Escolha vídeo ou áudio."}
+        if acao.interativo == "util-imagem":
+            if not params or not params.get("src") or not params.get("dest") or not params.get("format"):
+                return {
+                    "ok": False,
+                    "message": "Informe o arquivo, a pasta de destino e o formato.",
+                }
+            fmt = params.get("format", "").lower().lstrip(".")
+            if fmt not in _IMAGEMAGICK_FORMATS:
+                return {"ok": False, "message": "Formato de saída inválido."}
+            outname = params.get("outname", "").strip()
+            if outname:
+                if _INVALID_WIN_FILENAME.search(outname):
+                    return {
+                        "ok": False,
+                        "message": "Nome de arquivo inválido (caracteres proibidos: \\ / : * ? \" < > |).",
+                    }
+                if outname.endswith(".") or outname.endswith(" "):
+                    return {"ok": False, "message": "Nome de arquivo inválido."}
 
         with self._lock:
             if self._busy:
@@ -128,7 +174,7 @@ class PromptAuxiliarApi:
 
         def worker() -> None:
             try:
-                executar_acao(acao, aguardar=False, params=params)
+                executar_acao(acao, params=params)
             finally:
                 with self._lock:
                     self._busy = False
@@ -266,20 +312,28 @@ class PromptAuxiliarApi:
         except Exception as e:
             return {"ok": False, "message": str(e)}
 
-    def run_winget_install(self, ids: list[str] | None = None) -> dict[str, Any]:
+    def _run_panel_busy(
+        self, kind: PanelKind, ids: list[str] | None
+    ) -> dict[str, Any]:
         with self._lock:
             if self._busy:
                 return {"ok": False, "message": "Aguarde — outra operação em execução."}
             self._busy = True
         try:
             if ids:
-                write_selected_ids("winget", ids)
-            return run_panel("winget", ids)
+                write_selected_ids(kind, ids)
+            return run_panel(kind, ids)
         except Exception as e:
             return {"ok": False, "message": str(e)}
         finally:
             with self._lock:
                 self._busy = False
+
+    def run_winget_install(self, ids: list[str] | None = None) -> dict[str, Any]:
+        return self._run_panel_busy("winget", ids)
+
+    def run_debloat(self, ids: list[str] | None = None) -> dict[str, Any]:
+        return self._run_panel_busy("debloat", ids)
 
     def get_tweaks(self) -> dict[str, Any]:
         """Retorna catálogo de tweaks sem detecção (resposta imediata)."""
@@ -301,18 +355,3 @@ class PromptAuxiliarApi:
             return apply_tweaks(ids)
         except Exception as e:
             return {"ok": False, "message": str(e)}
-
-    def run_debloat(self, ids: list[str] | None = None) -> dict[str, Any]:
-        with self._lock:
-            if self._busy:
-                return {"ok": False, "message": "Aguarde — outra operação em execução."}
-            self._busy = True
-        try:
-            if ids:
-                write_selected_ids("debloat", ids)
-            return run_panel("debloat", ids)
-        except Exception as e:
-            return {"ok": False, "message": str(e)}
-        finally:
-            with self._lock:
-                self._busy = False

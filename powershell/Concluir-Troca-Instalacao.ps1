@@ -1,4 +1,4 @@
-# Pos-troca da instalacao (atualizacao adiada): corrige pasta, recria atalhos e abre o app.
+﻿# Pós-troca da instalação (atualização adiada): corrige pasta, recria atalhos e abre o app.
 #Requires -Version 5.1
 param(
     [Parameter(Mandatory = $true)]
@@ -16,7 +16,7 @@ function Repair-PromptAuxNestedInstall {
     $nested = Join-Path $Root 'PromptAuxiliar'
     $nestedMain = Join-Path $nested 'main.py'
     if (-not (Test-Path -LiteralPath $nestedMain)) { return }
-    Write-Host '  Corrigindo estrutura da pasta de instalacao...' -ForegroundColor DarkYellow
+    Write-Host '  Corrigindo estrutura da pasta de instalação...' -ForegroundColor DarkYellow
     Get-ChildItem -LiteralPath $nested -Force | ForEach-Object {
         $target = Join-Path $Root $_.Name
         if (Test-Path -LiteralPath $target) {
@@ -31,7 +31,7 @@ Repair-PromptAuxNestedInstall -Root $Destination
 
 $main = Join-Path $Destination 'main.py'
 if (-not (Test-Path -LiteralPath $main)) {
-    Write-Host "ERRO: Instalacao incompleta em $Destination (main.py ausente)." -ForegroundColor Red
+    Write-Host "ERRO: Instalação incompleta em $Destination (main.py ausente)." -ForegroundColor Red
     Write-Host 'Execute: irm "https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/win.ps1" | iex'
     Read-Host 'Pressione Enter para fechar'
     exit 1
@@ -45,7 +45,7 @@ if (Test-Path -LiteralPath $criar) {
 
 $win = Join-Path $Destination 'win.ps1'
 if (-not (Test-Path -LiteralPath $win)) {
-    Write-Host "ERRO: win.ps1 nao encontrado em $Destination" -ForegroundColor Red
+    Write-Host "ERRO: win.ps1 não encontrado em $Destination" -ForegroundColor Red
     Read-Host 'Pressione Enter para fechar'
     exit 1
 }

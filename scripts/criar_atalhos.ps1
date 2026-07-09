@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 . "$PSScriptRoot\_ui.ps1"
 
 Show-PABanner "Criar atalhos (GodMode e BIOS)" "Cria a pasta GodMode na Area de Trabalho e atalho para reiniciar no BIOS."

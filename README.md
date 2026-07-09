@@ -7,7 +7,7 @@
     <img alt="WebView2" src="https://img.shields.io/badge/WebView2-Edge-0078D4?logo=microsoftedge&logoColor=white" />
     <img alt="Winget" src="https://img.shields.io/badge/Winget-pacotes-2EA043?logo=windows&logoColor=white" />
     <img alt="PowerShell" src="https://img.shields.io/badge/PowerShell-5.1+-5391FE?logo=powershell&logoColor=white" />
-    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.7.15-0078D4" />
+    <img alt="Versão" src="https://img.shields.io/badge/Versão-2.7.16-0078D4" />
   </p>
 
   <p>
@@ -269,6 +269,7 @@ win.ps1                 # instalador / atualizador one-liner
 
 | Versão | Destaques |
 |--------|-----------|
+| **2.7.16** | Terminal com **UTF-8/acentos**; utilitário **ImageMagick** (converter + renomear); limpeza de código morto (ponytail); launcher **CMD** fecha sozinho; spotdl sem alterações |
 | **2.7.15** | Utilitários alinhados aos Scripts: **Grade/Lista**, container com bordas arredondadas; ícones mantidos |
 | **2.7.14** | **Utilitários** na barra lateral com 2 botões; playlist YouTube; instalação winget+pip |
 | **2.7.13** | Utilitários iniciais (yt-dlp / spotdl) com modal de URL e pasta |

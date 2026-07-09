@@ -1,7 +1,7 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 . "$PSScriptRoot\_ui.ps1"
 
-Show-PABanner "Reparar conexao de rede" "Libera e renova o IP, limpa o cache DNS, redefine Winsock e a pilha TCP/IP."
+Show-PABanner "Reparar conexão de rede" "Libera e renova o IP, limpa o cache DNS, redefine Winsock e a pilha TCP/IP."
 
 if (-not (Confirm-PAAction)) { exit 0 }
 
@@ -33,6 +33,6 @@ Invoke-PAStep "Registrando DNS (ipconfig /registerdns)" $results {
 }
 
 Write-Host ""
-Write-Host "  Reinicie o PC se o problema de conexao persistir." -ForegroundColor DarkGray
+Write-Host "  Reinicie o PC se o problema de conexão persistir." -ForegroundColor DarkGray
 
 Write-PASummary -Results $results -StartTime $startTime -Titulo "reparar_rede" -NeedRestart
