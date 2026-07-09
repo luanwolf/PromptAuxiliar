@@ -1,4 +1,4 @@
-"""Executa scripts .bat com console elegante."""
+"""Executa scripts .ps1/.bat com console elegante."""
 
 from __future__ import annotations
 
@@ -8,31 +8,66 @@ import sys
 import uuid
 from pathlib import Path
 
-from app.actions import Acao, obter_acao
+from app.actions import Acao
 from app.config import PASTA_BASE
 
 _PS_RUN = Path(os.environ.get("TEMP", ".")) / "PromptAuxiliar" / "run"
+
+# ponytail: mesmo bloco de _ui.ps1 — scripts temporários não dot-source _ui.ps1.
+PS_CONSOLE_INIT = """try {
+    [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+    [Console]::InputEncoding  = [System.Text.Encoding]::UTF8
+    $global:OutputEncoding     = [System.Text.Encoding]::UTF8
+    if ($Host.Name -eq 'ConsoleHost') { chcp 65001 | Out-Null }
+} catch {}
+"""
+
+# Apos confirmacao no app: PowerShell elevado (sem .bat intermediario).
+_COMANDOS_PS_ADMIN: dict[str, str] = {
+    "utilitario-externo": 'irm "https://christitus.com/win" | iex',
+    "ativar-windows-kms": "irm https://get.activated.win | iex",
+    "ativar-office-kms": "irm https://get.activated.win | iex",
+}
 
 
 class ScriptNaoEncontradoError(FileNotFoundError):
     pass
 
 
-def _raiz_projeto() -> Path:
-    return Path(__file__).resolve().parent.parent
+
+def _install_script_candidates(nome_arquivo: str) -> list[Path]:
+    candidatos: list[Path] = []
+    vistos: set[str] = set()
+
+    def add(base: Path | None) -> None:
+        if base is None:
+            return
+        p = (base / "scripts" / nome_arquivo).resolve()
+        key = str(p).lower()
+        if key not in vistos:
+            vistos.add(key)
+            candidatos.append(p)
+
+    # ponytail: em dev, prioriza scripts do repositório aberto (py main.py).
+    if not getattr(sys, "frozen", False):
+        add(Path(__file__).resolve().parent.parent)
+
+    home = os.environ.get("PROMPTAUX_HOME", "").strip()
+    if home:
+        add(Path(home))
+    localappdata = os.environ.get("LOCALAPPDATA", "").strip()
+    if localappdata:
+        add(Path(localappdata) / "PromptAuxiliar")
+    if getattr(sys, "frozen", False):
+        add(Path(sys._MEIPASS))
+    add(Path(PASTA_BASE))
+    return candidatos
 
 
 def resolver_script(nome_arquivo: str) -> str:
-    candidatos: list[Path] = []
-    if getattr(sys, "frozen", False):
-        candidatos.append(Path(sys._MEIPASS) / "scripts" / nome_arquivo)
-    candidatos.append(_raiz_projeto() / "scripts" / nome_arquivo)
-    custom = Path(PASTA_BASE) / "scripts" / nome_arquivo
-    if custom not in candidatos:
-        candidatos.append(custom)
-    for caminho in candidatos:
+    for caminho in _install_script_candidates(nome_arquivo):
         if caminho.is_file():
-            return str(caminho.resolve())
+            return str(caminho)
     raise ScriptNaoEncontradoError(f"Script '{nome_arquivo}' não encontrado.")
 
 
@@ -40,75 +75,150 @@ def _escape_ps(s: str) -> str:
     return s.replace("'", "''")
 
 
-def _abrir_console_script(script: str, titulo: str) -> None:
-    script_path = Path(script).resolve()
-    script_dir = _escape_ps(str(script_path.parent))
-    script_name = _escape_ps(script_path.name)
-    titulo_esc = _escape_ps(titulo)
-
-    ps_body = f"""
-$OutputEncoding = [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
-$Host.UI.RawUI.WindowTitle = '{titulo_esc} | Prompt Auxiliar'
-try {{
-  $b = $Host.UI.RawUI.BufferSize
-  $Host.UI.RawUI.BufferSize = New-Object System.Management.Automation.Host.Size(100, 9999)
-  $Host.UI.RawUI.WindowSize = New-Object System.Management.Automation.Host.Size(100, [Math]::Min(36, $b.Height))
-}} catch {{}}
-
-function Write-Banner {{
-  Write-Host ''
-  Write-Host ('  ' + ('=' * 62)) -ForegroundColor DarkCyan
-  Write-Host '   {titulo_esc}' -ForegroundColor White
-  Write-Host '   Prompt Auxiliar' -ForegroundColor DarkGray
-  Write-Host ('  ' + ('=' * 62)) -ForegroundColor DarkCyan
-  Write-Host ''
-}}
-
-Clear-Host
-Write-Banner
-Set-Location -LiteralPath '{script_dir}'
-$proc = Start-Process -FilePath 'cmd.exe' `
-  -ArgumentList '/c','@echo off & chcp 65001>nul & call ""{script_name}""' `
-  -Wait -PassThru -NoNewWindow
-Write-Host ''
-if ($proc.ExitCode -ne 0) {{
-  Write-Host ('  Finalizado com codigo ' + $proc.ExitCode) -ForegroundColor Yellow
-}} else {{
-  Write-Host '  Concluido.' -ForegroundColor Green
-}}
-Write-Host ''
-Write-Host '  Pressione Enter para fechar.' -ForegroundColor DarkGray
-$null = Read-Host
-"""
-
+def _executar_ps_admin(comando: str, titulo: str) -> None:
+    """Abre PowerShell como administrador com o comando remoto."""
     _PS_RUN.mkdir(parents=True, exist_ok=True)
-    ps1 = _PS_RUN / f"run_{uuid.uuid4().hex}.ps1"
-    ps1.write_text(ps_body.strip() + "\n", encoding="utf-8-sig")
-
+    titulo_esc = _escape_ps(titulo)
+    script_admin = _PS_RUN / f"admin_{uuid.uuid4().hex}.ps1"
+    script_admin.write_text(
+        PS_CONSOLE_INIT
+        + f"$Host.UI.RawUI.WindowTitle = '{titulo_esc} | Prompt Auxiliar'\n{comando}\n",
+        encoding="utf-8-sig",
+    )
+    script_path = _escape_ps(str(script_admin.resolve()))
+    elevador = _PS_RUN / f"elevate_{uuid.uuid4().hex}.ps1"
+    elevador.write_text(
+        f"""$p = '{script_path}'
+Start-Process -FilePath 'powershell.exe' -Verb RunAs -ArgumentList @(
+  '-NoProfile', '-ExecutionPolicy', 'Bypass', '-NoExit', '-File', $p
+)
+""",
+        encoding="utf-8-sig",
+    )
     flags = getattr(subprocess, "CREATE_NEW_CONSOLE", 0)
     subprocess.Popen(
         [
             "powershell.exe",
             "-NoProfile",
-            "-NoExit",
             "-ExecutionPolicy",
             "Bypass",
+            "-WindowStyle",
+            "Hidden",
             "-File",
-            str(ps1),
+            str(elevador),
         ],
         creationflags=flags,
         cwd=str(_PS_RUN),
     )
 
 
-def executar_acao(acao: Acao, *, aguardar: bool = True) -> subprocess.Popen | int:
+def _build_ps1_run_file(script_path: Path) -> Path:
+    """Constrói arquivo temporário PS1 com _ui.ps1 embutido (UTF-8-BOM).
+
+    Isso garante que as funções visuais estejam disponíveis independente
+    de onde _ui.ps1 esteja instalado e resolve problemas de encoding.
+    O arquivo temp é escrito com BOM para o PowerShell 5.1 ler corretamente.
+    """
+    _PS_RUN.mkdir(parents=True, exist_ok=True)
+    run_path = _PS_RUN / f"run_{uuid.uuid4().hex}.ps1"
+
+    ui_path = script_path.parent / "_ui.ps1"
+    util_path = script_path.parent / "_util_install.ps1"
+    try:
+        ui_src = ui_path.read_text(encoding="utf-8-sig") if ui_path.is_file() else ""
+        util_src = util_path.read_text(encoding="utf-8-sig") if util_path.is_file() else ""
+        sc_src = script_path.read_text(encoding="utf-8-sig")
+    except OSError:
+        return script_path  # fallback: rodar original
+
+    def _is_dotsource_line(ln: str) -> bool:
+        s = ln.strip()
+        return (
+            "_ui.ps1" in s
+            or "_util_install.ps1" in s
+        ) and s.startswith(".")
+
+    sc_lines = [ln for ln in sc_src.splitlines() if not _is_dotsource_line(ln)]
+    chunks = [c for c in (PS_CONSOLE_INIT.strip(), ui_src.strip(), util_src.strip(), "\n".join(sc_lines).strip()) if c]
+    combined = "\n\n".join(chunks) + "\n"
+    run_path.write_text(combined, encoding="utf-8-sig")
+    return run_path
+
+
+def _params_to_env(params: dict[str, str] | None) -> dict[str, str]:
+    """Converte parâmetros do app para variáveis de ambiente lidas pelos scripts."""
+    if not params:
+        return {}
+    key_map = {
+        "url": "PA_UTIL_URL",
+        "dest": "PA_UTIL_DEST",
+        "mode": "PA_UTIL_MODE",
+        "playlist": "PA_UTIL_PLAYLIST",
+        "src": "PA_UTIL_SRC",
+        "format": "PA_UTIL_FORMAT",
+        "outname": "PA_UTIL_OUTNAME",
+    }
+    out: dict[str, str] = {}
+    for k, v in params.items():
+        env_key = key_map.get(k.lower())
+        if env_key and v is not None:
+            out[env_key] = str(v)
+    return out
+
+
+def _abrir_console_script(
+    script: str,
+    titulo: str,
+    extra_env: dict[str, str] | None = None,
+) -> None:
+    """Abre o script em nova janela — .ps1 via PowerShell, .bat via CMD."""
+    script_path = Path(script).resolve()
+    if not script_path.is_file():
+        raise ScriptNaoEncontradoError(f"Script não encontrado: {script_path}")
+
+    flags = getattr(subprocess, "CREATE_NEW_CONSOLE", 0)
+    env = os.environ.copy()
+    if extra_env:
+        env.update(extra_env)
+
+    if script_path.suffix.lower() == ".ps1":
+        # Gera arquivo temp com _ui.ps1 embutido e encoding UTF-8-BOM
+        run_path = _build_ps1_run_file(script_path)
+        subprocess.Popen(
+            [
+                "powershell.exe",
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                str(run_path),
+            ],
+            cwd=str(script_path.parent),
+            creationflags=flags,
+            env=env,
+        )
+    else:
+        # Passar string (não lista) evita list2cmdline que converte " em \"
+        subprocess.Popen(
+            f'cmd.exe /c "{script_path}"',
+            cwd=str(script_path.parent),
+            creationflags=flags,
+            env=env,
+        )
+
+
+def usa_powershell_admin(action_id: str) -> bool:
+    return action_id in _COMANDOS_PS_ADMIN
+
+
+def executar_acao(
+    acao: Acao,
+    *,
+    params: dict[str, str] | None = None,
+) -> None:
+    comando = _COMANDOS_PS_ADMIN.get(acao.id)
+    if comando:
+        _executar_ps_admin(comando, acao.nome)
+        return
     caminho = resolver_script(acao.script)
-    _abrir_console_script(caminho, acao.nome)
-    return 0
-
-
-def executar_por_id(identificador: str, *, aguardar: bool = True) -> subprocess.Popen | int:
-    acao = obter_acao(identificador)
-    if not acao:
-        raise ValueError(f"Ação desconhecida: {identificador}")
-    return executar_acao(acao, aguardar=aguardar)
+    _abrir_console_script(caminho, acao.nome, extra_env=_params_to_env(params))

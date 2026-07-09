@@ -1,15 +1,15 @@
 """Constantes do Prompt Auxiliar."""
 
-APP_VERSION = "2.8.0"
+APP_VERSION = "2.7.19"
 PASTA_BASE = r"C:\PromptAuxiliar"
-PASTAS_NECESSARIAS = ("softwares", "registros")
+PASTA_LOGS = r"C:\PromptAuxiliar\logs"
+PASTAS_NECESSARIAS = ("softwares", "registros", "logs")
 
-GITHUB_REPO = "https://github.com/luanwolf/PromptAuxiliar"
-GITHUB_RELEASES = f"{GITHUB_REPO}/releases/latest"
-GITHUB_RAW_INSTALL = (
-    "https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/install.ps1"
-)
+GITHUB_OWNER = "luanwolf"
+GITHUB_REPO = "PromptAuxiliar"
+GITHUB_BRANCH = "main"
+
 GITHUB_RAW_WIN = (
-    "https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/win.ps1"
+    f"https://raw.githubusercontent.com/{GITHUB_OWNER}/{GITHUB_REPO}/{GITHUB_BRANCH}/win.ps1"
 )
-CREDITOS_URL = "https://heyash.vercel.app/"
+CREDITOS_URL = f"https://github.com/{GITHUB_OWNER}"

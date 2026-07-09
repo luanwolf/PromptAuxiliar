@@ -1,14 +1,20 @@
+chcp 65001 >nul 2>&1
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
-title Limpeza de Temporarios
+call "%~dp0_ui.bat" :banner "Limpeza de temporários" "Remove temporários, esvazia a Lixeira e limpa cache das pastas Temp."
+
+call "%~dp0_ui.bat" :confirmar
+if errorlevel 1 call "%~dp0_ui.bat" :sair 0 & exit /b 0
+set "EXIT_CODE=0"
+title Limpeza de temporários
 if exist "%~dp0limpeza_temporarios.ps1" (
   powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0limpeza_temporarios.ps1"
+  if errorlevel 1 set "EXIT_CODE=1"
 ) else (
-  echo Limpando...
+  echo   [1/1] Limpando TEMP da sessão...
   del /q /f /s "%TEMP%\*" >nul 2>&1
-  echo Concluido.
-  pause
 )
 
+call "%~dp0_ui.bat" :sair %EXIT_CODE%
 endlocal
-exit /b 0
+exit /b %EXIT_CODE%

@@ -1,37 +1,477 @@
 {
   "categorias": [
     "Apps Microsoft",
-    "Entretenimento",
+    "Xbox e gaming",
+    "Entretenimento e mídia",
     "Comunicação",
-    "Utilitários OEM"
+    "Windows 10 (legado)",
+    "Pré-instalados (loja)",
+    "Revisar antes de remover"
   ],
   "itens": [
-    {"id": "MicrosoftCorporationII.QuickAssist_8wekyb3d8bbwe", "nome": "Quick Assist", "categoria": "Apps Microsoft", "descricao": "Assistência remota Microsoft.", "padrao": true},
-    {"id": "Microsoft.GetHelp_8wekyb3d8bbwe", "nome": "Get Help", "categoria": "Apps Microsoft", "descricao": "Suporte Microsoft.", "padrao": true},
-    {"id": "Microsoft.Getstarted_8wekyb3d8bbwe", "nome": "Tips (Dicas)", "categoria": "Apps Microsoft", "descricao": "Dicas do Windows.", "padrao": true},
-    {"id": "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe", "nome": "Office Hub", "categoria": "Apps Microsoft", "descricao": "Hub do Microsoft 365.", "padrao": true},
-    {"id": "Microsoft.OutlookForWindows_8wekyb3d8bbwe", "nome": "Outlook (novo)", "categoria": "Apps Microsoft", "descricao": "Cliente Outlook Mail.", "padrao": true},
-    {"id": "microsoft.windowscommunicationsapps_8wekyb3d8bbwe", "nome": "Mail e Calendário", "categoria": "Apps Microsoft", "descricao": "Apps de e-mail e agenda.", "padrao": true},
-    {"id": "Microsoft.People_8wekyb3d8bbwe", "nome": "People", "categoria": "Apps Microsoft", "descricao": "Contatos Microsoft.", "padrao": true},
-    {"id": "Microsoft.YourPhone_8wekyb3d8bbwe", "nome": "Phone Link", "categoria": "Apps Microsoft", "descricao": "Vincular smartphone.", "padrao": true},
-    {"id": "Microsoft.Todos_8wekyb3d8bbwe", "nome": "Microsoft To Do", "categoria": "Apps Microsoft", "descricao": "Lista de tarefas.", "padrao": false},
-    {"id": "Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe", "nome": "Power Automate", "categoria": "Apps Microsoft", "descricao": "Automação desktop.", "padrao": true},
-    {"id": "Microsoft.WindowsFeedbackHub_8wekyb3d8bbwe", "nome": "Feedback Hub", "categoria": "Apps Microsoft", "descricao": "Enviar feedback ao Windows.", "padrao": true},
-    {"id": "Microsoft.WindowsMaps_8wekyb3d8bbwe", "nome": "Mapas", "categoria": "Apps Microsoft", "descricao": "App de mapas.", "padrao": true},
-    {"id": "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe", "nome": "Gravador de som", "categoria": "Apps Microsoft", "descricao": "Gravação de áudio simples.", "padrao": true},
-    {"id": "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe", "nome": "Sticky Notes", "categoria": "Apps Microsoft", "descricao": "Notas adesivas.", "padrao": false},
-    {"id": "Microsoft.DevHome", "nome": "Dev Home", "categoria": "Apps Microsoft", "descricao": "Painel para desenvolvedores.", "padrao": true},
-    {"id": "Microsoft.BingNews_8wekyb3d8bbwe", "nome": "Microsoft News", "categoria": "Apps Microsoft", "descricao": "Notícias Bing.", "padrao": true},
-    {"id": "Microsoft.BingWeather_8wekyb3d8bbwe", "nome": "Clima (Bing)", "categoria": "Apps Microsoft", "descricao": "Previsão do tempo.", "padrao": true},
-    {"id": "Microsoft.549981C3F5F10_8wekyb3d8bbwe", "nome": "Cortana", "categoria": "Apps Microsoft", "descricao": "Assistente Cortana.", "padrao": true},
-    {"id": "WindowsCamera_8wekyb3d8bbwe", "nome": "Câmera", "categoria": "Apps Microsoft", "descricao": "App de câmera.", "padrao": false},
-    {"id": "Clipchamp.Clipchamp_yxz26nhyzhsrt", "nome": "Clipchamp", "categoria": "Entretenimento", "descricao": "Editor de vídeo.", "padrao": true},
-    {"id": "Microsoft.ZuneVideo_8wekyb3d8bbwe", "nome": "Filmes e TV", "categoria": "Entretenimento", "descricao": "Loja de vídeo Microsoft.", "padrao": true},
-    {"id": "Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe", "nome": "Solitaire Collection", "categoria": "Entretenimento", "descricao": "Jogos de paciência.", "padrao": true},
-    {"id": "Microsoft.Teams", "nome": "Microsoft Teams", "categoria": "Comunicação", "descricao": "Chat e reuniões (consumo).", "padrao": false},
-    {"id": "Microsoft.SkypeApp_kzf8qxf38zg5c", "nome": "Skype", "categoria": "Comunicação", "descricao": "Skype (se instalado).", "padrao": true},
-    {"id": "Microsoft.XboxGamingOverlay_8wekyb3d8bbwe", "nome": "Xbox Game Bar", "categoria": "Utilitários OEM", "descricao": "Overlay de jogos Xbox.", "padrao": false},
-    {"id": "Microsoft.Xbox.TCUI_8wekyb3d8bbwe", "nome": "Xbox TCUI", "categoria": "Utilitários OEM", "descricao": "Componente Xbox.", "padrao": false},
-    {"id": "Microsoft.XboxSpeechToTextOverlay_8wekyb3d8bbwe", "nome": "Xbox Speech Overlay", "categoria": "Utilitários OEM", "descricao": "Overlay de voz Xbox.", "padrao": true}
+    {
+      "id": "MicrosoftCorporationII.QuickAssist_8wekyb3d8bbwe",
+      "nome": "Quick Assist",
+      "categoria": "Apps Microsoft",
+      "descricao": "Assistência remota Microsoft.",
+      "padrao": true,
+      "descricao_detalhada": "App de assistencia remota da Microsoft integrado ao Windows. Permite que outra pessoa veja ou controle sua tela temporariamente para suporte."
+    },
+    {
+      "id": "Microsoft.GetHelp_8wekyb3d8bbwe",
+      "nome": "Get Help",
+      "categoria": "Apps Microsoft",
+      "descricao": "Suporte e ajuda Microsoft.",
+      "padrao": true,
+      "descricao_detalhada": "Central de ajuda e suporte da Microsoft no Windows. Orienta solucao de problemas e contato com suporte oficial."
+    },
+    {
+      "id": "Microsoft.Getstarted_8wekyb3d8bbwe",
+      "nome": "Tips (Dicas do Windows)",
+      "categoria": "Apps Microsoft",
+      "descricao": "Dicas e novidades do Windows.",
+      "padrao": true,
+      "descricao_detalhada": "App Dicas do Windows com tutoriais e novidades do sistema. Apresenta recursos novos e atalhos apos atualizacoes."
+    },
+    {
+      "id": "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe",
+      "nome": "Office Hub",
+      "categoria": "Apps Microsoft",
+      "descricao": "Hub do Microsoft 365.",
+      "padrao": true,
+      "descricao_detalhada": "Hub que centraliza acesso ao Microsoft 365 e apps Office. Abre documentos recentes e atalhos para Word, Excel e servicos na nuvem."
+    },
+    {
+      "id": "Microsoft.OutlookForWindows_8wekyb3d8bbwe",
+      "nome": "Outlook (novo)",
+      "categoria": "Apps Microsoft",
+      "descricao": "Cliente Outlook Mail.",
+      "padrao": true,
+      "descricao_detalhada": "Cliente de e-mail Outlook moderno para Windows. Gerencia contas Microsoft e outros provedores com calendario integrado."
+    },
+    {
+      "id": "microsoft.windowscommunicationsapps_8wekyb3d8bbwe",
+      "nome": "Mail e Calendário",
+      "categoria": "Apps Microsoft",
+      "descricao": "Apps de e-mail e agenda (legado).",
+      "padrao": true,
+      "descricao_detalhada": "Pacote legado Mail e Calendario do Windows. Apps UWP para ler e-mail e agendar compromissos antes do Outlook unificado."
+    },
+    {
+      "id": "Microsoft.People_8wekyb3d8bbwe",
+      "nome": "People",
+      "categoria": "Apps Microsoft",
+      "descricao": "Contatos Microsoft.",
+      "padrao": true,
+      "descricao_detalhada": "Agenda de contatos da conta Microsoft. Sincroniza pessoas do Outlook, Skype e servicos vinculados."
+    },
+    {
+      "id": "Microsoft.YourPhone_8wekyb3d8bbwe",
+      "nome": "Phone Link",
+      "categoria": "Apps Microsoft",
+      "descricao": "Vincular smartphone (não remove em todas as builds).",
+      "padrao": false,
+      "descricao_detalhada": "Phone Link conecta smartphone Android ou iPhone ao PC. Exibe notificacoes, mensagens e arquivos do celular na area de trabalho."
+    },
+    {
+      "id": "Microsoft.Todos_8wekyb3d8bbwe",
+      "nome": "Microsoft To Do",
+      "categoria": "Apps Microsoft",
+      "descricao": "Lista de tarefas.",
+      "padrao": false,
+      "descricao_detalhada": "Lista de tarefas Microsoft To Do. Organiza lembretes diarios com sincronizacao na conta Microsoft."
+    },
+    {
+      "id": "Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe",
+      "nome": "Power Automate",
+      "categoria": "Apps Microsoft",
+      "descricao": "Automação desktop (Power Automate).",
+      "padrao": true,
+      "descricao_detalhada": "Automacao de tarefas repetitivas no desktop (RPA). Grava cliques e fluxos para integrar apps sem programar do zero."
+    },
+    {
+      "id": "Microsoft.WindowsFeedbackHub_8wekyb3d8bbwe",
+      "nome": "Feedback Hub",
+      "categoria": "Apps Microsoft",
+      "descricao": "Enviar feedback ao Windows.",
+      "padrao": true,
+      "descricao_detalhada": "Envia feedback e relatos de bugs ao time do Windows. Usuarios insiders e publico podem votar em sugestoes."
+    },
+    {
+      "id": "Microsoft.WindowsMaps_8wekyb3d8bbwe",
+      "nome": "Mapas",
+      "categoria": "Apps Microsoft",
+      "descricao": "App de mapas.",
+      "padrao": true,
+      "descricao_detalhada": "App de mapas e navegacao da Microsoft. Rotas, busca de lugares e mapas offline com dados Bing."
+    },
+    {
+      "id": "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe",
+      "nome": "Gravador de som",
+      "categoria": "Apps Microsoft",
+      "descricao": "Gravação de áudio simples.",
+      "padrao": true,
+      "descricao_detalhada": "Gravador de audio simples do Windows. Captura voz e sons pelo microfone em arquivos basicos."
+    },
+    {
+      "id": "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe",
+      "nome": "Sticky Notes",
+      "categoria": "Apps Microsoft",
+      "descricao": "Notas adesivas.",
+      "padrao": false,
+      "descricao_detalhada": "Notas adesivas digitais na area de trabalho. Sincroniza lembretes coloridos com a conta Microsoft."
+    },
+    {
+      "id": "Microsoft.DevHome",
+      "nome": "Dev Home",
+      "categoria": "Apps Microsoft",
+      "descricao": "Painel para desenvolvedores (Win11).",
+      "padrao": true,
+      "descricao_detalhada": "Painel para desenvolvedores no Windows 11. Configura ambiente, repositorios GitHub e ferramentas de codigo em um lugar."
+    },
+    {
+      "id": "Microsoft.BingNews_8wekyb3d8bbwe",
+      "nome": "Microsoft News",
+      "categoria": "Apps Microsoft",
+      "descricao": "Notícias Bing / MSN.",
+      "padrao": true,
+      "descricao_detalhada": "Feed de noticias Bing e MSN no Windows. Exibe manchetes, categorias e widgets de noticias personalizados."
+    },
+    {
+      "id": "Microsoft.BingWeather_8wekyb3d8bbwe",
+      "nome": "Clima (Bing)",
+      "categoria": "Apps Microsoft",
+      "descricao": "Previsão do tempo.",
+      "padrao": true,
+      "descricao_detalhada": "Previsao do tempo com dados Bing. Mostra temperatura, chuva e alertas na sua localizacao."
+    },
+    {
+      "id": "Microsoft.549981C3F5F10_8wekyb3d8bbwe",
+      "nome": "Cortana",
+      "categoria": "Apps Microsoft",
+      "descricao": "Assistente Cortana (onde ainda existir).",
+      "padrao": true,
+      "descricao_detalhada": "Assistente virtual Cortana onde ainda disponivel. Comandos de voz, lembretes e busca integrada a conta Microsoft."
+    },
+    {
+      "id": "WindowsCamera_8wekyb3d8bbwe",
+      "nome": "Câmera",
+      "categoria": "Apps Microsoft",
+      "descricao": "App de câmera.",
+      "padrao": false,
+      "descricao_detalhada": "App de camera padrao do Windows. Fotos, video e ajustes basicos para webcam integrada ou USB."
+    },
+    {
+      "id": "Microsoft.WindowsAlarms_8wekyb3d8bbwe",
+      "nome": "Alarmes e Relógio",
+      "categoria": "Apps Microsoft",
+      "descricao": "Alarmes, timer e relógio.",
+      "padrao": false,
+      "descricao_detalhada": "Alarmes, timer e relogio mundial do Windows. Desperta, cronometra tarefas e exibe fusos horarios."
+    },
+    {
+      "id": "Microsoft.WindowsCalculator_8wekyb3d8bbwe",
+      "nome": "Calculadora",
+      "categoria": "Apps Microsoft",
+      "descricao": "Calculadora UWP (reinstale via winget se precisar).",
+      "padrao": false,
+      "descricao_detalhada": "Calculadora UWP do Windows com modos padrao, cientifico e conversao de unidades. Substitui a calculadora classica em versoes recentes."
+    },
+    {
+      "id": "Microsoft.ScreenSketch_8wekyb3d8bbwe",
+      "nome": "Snipping Tool (UWP)",
+      "categoria": "Apps Microsoft",
+      "descricao": "Captura de tela / Recorte.",
+      "padrao": false,
+      "descricao_detalhada": "Ferramenta de recorte e anotacao de tela (Snipping Tool moderno). Captura regiao, janela ou tela inteira com desenho."
+    },
+    {
+      "id": "Microsoft.Windows.Photos_8wekyb3d8bbwe",
+      "nome": "Fotos",
+      "categoria": "Apps Microsoft",
+      "descricao": "Visualizador de fotos Microsoft.",
+      "padrao": false,
+      "descricao_detalhada": "Visualizador e organizador de fotos da Microsoft. Albums, edicao basica e reproducao de video na biblioteca."
+    },
+    {
+      "id": "Microsoft.Whiteboard_8wekyb3d8bbwe",
+      "nome": "Microsoft Whiteboard",
+      "categoria": "Apps Microsoft",
+      "descricao": "Quadro branco colaborativo.",
+      "padrao": true,
+      "descricao_detalhada": "Quadro branco digital colaborativo. Desenho livre e notas compartilhadas em reunioes Teams ou solo."
+    },
+    {
+      "id": "Microsoft.Office.OneNote_8wekyb3d8bbwe",
+      "nome": "OneNote (UWP)",
+      "categoria": "Apps Microsoft",
+      "descricao": "OneNote da Microsoft Store.",
+      "padrao": true,
+      "descricao_detalhada": "Versao UWP do OneNote para notas estruturadas. Cadernos, secoes e sincronizacao com Microsoft 365."
+    },
+    {
+      "id": "Microsoft.MixedReality.Portal_8wekyb3d8bbwe",
+      "nome": "Mixed Reality Portal",
+      "categoria": "Apps Microsoft",
+      "descricao": "Portal de realidade mista.",
+      "padrao": true,
+      "descricao_detalhada": "Portal para headsets de realidade mista Windows. Configura dispositivos VR/AR compatíveis com Mixed Reality."
+    },
+    {
+      "id": "Microsoft.Print3D_8wekyb3d8bbwe",
+      "nome": "Print 3D",
+      "categoria": "Apps Microsoft",
+      "descricao": "Impressão 3D.",
+      "padrao": true,
+      "descricao_detalhada": "App para preparar e enviar modelos 3D a impressoras. Visualiza e ajusta objetos antes da impressao."
+    },
+    {
+      "id": "Microsoft.Microsoft3DViewer_8wekyb3d8bbwe",
+      "nome": "Visualizador 3D",
+      "categoria": "Apps Microsoft",
+      "descricao": "Visualizador de modelos 3D.",
+      "padrao": true,
+      "descricao_detalhada": "Visualizador de modelos 3D no Windows. Abre arquivos GLB, OBJ e outros formatos com rotacao e iluminacao."
+    },
+    {
+      "id": "9NBLGGH42THS",
+      "nome": "3D Viewer (legado)",
+      "categoria": "Apps Microsoft",
+      "descricao": "Visualizador 3D (ID legado da Store).",
+      "padrao": true,
+      "descricao_detalhada": "Visualizador 3D legado da Microsoft Store. Exibe modelos tridimensionais em versoes antigas do Windows 10."
+    },
+    {
+      "id": "9NBLGGH5FV99",
+      "nome": "Paint 3D",
+      "categoria": "Apps Microsoft",
+      "descricao": "Editor Paint 3D.",
+      "padrao": true,
+      "descricao_detalhada": "Paint 3D para editar modelos e desenhos com camadas 3D. Ferramenta criativa descontinuada mas ainda presente em algumas instalacoes."
+    },
+    {
+      "id": "Microsoft.Wallet_8wekyb3d8bbwe",
+      "nome": "Microsoft Pay / Wallet",
+      "categoria": "Apps Microsoft",
+      "descricao": "Carteira digital (descontinuado).",
+      "padrao": true,
+      "descricao_detalhada": "Carteira digital Microsoft Pay, em grande parte descontinuada. Guardava cartoes para pagamento por aproximacao onde suportado."
+    },
+    {
+      "id": "MicrosoftCorporationII.MicrosoftFamily_8wekyb3d8bbwe",
+      "nome": "Microsoft Family",
+      "categoria": "Apps Microsoft",
+      "descricao": "Segurança familiar.",
+      "padrao": true,
+      "descricao_detalhada": "Gerenciamento de conta familiar Microsoft. Controles parentais, tempo de tela e localizacao de membros."
+    },
+    {
+      "id": "Microsoft.OneConnect_8wekyb3d8bbwe",
+      "nome": "Mobile Plans",
+      "categoria": "Apps Microsoft",
+      "descricao": "Planos móveis / dados celular.",
+      "padrao": true,
+      "descricao_detalhada": "App Mobile Plans para dados celulares e eSIM no Windows. Ativa planos de operadoras em dispositivos compativeis."
+    },
+    {
+      "id": "Microsoft.Messaging_8wekyb3d8bbwe",
+      "nome": "Messaging",
+      "categoria": "Apps Microsoft",
+      "descricao": "Mensagens SMS (onde disponível).",
+      "padrao": true,
+      "descricao_detalhada": "App de mensagens SMS no Windows quando vinculado a operadora. Envia e recebe textos do PC em hardware suportado."
+    },
+    {
+      "id": "Microsoft.GamingApp_8wekyb3d8bbwe",
+      "nome": "Xbox (Gaming App)",
+      "categoria": "Xbox e gaming",
+      "descricao": "App Xbox / PC Game Pass.",
+      "padrao": true,
+      "descricao_detalhada": "App Xbox no Windows com biblioteca, Game Pass e social. Instala jogos da Microsoft e gerencia capturas e amigos."
+    },
+    {
+      "id": "Microsoft.XboxApp_8wekyb3d8bbwe",
+      "nome": "Xbox Console Companion",
+      "categoria": "Xbox e gaming",
+      "descricao": "App Xbox legado.",
+      "padrao": true,
+      "descricao_detalhada": "Xbox Console Companion, cliente legado da Microsoft. Biblioteca, streaming e mensagens para contas Xbox mais antigas."
+    },
+    {
+      "id": "Microsoft.XboxGamingOverlay_8wekyb3d8bbwe",
+      "nome": "Xbox Game Bar",
+      "categoria": "Xbox e gaming",
+      "descricao": "Overlay de jogos (Win+G).",
+      "padrao": false,
+      "descricao_detalhada": "Xbox Game Bar abre com Win+G durante jogos. Grava clipes, monitora desempenho, chat e widgets sobre o jogo."
+    },
+    {
+      "id": "Microsoft.Xbox.TCUI_8wekyb3d8bbwe",
+      "nome": "Xbox TCUI",
+      "categoria": "Xbox e gaming",
+      "descricao": "Componente de interface Xbox.",
+      "padrao": false,
+      "descricao_detalhada": "Componente de interface do ecossistema Xbox no Windows. Suporte interno para overlays e experiencias de conta."
+    },
+    {
+      "id": "Microsoft.XboxSpeechToTextOverlay_8wekyb3d8bbwe",
+      "nome": "Xbox Speech Overlay",
+      "categoria": "Xbox e gaming",
+      "descricao": "Overlay de voz para jogos.",
+      "padrao": true,
+      "descricao_detalhada": "Overlay de conversao de fala em texto para jogos Xbox. Acessibilidade e comandos de voz em titulos compatíveis."
+    },
+    {
+      "id": "Microsoft.XboxIdentityProvider_8wekyb3d8bbwe",
+      "nome": "Xbox Identity Provider",
+      "categoria": "Xbox e gaming",
+      "descricao": "Login/conta Xbox.",
+      "padrao": false,
+      "descricao_detalhada": "Provedor de identidade para login em conta Xbox e jogos da Store. Necessario para autenticacao em muitos titulos."
+    },
+    {
+      "id": "Microsoft.XboxGameOverlay_8wekyb3d8bbwe",
+      "nome": "Xbox Game Overlay",
+      "categoria": "Xbox e gaming",
+      "descricao": "Overlay de jogos Xbox.",
+      "padrao": true,
+      "descricao_detalhada": "Overlay de jogos da plataforma Xbox. Exibe notificacoes e elementos sociais durante partidas."
+    },
+    {
+      "id": "Clipchamp.Clipchamp_yxz26nhyzhsrt",
+      "nome": "Clipchamp",
+      "categoria": "Entretenimento e mídia",
+      "descricao": "Editor de vídeo.",
+      "padrao": true,
+      "descricao_detalhada": "Editor de video da Microsoft integrado ao Windows. Cortes, textos e exportacao na nuvem para redes sociais."
+    },
+    {
+      "id": "Microsoft.ZuneVideo_8wekyb3d8bbwe",
+      "nome": "Filmes e TV",
+      "categoria": "Entretenimento e mídia",
+      "descricao": "Loja de vídeo Microsoft.",
+      "padrao": true,
+      "descricao_detalhada": "App Filmes e TV para comprar e alugar videos na Microsoft Store. Reproduz conteudo DRM da loja de video."
+    },
+    {
+      "id": "Microsoft.ZuneMusic_8wekyb3d8bbwe",
+      "nome": "Groove Music",
+      "categoria": "Entretenimento e mídia",
+      "descricao": "Player de música legado.",
+      "padrao": true,
+      "descricao_detalhada": "Groove Music, player legado de musica local e streaming Microsoft. Organiza biblioteca MP3 no PC."
+    },
+    {
+      "id": "Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe",
+      "nome": "Solitaire Collection",
+      "categoria": "Entretenimento e mídia",
+      "descricao": "Jogos de paciência Microsoft.",
+      "padrao": true,
+      "descricao_detalhada": "Colecao de jogos de paciencia e cartas da Microsoft. Klondike, Spider e outros com placares online opcionais."
+    },
+    {
+      "id": "Microsoft.Teams",
+      "nome": "Microsoft Teams (desktop)",
+      "categoria": "Comunicação",
+      "descricao": "Teams instalado via winget/desktop.",
+      "padrao": false,
+      "descricao_detalhada": "Plataforma de chat, chamadas e reunioes da Microsoft. Usada em empresas com Microsoft 365 para colaboracao e compartilhamento de arquivos."
+    },
+    {
+      "id": "MicrosoftTeams_8wekyb3d8bbwe",
+      "nome": "Microsoft Teams (consumo)",
+      "categoria": "Comunicação",
+      "descricao": "Teams pré-instalado (app consumo).",
+      "padrao": true,
+      "descricao_detalhada": "Versao consumo do Teams pre-instalada no Windows. Chat pessoal e reunioes leves distinta do Teams corporativo."
+    },
+    {
+      "id": "Microsoft.SkypeApp_kzf8qxf38zg5c",
+      "nome": "Skype",
+      "categoria": "Comunicação",
+      "descricao": "Skype (se instalado).",
+      "padrao": true,
+      "descricao_detalhada": "App Skype da Microsoft Store no Windows. Chamadas, video e mensagens com contas Skype e Microsoft."
+    },
+    {
+      "id": "Microsoft.BingFinance_8wekyb3d8bbwe",
+      "nome": "Bing Finanças",
+      "categoria": "Windows 10 (legado)",
+      "descricao": "App de finanças (Win10).",
+      "padrao": true,
+      "descricao_detalhada": "App de noticias e cotacoes financeiras Bing no Windows 10. Acompanha mercado e carteiras em feed dedicado."
+    },
+    {
+      "id": "Microsoft.BingSports_8wekyb3d8bbwe",
+      "nome": "Bing Esportes",
+      "categoria": "Windows 10 (legado)",
+      "descricao": "Notícias esportivas (Win10).",
+      "padrao": true,
+      "descricao_detalhada": "Noticias esportivas e placares via Bing. Focado em ligas e times favoritos em instalacoes Windows 10."
+    },
+    {
+      "id": "Microsoft.BingHealthAndFitness_8wekyb3d8bbwe",
+      "nome": "Bing Saúde",
+      "categoria": "Windows 10 (legado)",
+      "descricao": "Saúde e fitness (Win10).",
+      "padrao": true,
+      "descricao_detalhada": "App de saude e fitness Bing legado. Artigos, dietas e acompanhamento basico de atividade no Win10."
+    },
+    {
+      "id": "Microsoft.BingFoodAndDrink_8wekyb3d8bbwe",
+      "nome": "Bing Comida",
+      "categoria": "Windows 10 (legado)",
+      "descricao": "Receitas e bebidas (Win10).",
+      "padrao": true,
+      "descricao_detalhada": "Receitas e bebidas no ecossistema Bing para Windows 10. Busca culinaria e listas de ingredientes."
+    },
+    {
+      "id": "Microsoft.BingTravel_8wekyb3d8bbwe",
+      "nome": "Bing Viagens",
+      "categoria": "Windows 10 (legado)",
+      "descricao": "Viagens (Win10).",
+      "padrao": true,
+      "descricao_detalhada": "Inspiracao e informacoes de viagem via Bing. Destinos e dicas em app UWP de geracoes anteriores."
+    },
+    {
+      "id": "disney+",
+      "nome": "Disney+",
+      "categoria": "Pré-instalados (loja)",
+      "descricao": "Streaming Disney (OEM/loja).",
+      "padrao": true,
+      "descricao_detalhada": "Aplicativo de streaming Disney+ para filmes e series Marvel, Star Wars e Pixar. Instalado por OEM ou loja em alguns PCs."
+    },
+    {
+      "id": "Microsoft.OneDrive",
+      "nome": "OneDrive",
+      "categoria": "Revisar antes de remover",
+      "descricao": "Sync na nuvem — pode ser integrado ao Windows.",
+      "padrao": false,
+      "descricao_detalhada": "Servico de armazenamento e sincronizacao de arquivos na nuvem da Microsoft. Integra pastas do Windows e backup de documentos. Remover do sistema desativa essa sincronizacao integrada e pode afetar backups automaticos."
+    },
+    {
+      "id": "Microsoft.Edge",
+      "nome": "Microsoft Edge",
+      "categoria": "Revisar antes de remover",
+      "descricao": "Navegador padrão — remoção avançada.",
+      "padrao": false,
+      "descricao_detalhada": "Navegador padrao da Microsoft baseado em Chromium. Integra perfis, colecao, leitura em voz alta e recursos de produtividade. Remover do sistema pode afetar WebView2 e apps que dependem do motor do Edge."
+    },
+    {
+      "id": "Microsoft.MicrosoftEdge.Stable",
+      "nome": "Microsoft Edge (Stable)",
+      "categoria": "Revisar antes de remover",
+      "descricao": "ID alternativo do Edge.",
+      "padrao": false,
+      "descricao_detalhada": "Identificador alternativo do navegador Microsoft Edge. Mesmo motor Chromium usado como navegador padrao. Remover pode afetar WebView2 e aplicativos que embutem o Edge."
+    },
+    {
+      "id": "Microsoft.WindowsStore_8wekyb3d8bbwe",
+      "nome": "Microsoft Store",
+      "categoria": "Revisar antes de remover",
+      "descricao": "Loja de apps — não recomendado remover.",
+      "padrao": false,
+      "descricao_detalhada": "Microsoft Store, loja oficial de apps e jogos UWP no Windows. Instala atualizacoes de muitos apps do sistema. Remover impede novas instalacoes e atualizacoes pela loja."
+    }
   ]
 }

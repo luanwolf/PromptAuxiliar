@@ -1,23 +1,80 @@
-"""Bridge Python ↔ WebView — painéis Winget e Debloat."""
+"""Bridge Python ↔ WebView — painéis Winget, Debloat e Tweaks."""
 
 from __future__ import annotations
 
 import os
+import re
+import shutil
+import subprocess
 import threading
 import webbrowser
-from typing import Any
+from typing import Any, Literal
 
 from app.actions import catalogo_para_json, obter_acao
-from app.config import (
-    APP_VERSION,
-    CREDITOS_URL,
-    GITHUB_RAW_INSTALL,
-    GITHUB_RELEASES,
-    PASTA_BASE,
-)
+from app.ui_strings import load_ui_strings
+from app.config import CREDITOS_URL, PASTA_BASE, PASTA_LOGS
 from app.environment import preparar_ambiente
-from app.panels import get_panel, run_panel, write_selected_ids
-from app.runner import ScriptNaoEncontradoError, executar_acao
+from app.uninstall import paths_for_display, schedule_uninstall
+from app.updater import check_for_update, get_local_version, launch_win_ps1_update
+from app.panels import PanelKind, get_panel, run_panel, write_selected_ids
+from app.tweaks import apply_tweaks, detect_all, get_tweaks_catalog
+from app.ui_settings import (
+    get_scripts_layout,
+    get_theme,
+    get_utils_layout,
+    set_scripts_layout,
+    set_theme,
+    set_utils_layout,
+)
+from app.winget_installed import prefetch_installed_scan
+from app.runner import ScriptNaoEncontradoError, executar_acao, usa_powershell_admin
+
+
+_IMAGEMAGICK_FORMATS = frozenset(
+    {"jpg", "jpeg", "png", "webp", "gif", "bmp", "tiff", "tif", "pdf", "ico", "avif"}
+)
+_INVALID_WIN_FILENAME = re.compile(r'[\\/:*?"<>|]')
+_YTDLP_SITES_ALL_CACHE: list[str] | None = None
+
+# ponytail: substring match on extractor id — misses niche mirrors; upgrade = explicit id map
+_YTDLP_POPULAR_PATTERNS = (
+    "youtube",
+    "tiktok",
+    "instagram",
+    "twitter",
+    "facebook",
+    "twitch",
+    "vimeo",
+    "reddit",
+    "soundcloud",
+    "spotify",
+    "bandcamp",
+    "dailymotion",
+    "bilibili",
+    "niconico",
+    "rumble",
+    "linkedin",
+    "pinterest",
+    "kick",
+    "mixcloud",
+    "streamable",
+    "odysee",
+    "lbry",
+    "archive.org",
+    "peertube",
+    "ted",
+    "coub",
+    "loom",
+    "vk",
+)
+
+
+def _popular_ytdlp_sites(all_sites: list[str]) -> list[str]:
+    def is_popular(name: str) -> bool:
+        n = name.lower()
+        return any(p in n for p in _YTDLP_POPULAR_PATTERNS)
+
+    return sorted(s for s in all_sites if is_popular(s))
 
 
 class PromptAuxiliarApi:
@@ -28,12 +85,21 @@ class PromptAuxiliarApi:
     def initialize(self) -> dict[str, Any]:
         try:
             primeira_vez = preparar_ambiente()
+            prefetch_installed_scan()
+            local = get_local_version()
             return {
                 "ok": True,
-                "version": APP_VERSION,
+                "version": local,
                 "pasta": PASTA_BASE,
                 "primeira_vez": primeira_vez,
                 "message": "Ambiente pronto.",
+                "theme": get_theme(),
+                "scripts_layout": get_scripts_layout(),
+                "utils_layout": get_utils_layout(),
+                "update_available": False,
+                "update_message": "",
+                "remote_version": None,
+                "local_version": local,
             }
         except Exception as e:
             return {"ok": False, "message": str(e)}
@@ -44,21 +110,165 @@ class PromptAuxiliarApi:
             return {"ok": True, "message": "Pasta aberta."}
         return {"ok": False, "message": f"Pasta não encontrada: {PASTA_BASE}"}
 
+    def open_logs_folder(self) -> dict[str, Any]:
+        os.makedirs(PASTA_LOGS, exist_ok=True)
+        os.startfile(PASTA_LOGS)
+        return {"ok": True, "message": "Pasta de logs aberta."}
+
     def get_catalog(self) -> dict[str, Any]:
         data = catalogo_para_json()
         data["meta"] = {
-            "version": APP_VERSION,
+            "version": get_local_version(),
             "pasta": PASTA_BASE,
             "creditos": CREDITOS_URL,
-            "releases": GITHUB_RELEASES,
-            "install": GITHUB_RAW_INSTALL,
         }
+        data["ui_strings"] = load_ui_strings()
         return data
 
+    def _tk_pick(self, mode: Literal["file", "folder"]) -> dict[str, Any]:
+        """Abre seletor nativo de arquivo ou pasta (tkinter)."""
+        try:
+            import tkinter as tk
+            from tkinter import filedialog
+
+            root = tk.Tk()
+            root.withdraw()
+            root.attributes("-topmost", True)
+            root.update()
+            if mode == "file":
+                path = filedialog.askopenfilename(
+                    title="Escolha o arquivo de origem",
+                    filetypes=[
+                        (
+                            "Imagens",
+                            "*.jpg *.jpeg *.png *.webp *.gif *.bmp *.tiff *.tif "
+                            "*.pdf *.svg *.avif *.heic *.ico",
+                        ),
+                        ("Todos os arquivos", "*.*"),
+                    ],
+                )
+                empty_msg = "Nenhum arquivo selecionado."
+            else:
+                path = filedialog.askdirectory(title="Escolha a pasta de destino")
+                empty_msg = "Nenhuma pasta selecionada."
+            root.destroy()
+            if path:
+                return {"ok": True, "path": path}
+            return {"ok": False, "message": empty_msg}
+        except Exception as e:
+            return {"ok": False, "message": str(e)}
+
+    def pick_file(self) -> dict[str, Any]:
+        return self._tk_pick("file")
+
+    def pick_folder(self) -> dict[str, Any]:
+        return self._tk_pick("folder")
+
+    def list_ytdlp_sites(self) -> dict[str, Any]:
+        """Lista extractors populares do yt-dlp (--list-extractors, filtrado)."""
+        global _YTDLP_SITES_ALL_CACHE
+        if _YTDLP_SITES_ALL_CACHE is not None:
+            popular = _popular_ytdlp_sites(_YTDLP_SITES_ALL_CACHE)
+            return {
+                "ok": True,
+                "sites": popular,
+                "count": len(popular),
+                "total": len(_YTDLP_SITES_ALL_CACHE),
+            }
+
+        if not shutil.which("yt-dlp"):
+            return {
+                "ok": False,
+                "message": "yt-dlp não encontrado. Execute o download uma vez para instalar.",
+                "sites": [],
+                "count": 0,
+            }
+
+        kwargs: dict[str, Any] = {
+            "capture_output": True,
+            "text": True,
+            "encoding": "utf-8",
+            "errors": "replace",
+            "timeout": 30,
+            "shell": False,
+        }
+        if hasattr(subprocess, "CREATE_NO_WINDOW"):
+            kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW  # type: ignore[attr-defined]
+
+        try:
+            proc = subprocess.run(["yt-dlp", "--list-extractors"], **kwargs)
+        except subprocess.TimeoutExpired:
+            return {
+                "ok": False,
+                "message": "yt-dlp demorou demais para responder. Tente novamente.",
+                "sites": [],
+                "count": 0,
+            }
+        except Exception as e:
+            return {"ok": False, "message": str(e), "sites": [], "count": 0}
+
+        if proc.returncode != 0:
+            err = (proc.stderr or proc.stdout or "").strip()
+            return {
+                "ok": False,
+                "message": err or f"yt-dlp encerrou com código {proc.returncode}.",
+                "sites": [],
+                "count": 0,
+            }
+
+        all_sites = [line.strip() for line in (proc.stdout or "").splitlines() if line.strip()]
+        _YTDLP_SITES_ALL_CACHE = all_sites
+        popular = _popular_ytdlp_sites(all_sites)
+        return {"ok": True, "sites": popular, "count": len(popular), "total": len(all_sites)}
+
     def run_action(self, action_id: str) -> dict[str, Any]:
+        return self._run_action_impl(action_id, None)
+
+    def run_action_params(self, action_id: str, params: dict[str, Any]) -> dict[str, Any]:
+        """Executa ação com parâmetros (URL, pasta, modo) vindos do modal Utilitários."""
+        clean: dict[str, str] = {}
+        if isinstance(params, dict):
+            for key in ("url", "dest", "mode", "src", "format", "playlist", "outname"):
+                val = params.get(key)
+                if val is not None and str(val).strip():
+                    clean[key] = str(val).strip()
+        return self._run_action_impl(action_id, clean or None)
+
+    def _run_action_impl(
+        self, action_id: str, params: dict[str, str] | None
+    ) -> dict[str, Any]:
         acao = obter_acao(action_id)
         if not acao:
             return {"ok": False, "message": f"Ação desconhecida: {action_id}"}
+        if params and acao.interativo not in ("util", "util-imagem"):
+            return {"ok": False, "message": "Esta ação não aceita parâmetros."}
+        if acao.interativo == "util":
+            if not params or not params.get("url") or not params.get("dest"):
+                return {
+                    "ok": False,
+                    "message": "Informe o link e a pasta de destino.",
+                }
+            if acao.id == "baixar-ytdlp" and params.get("mode") not in ("video", "audio"):
+                return {"ok": False, "message": "Escolha vídeo ou áudio."}
+        if acao.interativo == "util-imagem":
+            if not params or not params.get("src") or not params.get("dest") or not params.get("format"):
+                return {
+                    "ok": False,
+                    "message": "Informe o arquivo, a pasta de destino e o formato.",
+                }
+            fmt = params.get("format", "").lower().lstrip(".")
+            if fmt not in _IMAGEMAGICK_FORMATS:
+                return {"ok": False, "message": "Formato de saída inválido."}
+            outname = params.get("outname", "").strip()
+            if outname:
+                if _INVALID_WIN_FILENAME.search(outname):
+                    return {
+                        "ok": False,
+                        "message": "Nome de arquivo inválido (caracteres proibidos: \\ / : * ? \" < > |).",
+                    }
+                if outname.endswith(".") or outname.endswith(" "):
+                    return {"ok": False, "message": "Nome de arquivo inválido."}
+
         with self._lock:
             if self._busy:
                 return {"ok": False, "message": "Aguarde — outra operação em execução."}
@@ -66,21 +276,110 @@ class PromptAuxiliarApi:
 
         def worker() -> None:
             try:
-                executar_acao(acao, aguardar=False)
+                executar_acao(acao, params=params)
             finally:
                 with self._lock:
                     self._busy = False
 
         try:
             threading.Thread(target=worker, daemon=True).start()
-            return {"ok": True, "message": f"{acao.nome} iniciado.", "action": acao.id}
+            msg = (
+                f"{acao.nome} — PowerShell (admin) iniciado."
+                if usa_powershell_admin(acao.id)
+                else f"{acao.nome} iniciado."
+            )
+            return {"ok": True, "message": msg, "action": acao.id}
         except ScriptNaoEncontradoError as e:
             with self._lock:
                 self._busy = False
             return {"ok": False, "message": str(e)}
 
+    def get_ui_settings(self) -> dict[str, Any]:
+        try:
+            preparar_ambiente()
+            return {
+                "ok": True,
+                "theme": get_theme(),
+                "scripts_layout": get_scripts_layout(),
+                "utils_layout": get_utils_layout(),
+            }
+        except Exception as e:
+            return {
+                "ok": False,
+                "message": str(e),
+                "theme": "dark",
+                "scripts_layout": "grid",
+                "utils_layout": "grid",
+            }
+
+    def save_ui_theme(self, theme: str) -> dict[str, Any]:
+        try:
+            preparar_ambiente()
+            saved = set_theme(theme)
+            return {"ok": True, "theme": saved}
+        except Exception as e:
+            return {"ok": False, "message": str(e)}
+
+    def save_scripts_layout(self, layout: str) -> dict[str, Any]:
+        try:
+            preparar_ambiente()
+            saved = set_scripts_layout(layout)
+            return {"ok": True, "scripts_layout": saved}
+        except Exception as e:
+            return {"ok": False, "message": str(e)}
+
+    def save_utils_layout(self, layout: str) -> dict[str, Any]:
+        try:
+            preparar_ambiente()
+            saved = set_utils_layout(layout)
+            return {"ok": True, "utils_layout": saved}
+        except Exception as e:
+            return {"ok": False, "message": str(e)}
+
+    def check_for_updates(self) -> dict[str, Any]:
+        """Consulta APP_VERSION no GitHub (branch main) e compara com a instalação local."""
+        try:
+            return check_for_update()
+        except Exception as e:
+            return {"ok": False, "message": str(e)}
+
+    def launch_app_update(self) -> dict[str, Any]:
+        """Inicia win.ps1 remoto no PowerShell e fecha o app."""
+        try:
+            launch_win_ps1_update()
+            threading.Timer(0.5, self._quit_app).start()
+            return {
+                "ok": True,
+                "message": "Atualização iniciada no PowerShell. Esta janela será fechada.",
+            }
+        except Exception as e:
+            return {"ok": False, "message": str(e)}
+
+    def get_uninstall_preview(self) -> dict[str, Any]:
+        return {"ok": True, "paths": paths_for_display()}
+
+    def uninstall_prompt_auxiliar(self) -> dict[str, Any]:
+        try:
+            threading.Timer(0.2, self._quit_app).start()
+            schedule_uninstall()
+            return {
+                "ok": True,
+                "message": "Exclusão agendada. O aplicativo será fechado em instantes.",
+            }
+        except Exception as e:
+            return {"ok": False, "message": str(e)}
+
+    def _quit_app(self) -> None:
+        try:
+            import webview
+
+            for window in webview.windows:
+                window.destroy()
+        except Exception:
+            pass
+
     def open_link(self, kind: str) -> dict[str, Any]:
-        urls = {"releases": GITHUB_RELEASES, "creditos": CREDITOS_URL}
+        urls = {"creditos": CREDITOS_URL}
         url = urls.get(kind)
         if not url:
             return {"ok": False, "message": "Link inválido."}
@@ -115,32 +414,46 @@ class PromptAuxiliarApi:
         except Exception as e:
             return {"ok": False, "message": str(e)}
 
-    def run_winget_install(self, ids: list[str] | None = None) -> dict[str, Any]:
+    def _run_panel_busy(
+        self, kind: PanelKind, ids: list[str] | None
+    ) -> dict[str, Any]:
         with self._lock:
             if self._busy:
                 return {"ok": False, "message": "Aguarde — outra operação em execução."}
             self._busy = True
         try:
             if ids:
-                write_selected_ids("winget", ids)
-            return run_panel("winget", ids)
+                write_selected_ids(kind, ids)
+            return run_panel(kind, ids)
         except Exception as e:
             return {"ok": False, "message": str(e)}
         finally:
             with self._lock:
                 self._busy = False
 
+    def run_winget_install(self, ids: list[str] | None = None) -> dict[str, Any]:
+        return self._run_panel_busy("winget", ids)
+
     def run_debloat(self, ids: list[str] | None = None) -> dict[str, Any]:
-        with self._lock:
-            if self._busy:
-                return {"ok": False, "message": "Aguarde — outra operação em execução."}
-            self._busy = True
+        return self._run_panel_busy("debloat", ids)
+
+    def get_tweaks(self) -> dict[str, Any]:
+        """Retorna catálogo de tweaks sem detecção (resposta imediata)."""
         try:
-            if ids:
-                write_selected_ids("debloat", ids)
-            return run_panel("debloat", ids)
+            return get_tweaks_catalog()
         except Exception as e:
             return {"ok": False, "message": str(e)}
-        finally:
-            with self._lock:
-                self._busy = False
+
+    def detect_tweaks(self) -> dict[str, Any]:
+        """Executa PowerShell para detectar o estado atual de cada tweak."""
+        try:
+            return detect_all()
+        except Exception as e:
+            return {"ok": False, "message": str(e), "states": {}}
+
+    def apply_tweaks(self, ids: list[str]) -> dict[str, Any]:
+        """Aplica os tweaks selecionados via PS1 temporário em nova janela."""
+        try:
+            return apply_tweaks(ids)
+        except Exception as e:
+            return {"ok": False, "message": str(e)}

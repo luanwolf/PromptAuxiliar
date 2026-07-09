@@ -1,32 +1,37 @@
-# Prompt Auxiliar v2.8.0 — instalador (entry point IRM)
+﻿# Instalador com Bypass na sessão (recomendado no one-liner)
 # irm "https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/install.ps1" | iex
 #Requires -Version 5.1
 
-$PromptAuxVersion = '2.8.0'
 $ErrorActionPreference = 'Stop'
 
-$DefaultWinUrl = if ($env:PROMPTAUX_WIN_URL) {
-    $env:PROMPTAUX_WIN_URL
-} else {
-    'https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/win.ps1'
+try {
+    [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+    [Console]::InputEncoding  = [System.Text.Encoding]::UTF8
+    $global:OutputEncoding     = [System.Text.Encoding]::UTF8
+    if ($Host.Name -eq 'ConsoleHost') { chcp 65001 | Out-Null }
+} catch {}
+
+try {
+    Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
+} catch {
+    Write-Warning 'Não foi possivel usar Bypass nesta sessão. Tente abrir o PowerShell como usuario normal.'
 }
 
 $localWin = if ($PSScriptRoot) { Join-Path $PSScriptRoot 'win.ps1' } else { $null }
 
 if ($localWin -and (Test-Path -LiteralPath $localWin)) {
     & $localWin @args
-    return
-}
-
-Write-Host "Prompt Auxiliar v$PromptAuxVersion — instalador remoto" -ForegroundColor Cyan
-try {
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    $response = Invoke-WebRequest -Uri $DefaultWinUrl -UseBasicParsing
-    $content = [string]$response.Content
-    if ([string]::IsNullOrWhiteSpace($content)) {
-        throw 'Resposta vazia do servidor.'
+} else {
+    $url = if ($env:PROMPTAUX_WIN_URL) {
+        $env:PROMPTAUX_WIN_URL
+    } else {
+        'https://raw.githubusercontent.com/luanwolf/PromptAuxiliar/main/win.ps1'
     }
-    Invoke-Expression $content
-} catch {
-    throw "Falha ao baixar win.ps1 de $DefaultWinUrl. $_"
+    $scriptText = (Invoke-WebRequest -Uri $url -UseBasicParsing -Headers @{
+        'User-Agent' = 'PromptAuxiliar-Installer'
+    }).Content
+    $winPath = Join-Path $env:TEMP 'PromptAuxiliar-win.ps1'
+    $utf8 = New-Object System.Text.UTF8Encoding $false
+    [System.IO.File]::WriteAllText($winPath, $scriptText.TrimStart([char]0xFEFF), $utf8)
+    & $winPath @args
 }
